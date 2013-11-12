@@ -8,7 +8,7 @@
 #define DBXDATE -980824
 #define DBXLEVEL 1
 
-void dbx(int lvl, char *fmt, ...) {
+void dbx(int lvl, char const *fmt, ...) {
   va_list ap;
   if (lvl>0) {
     if (lvl>DBXLEVEL)

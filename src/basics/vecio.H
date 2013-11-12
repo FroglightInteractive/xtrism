@@ -3,9 +3,9 @@
 #ifndef _vecio_H
 #define _vecio_H
 
-#include <iostream.h>
+#include <iostream>
 #include <backward/strstream>
-#include <vector.h>
+#include <vector>
 #include <string.h>
 using namespace std;
 

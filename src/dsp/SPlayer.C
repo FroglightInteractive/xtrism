@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
-
+#include "../basics/minmax.H"
 #include "../basics/dbx.H"
 
 SPlayer::SPlayer(): fd(-1), dummy(false) {
@@ -67,7 +67,7 @@ void SPlayer::activate() throw (SampleExc) {
 
   int bytespsec=(1+stereo)*bytespsam*pfreq; // bytes per second
   int optifragsize=bytespsec/SP_FRAGSPSEC; // optimal fragment size
-  int logfrag=int(floor(log(double(optifragsize))/log(2.)+.5)) >? 8;
+  int logfrag=max(int(floor(log(double(optifragsize))/log(2.)+.5)), 8);
   int fragsize=1<<logfrag; // nearest realizable fragment size
   int arg=logfrag+(10000<<16);
   if (ioctl(fd,SNDCTL_DSP_SETFRAGMENT,&arg)<0)
@@ -76,7 +76,7 @@ void SPlayer::activate() throw (SampleExc) {
   if (ioctl(fd,SNDCTL_DSP_GETOSPACE, &info)<0)
     { perror("SPlayer: SNDCTL_DSP_GETOSPACE"); throw SampleExc(); }
   int nfrags
-    =int((bytespsec*SP_MAXAHEAD)/fragsize) >? 2; // # of frags I want to use  
+    = max(int((bytespsec*SP_MAXAHEAD)/fragsize), 2); // # frags I want to use  
   freefrags=info.fragstotal-nfrags; // leave rest free
   dbx(-980808,"SPlayer: nfrags=%i, info.fragstotal=%i, info.fragments=%i",nfrags,info.fragstotal,info.fragments);
   dbx(-980808,"SPlayer: fragsize=%i, info.fragsize=%i info.bytes=%i",fragsize,info.fragsize,info.bytes);
@@ -170,9 +170,9 @@ bool SPlayer::poll() throw (SampleExc) {
   //  printf("SP:poll: f=%i ft=%i fs=%i b=%i (ff=%i)\n",
   //          info.fragments, info.fragstotal, info.fragsize, info.bytes, freefrags);
 //  freefrags=0;
-  if (info.fragments>freefrags)
+  if (info.fragments>int(freefrags))
     { if (deact)
-        for (int i=0; i<info.fragments-freefrags; i++)
+        for (int i=0; i<int(info.fragments-freefrags); i++)
           { (this->*p)(1);
             if (n==0)
               { donedeact(); break; }
@@ -228,7 +228,7 @@ void SPlayer::polls16(int nfrags) throw (SampleExc) {
     quiet();
   }
 
-void SPlayer::pollu8(int nfrags) throw (SampleExc) {
+void SPlayer::pollu8(int /*nfrags*/) throw (SampleExc) {
   perror("SPlayer: pollu8 NYI");
   throw SampleExc();
   }

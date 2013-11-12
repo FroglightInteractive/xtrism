@@ -4,7 +4,7 @@
 #include "Sleeper.H"
 #include "../basics/Throw.H"
 
-#include <algo.h>
+#include <algorithm>
 
 #include "../basics/dbx.H"
 

@@ -18,7 +18,7 @@
 
 #include "../.datadir"
 
-#include <fstream.h>
+#include <fstream>
 
 TEnv *gl_tenvp=0;
 SBrickData *gl_sbdp=0;

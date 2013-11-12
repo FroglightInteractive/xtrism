@@ -4,7 +4,7 @@
 #define _GBParent_H
 
 #include "GBox.H"
-#include <list.h>
+#include <list>
 #include "../basics/Throw.H"
 
 class GBPos {

@@ -119,8 +119,8 @@ GBParent::~GBParent() {
       dbx(2,"~GBP: %p child %p - %s",this,(*j).child, (*j).killwhendying?"OK":"BAD");
       if ((*j).killwhendying)
         delete (*j).child;
-      else
-        ; // throw "GBParent: dying while children are present";
+      //else
+      // throw "GBParent: dying while children are present";
     }
   }
 
@@ -158,7 +158,7 @@ void GBParent::takefocus_notify(GBox *ch) {
   focus_child=ch;
   }
 
-void GBParent::losefocus_notify(GBox *ch) {
+void GBParent::losefocus_notify(GBox */*ch*/) {
   focus_child=0;
   offerfocus();
   }
@@ -178,7 +178,7 @@ void GBParent::takeselect_notify(GBox *ch) {
   selected_child=ch;
   }
 
-void GBParent::loseselect_notify(GBox *ch) {
+void GBParent::loseselect_notify(GBox */*ch*/) {
   selected_child=0;
   offerselect();
   }
@@ -333,9 +333,9 @@ void GBParent::pc_one(bool vnoth, GBChildInfo &ch) {
   else
     { int mm;
       if (pc_get_minmax(vnoth, GBP_Min, ch, mm))
-        ch.moveto(vnoth, mm + (ch.dist(vnoth,GBP_Min)>?0));
+        ch.moveto(vnoth, mm + max(ch.dist(vnoth,GBP_Min), 0));
       else if (pc_get_minmax(vnoth, GBP_Max, ch, mm))
-        ch.moveto(vnoth,mm - ch.size(vnoth) - (ch.dist(vnoth,GBP_Max)>?0));
+        ch.moveto(vnoth,mm - ch.size(vnoth) - max(ch.dist(vnoth,GBP_Max), 0));
       else
         athrow("GBParent::pc_one: couldn't determine position for a singly connected child");
     }

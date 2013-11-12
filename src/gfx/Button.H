@@ -19,7 +19,7 @@ class Button: public GBox {
     virtual bool mouse(int b, bool io, const Point &p)
       { printf("Button: Click! %i/%i (%i,%i) (this=%p)\n",
                b,io,p.x(),p.y(),this); return true; }
-    virtual void enterleave(bool io, const Point &p)
+  virtual void enterleave(bool io, const Point &/*p*/)
       { printf("Button: enterleave(%i) (this=%p)\n",int(io),this); }
   private:
     union {
@@ -32,10 +32,10 @@ class Button: public GBox {
 class TextButton: public Button {
   public:
     TextButton(GBParent *p, const Area &area,
-               const TRGB &bg, char *txt, const TFont &tf):
+               const TRGB &bg, char const *txt, const TFont &tf):
       Button(p,area,bg), text(txt), font(tf) {}
     TextButton(GBParent *p, const Area &area,
-               char *txt, const TFont &tf):
+               char const *txt, const TFont &tf):
       Button(p,area), text(txt), font(tf) {}
     virtual void redraw(const BBox &bbox)
       { Button::redraw(bbox);

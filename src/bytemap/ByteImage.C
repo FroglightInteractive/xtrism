@@ -9,8 +9,8 @@
 /* ------------------------------- byteimage ------------------------------ */
 void byteimage(TImage &dst, ByteMap const &src,
                WideRGB const &rgb0, WideRGB const &rgb1) {
-  int w=dst.width()<?src.width();
-  int h=dst.height()<?src.height();
+  int w=min(dst.width(), src.width());
+  int h=min(dst.height(), src.height());
   if (w*h<256+10)
     {
       for (int y=0; y<h; y++)

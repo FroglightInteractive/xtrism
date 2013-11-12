@@ -4,9 +4,11 @@
 #define _GlobalOpts_H
 
 #include <string>
-#include <vector.h>
-#include <iostream.h>
+#include <vector>
+#include <iostream>
 #include "../basics/KeyCode.H"
+
+using namespace std;
 
 istream &operator>>(istream &is, class GlobalOpts &go);
 ostream &operator<<(ostream &os, class GlobalOpts &go);

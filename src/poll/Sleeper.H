@@ -3,7 +3,7 @@
 #ifndef _Sleeper_H
 #define _Sleeper_H
 
-#include <list.h>
+#include <list>
 
 class Sleeper {
   public:
@@ -23,7 +23,7 @@ class Sleeper {
     void regwaker(class Waker *waker);
   private:
     class PollServer &server;
-    list<class Waker *> wakers;
+  std::list<class Waker *> wakers;
     bool warned;
   };
 

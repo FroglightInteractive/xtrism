@@ -4,7 +4,7 @@
 #define _Chooser_H
 
 #include <string>
-#include <list.h>
+#include <list>
 using namespace std;
 
 class CItem {

@@ -58,10 +58,10 @@ istream &operator>>(istream &is, ProbBSet &pbs) {
   return is;
   }
 
-static void __never_call_this() {
-  /* This fn exists solely to force the compiler to create
-     vector<ProbLevel>::operator=(vector<ProbLevel> const &)
-   */
-  vector <ProbLevel> a, b;
-  a=b;
-  }
+//static void __never_call_this() {
+//  /* This fn exists solely to force the compiler to create
+//     vector<ProbLevel>::operator=(vector<ProbLevel> const &)
+//   */
+//  vector <ProbLevel> a, b;
+//  a=b;
+//  }

@@ -141,9 +141,9 @@ void MMPict::drawit(int top, int bottom) {
                          (*tb_cloud)(tx2,ty2)*ftx)*fty ) +
             CLOUD0;
           cloud *= c_e_0; // damp cloudyness near horizon
-          cloud=cloud>?0;
+          cloud=max(cloud, 0.f);
           cloud += c_e_3; // add haze
-          cloud=cloud>?0;
+          cloud=max(cloud, 0.f);
 /*          float a=cos(xi*5), b=cos(zeta*5);
             cloud+=300*exp(-a*a*100);
             cloud+=300*exp(-b*b*100); */ // for grid
@@ -157,7 +157,7 @@ void MMPict::drawit(int top, int bottom) {
     { // doing grass
       float a=float(y)/hei - HORISCR;
       float xp=exp(-a/HAZE1a_g);
-      float haze=(HAZE1_g*xp + HAZE0_g)>?0;
+      float haze=max(HAZE1_g*xp + HAZE0_g, 0.f);
       float c_e_0=CLOUD1_g*(1-CLOUD1b_g*xp);
       float grey=GREY0_g;
       for (int x=0; x<wid; x++)
@@ -175,7 +175,7 @@ void MMPict::drawit(int top, int bottom) {
           cloud += ROUGHg*cos(cloud*ROUGHFREQg);
           cloud *= c_e_0; // damp cloudyness near horizon
           cloud += CLOUD2_g*cos(xi*CLOUD2f_g);
-          cloud=cloud>?0;
+          cloud = max(cloud, 0.f);
           float red=cloud*dREDg+RED0g+haze*hREDg;
           float green=cloud*dGREENg+GREEN0g+haze*hGREENg;
           float blue=cloud*dBLUEg+BLUE0g+haze*hBLUEg;

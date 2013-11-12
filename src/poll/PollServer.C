@@ -17,7 +17,7 @@ PollServer::~PollServer() {
 int PollServer::poll(TTime const &now) {
   if (first>now)
     return first-now;
-  list<pair<TTime, Sleeper *> >::iterator i,j,last;
+  std::list<std::pair<TTime, Sleeper *> >::iterator i,j,last;
   last=events.end();
   bool acted=false; // DEBUG!
   for (i=events.begin(); i!=last; )
@@ -41,11 +41,11 @@ int PollServer::poll(TTime const &now) {
 void PollServer::request(Sleeper *slpr, TTime const &when) {
   if (when<first)
     first=when;
-  events.push_back(pair<TTime,Sleeper *>(when,slpr));
+  events.push_back(std::pair<TTime,Sleeper *>(when,slpr));
   }
 
 void PollServer::forget(Sleeper *slpr) {
-  list<pair<TTime,Sleeper *> >::iterator i,j;
+  std::list<std::pair<TTime,Sleeper *> >::iterator i,j;
   for (i=events.begin(); i!=events.end(); )
     { j=i; ++i;
       if ((*j).second==slpr)

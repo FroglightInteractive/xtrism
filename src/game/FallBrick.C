@@ -41,7 +41,7 @@ bool FallBrick::tryshoosh(int dir) {
 FBHResult FallBrick::movex(int dir, bool zap)  {
   FBHResult res;
   lastisright=dir>0;
-  bool cont=true;
+  //  bool cont=true;
   do {
     switch (env->doiclash(pos.bno,pos.rot,pos.x+dir,pos.y)) {
     case BEC_OK:
@@ -180,10 +180,10 @@ bool FallBrick::swap(FallBrick &other) {
   int othdx[] = {1,2,1,2,3,1};
   int dir = lastisright ? 1 : -1;
   for (int k=0; k<6; k++) {
-    if (env->doiclash(pos.bno,pos.rot,
-		      pos.x+dir*mydx[k],pos.y,true) == BEC_OK &&
-	other.env->doiclash(other.pos.bno,other.pos.rot,
-			    other.pos.x-dir*othdx[k],pos.y,true) == BEC_OK &&
+    if (env->doiclash(pos.bno, pos.rot,
+		      pos.x+dir*mydx[k], pos.y, true) == BEC_OK &&
+	other.env->doiclash(other.pos.bno, other.pos.rot,
+			    other.pos.x-dir*othdx[k], pos.y, true) == BEC_OK &&
 	!other.clash(pos.bno,pos.rot,
 		     pos.x+dir*(mydx[k]+othdx[k]),pos.y)) {
       // Good!

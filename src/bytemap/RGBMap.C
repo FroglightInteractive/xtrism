@@ -4,6 +4,7 @@
 #include <errno.h>
 #include "RGBMap.H"
 #include "../basics/dbx.H"
+#include <string.h>
 
 RGBMap::RGBMap(unsigned int w, unsigned int h):
   wid(w), hei(h) {

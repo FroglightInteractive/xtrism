@@ -17,5 +17,9 @@ template <class X> void makeatmost(X &a, X const &b) {
     a=b;
 }
 
+inline int min(int a, unsigned int b) {
+  int b1 = b;
+  return a<b1 ? a : b1;
+}
 
 #endif

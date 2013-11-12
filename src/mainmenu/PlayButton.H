@@ -12,7 +12,7 @@ class PlayButton: public TextButton,
                   private SessionQuit,
                   private TCallBack, private THQuit {
   public:
-    PlayButton(GBParent *p, const Area &area, char *txt,
+    PlayButton(GBParent *p, const Area &area, char const *txt,
                class TImage &bg0, bool bgok0):
       TextButton(p, area, txt, tf()), s(0),
       bg(bg0), bgok(bgok0) {}
@@ -42,7 +42,7 @@ class PlayButton: public TextButton,
 class SoloButton: public PlayButton {
   public:
     SoloButton(GBParent *p, const Area &area,
-	       bool right0, char *txt,
+	       bool right0, char const *txt,
                class TImage &bg, bool bgok):
       PlayButton(p,area,txt,bg,bgok), right(right0) { }
     void play(int bset=-1);
@@ -52,7 +52,7 @@ private:
 
 class TeamButton: public PlayButton {
   public:
-    TeamButton(GBParent *p, const Area &area, char *txt,
+    TeamButton(GBParent *p, const Area &area, char const *txt,
                class TImage &bg, bool bgok):
       PlayButton(p,area,txt,bg,bgok) { }
     void play(int bset=-1);
@@ -60,7 +60,7 @@ class TeamButton: public PlayButton {
 
 class ApartButton: public PlayButton {
   public:
-    ApartButton(GBParent *p, const Area &area, char *txt,
+    ApartButton(GBParent *p, const Area &area, char const *txt,
                class TImage &bg, bool bgok):
       PlayButton(p,area,txt,bg,bgok) { }
     void play(int bset=-1);

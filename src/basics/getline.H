@@ -4,7 +4,7 @@
 #define _getline_H
 
 #include <string>
-#include <iostream.h>
+#include <iostream>
 using namespace std;
 
 string getline_nocmt(istream &is);

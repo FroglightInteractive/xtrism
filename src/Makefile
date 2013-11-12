@@ -43,13 +43,14 @@ INCS =	$(R6XINCDIR)
 ################################ VARIOUS PATHS ###############################
 R6XINCDIR = -I/usr/X11R6/include
 R6XLIBDIR = -L/usr/X11R6/lib
-R6XLIBS = ${R6XLIBDIR} -lXt -lX11 -lXext -lSM -lICE
+#R6XLIBS = ${R6XLIBDIR} -lXt -lX11 -lXext -lSM -lICE
+R6XLIBS = ${R6XLIBDIR} -lX11 
 CLIBS = -lm -lc -I/usr/include/g++
 
 ################################### FLAGS ####################################
 CFLAGS = ${DEBUG} -Wall -W -Wno-inline -Woverloaded-virtual -Wno-unused -c \
 	 ${PROFILE} -m486
-LFLAGS = ${DEBUG} -fhandle-exceptions ${PROFILE}
+LFLAGS = ${DEBUG} ${PROFILE}
 #		#-Bsymbolic
 export DATADIR
 export STRIP

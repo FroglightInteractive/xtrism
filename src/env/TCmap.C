@@ -5,6 +5,7 @@
 #include "../basics/Throw.H"
 #include "TCmap.H"
 
+#include <string.h>
 #include <stdio.h>
 
 void TRGB::fill(const char *str) {

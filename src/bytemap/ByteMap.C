@@ -4,6 +4,7 @@
 #include "ByteMap.H"
 #include "../basics/dbx.H"
 #include "../env/TCompress.H"
+#include <string.h>
 
 //#define SAFETY
 #ifdef SAFETY

@@ -5,7 +5,7 @@
 #include "PollServer.H"
 #include "../basics/Throw.H"
 
-#include <algo.h>
+#include <algorithm>
 
 #include "../basics/dbx.H"
 
@@ -22,7 +22,7 @@ Sleeper::~Sleeper() {
   server.forget(this);
   }
 
-void Sleeper::warn(Waker const *waker, int code) {
+void Sleeper::warn(Waker const *, int) {
   if (warned)
     return;
   warned=true;

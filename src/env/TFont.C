@@ -8,6 +8,7 @@
 #include "setclip.H"
 
 #include <stdio.h>
+#include <string.h>
 
 ////////////////////////////// TMFont ////////////////////////////////////////
 TMFont::TMFont(const TGFX &tgfx0, char *name, int size):

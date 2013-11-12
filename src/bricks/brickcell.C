@@ -122,7 +122,7 @@ inline void BrickCell::a_line_ne_sw(unsigned int x, unsigned int y,
 inline unsigned int BrickCell::random(unsigned int w, unsigned int n,
                                       unsigned int nw) {
   int b=int(.37*w + .37*n + .25*nw+.01*128 + 89.6*rand()/RAND_MAX-44.8);
-  return (b<?255)>?0;
+  return max(min(b, 255), 0);
   }
 
 void BrickCell::drawstripes(unsigned int depth) {

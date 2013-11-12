@@ -4,7 +4,7 @@
 #include "FallBrick.H"
 #include "LogPit.H"
 
-BEClash BrickEnv::doiclash(int bno, int rot, int x, int y) {
+BEClash BrickEnv::doiclash(int bno, int rot, int x, int y, bool /*wallonly*/) {
   return pit.tst(bno,rot,x,y)?BEC_SolidRock:BEC_OK;
   }
 

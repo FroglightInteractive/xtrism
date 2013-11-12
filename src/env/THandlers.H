@@ -15,9 +15,9 @@ class THKey {
 class THMML {
   public:
   virtual ~THMML() {}
-    virtual void tmbc(int but, bool io, int x, int y) {}
-    virtual void tmotion(int x, int y) {}
-    virtual void tenterleave(bool enter_not_leave) {}
+  virtual void tmbc(int /*but*/, bool /*io*/, int /*x*/, int /*y*/) {}
+  virtual void tmotion(int /*x*/, int /*y*/) {}
+  virtual void tenterleave(bool /*enter_not_leave*/) {}
   };
 
 class THRedraw {

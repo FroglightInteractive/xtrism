@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #include <esd.h>
-
+#include "../basics/minmax.H"
 #include "../basics/dbx.H"
 
 SPlayer::SPlayer(): dummy(false) {
@@ -54,7 +54,7 @@ SPHandle SPlayer::play(Sample const *s, float freqratio,
     float leftamp = amplitude*(1-posn)/2;
     float rightamp = amplitude*(1+posn)/2;
     while (i<s->length()) {
-      int len = (BUFSIZ/4) <? (s->length() - i);
+      int len = min(BUFSIZ/4, s->length() - i);
       signed short *bufp=buf;
       for (int j=0; j<len; j++) {
 	float c=(*s)[i+j];

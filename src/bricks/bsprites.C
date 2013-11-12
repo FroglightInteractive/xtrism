@@ -133,7 +133,7 @@ BrickCell *BrickSprites::docreate(int cel,
                  bd.safecell(x,y-1), bd.safecell(x-1,y-1),
                  bd.safecell(x-1,y), bd.safecell(x-1,y+1),
                  bd.safecell(x,y+1), bd.safecell(x+1,y+1));
-  bc->drawborders((size/10)>?1,sur);
+  bc->drawborders(max(size/10, 1), sur);
 /*  for (int x=0; x<3*cel+3; x++)
     for (int y=0; y<4; y++)
     if (x%3)

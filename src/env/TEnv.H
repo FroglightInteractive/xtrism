@@ -27,7 +27,7 @@ class TEnv: public TGFX {
   public: // dev.indep.
     TEnv(const class TReso &reso, 
          int argc, char **argv,
-         char *addit=0 /* display name for X */);
+         char const *addit=0 /* display name for X */);
     ~TEnv();
 
     int actualfactor() const { return actfactor; };

@@ -35,7 +35,7 @@ bool LNode::read(FILE *f) {
   }
 
 bool LNode::write(FILE *f, unsigned int length) {
-  unsigned int l0=length<?size;
+  unsigned int l0=min(length, size);
   if (fwrite(data,sizeof(LEvent),l0,f)!=l0)
     return false;
   if (length>size)
@@ -135,7 +135,7 @@ void Logger::newnext(int id, int bno, int rot) {
 
 void Logger::quit() {
   LEvent &lev=newevent(LT_QUIT);
-  lev.quit.alwaystrue=~0;
+  lev.quit.alwaystrue=~0u;
   }
 
 void Logger::pause(bool p) {

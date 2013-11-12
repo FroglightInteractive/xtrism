@@ -4,6 +4,7 @@
 #include "../basics/Throw.H"
 #include "../basics/Filename.H"
 #include <errno.h>
+#include <string.h>
 
 /* data is stored as one byte per line, lsb=leftmost cell. */
 
@@ -194,8 +195,8 @@ void SBrickData::print() const {
   }
 
 unsigned int SBrickData::maxlines() const {
-  int max=0;
+  unsigned int mx=0;
   for (int i=0; i<n; i++)
-    max=max>?rbd[i]->height();
-  return max;
+    mx=max(mx, rbd[i]->height());
+  return mx;
   }

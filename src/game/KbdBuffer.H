@@ -3,9 +3,10 @@
 #ifndef _KbdBuffer_H
 #define _KbdBuffer_H
 
-#include <vector.h>
+#include <vector>
 #include "../basics/KeyCode.H"
 #include "../poll/Waker.H"
+using namespace std;
 
 enum KeyNumber {
   KN_None=-1,
@@ -99,7 +100,7 @@ class LimitedInt {
   };
  */
 
-#include <list.h>
+#include <list>
 
 class KbdBuffer: public Waker {
   public:

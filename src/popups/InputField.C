@@ -31,7 +31,7 @@ bool InputField::mouse(int button, bool ino, Point const &xy) {
   if (ino && button==1)
     { takefocus(); cursoronoff(0,0);
       string hoi=contents;
-      int x=(xy.x()-left())>?0;
+      int x = max(xy.x()-left(), 0);
       while (font.stringwidth(hoi.c_str())>x)
         hoi.erase(hoi.size()-1,1);
       cpos=hoi.size();

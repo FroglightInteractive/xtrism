@@ -4,7 +4,9 @@
 
 #include "../basics/Throw.H"
 #include "../basics/dbx.H"
+#include "../basics/minmax.H"
 
+#include <string.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -30,7 +32,7 @@ TCompress::TCompress(Filename const &fn) {
       close(pfd[1]); // this is for parent
       close(0); dup(pfd[0]); // stdin = pipe
       close(1); dup(fd); // stdout = file
-      execlp("gzip", "gzip", "-", 0);
+      execlp("gzip", "gzip", "-", (char*)NULL);
       fprintf(stderr,"TCompress: execlp returned\n");
       exit(1);
     }
@@ -42,7 +44,7 @@ TCompress::TCompress(Filename const &fn) {
 
 TCompress::~TCompress() {
   dbx(1,"~TCompress");
-  int r=fclose(pipe);
+  /*int r=*/ fclose(pipe);
   int stt;
   waitpid(cpid,&stt,0);
   dbx(2,"~TC: wait returned");
@@ -51,7 +53,7 @@ TCompress::~TCompress() {
          "~TCompress: compression failed: child exited with non-zero code");
   }
 
-static int totlen=0;
+//static int totlen=0;
 
 int TCompress::write(void const *adr, unsigned int len) {
   return len-fwrite(adr,1,len,pipe);
@@ -72,7 +74,7 @@ TDecompress::TDecompress(Filename const &fn):
       close(pfd[0]); // is for parent
       close(0); dup(fd); // stdin = file
       close(1); dup(pfd[1]); // stdout = pipe
-      execlp("gunzip", "gunzip", "-", 0);
+      execlp("gunzip", "gunzip", "-", (char*)NULL);
       fprintf(stderr,"TCompress: execlp returned\n");
       exit(1);
     }
@@ -92,7 +94,7 @@ TDecompress::~TDecompress() {
 
 int TDecompress::read(void *adr, unsigned int len) {
   if (usedbuflen)
-    { unsigned int readlen=len<?usedbuflen;
+    { unsigned int readlen=min(len, usedbuflen);
       memcpy(adr,buffer+bufstartoff,readlen);
       bufstartoff+=readlen; usedbuflen-=readlen;
       adr=(void*)((byte*)adr+readlen);

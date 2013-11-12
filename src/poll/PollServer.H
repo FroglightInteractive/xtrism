@@ -3,7 +3,7 @@
 #ifndef _PollServer_H
 #define _PollServer_H
 
-#include <list.h>
+#include <list>
 #include "../env/TTime.H"
 
 class PollServer {
@@ -15,7 +15,7 @@ class PollServer {
     void request(class Sleeper *slpr, class TTime const &when);
     void forget(class Sleeper *slpr);
   private:
-    list<pair<class TTime, class Sleeper *> > events;
+  std::list<std::pair<class TTime, class Sleeper *> > events;
     TTime first;
   };
 

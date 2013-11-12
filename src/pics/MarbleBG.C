@@ -45,11 +45,11 @@ void marblebg(unsigned int w, unsigned int h, unsigned int bw,
     for (unsigned int x=0; x<w; x++)
       { float phi=atan2(left+width*x/w,-top-height*y/h);
         phi-=PI/6; if (phi<-PI) phi+=2*PI;
-        float green=cos(phi*DECAY)>?0;
+        float green=max(cosf(phi*DECAY), 0.f);
         phi-=2*PI/3; if (phi<-PI) phi+=2*PI;
-        float red=cos(phi*DECAY)>?0;
+        float red=max(cosf(phi*DECAY),0.f);
         phi-=2*PI/3; if (phi<-PI) phi+=2*PI;
-        float blue=cos(phi*DECAY)>?0;
+        float blue=max(cosf(phi*DECAY),0.f);
         float grey=bytemap->cc(x,y)*dGREY+GREY0;
         img.putpix(x+offset_x,y+offset_y,
                    cm(TRGB(grey*red,grey*green,grey*blue)));

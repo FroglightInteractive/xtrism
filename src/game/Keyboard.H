@@ -3,7 +3,7 @@
 #ifndef _Keyboard_H
 #define _Keyboard_H
 
-#include <set.h>
+#include <set>
 using namespace std;
 
 class Keyboard {

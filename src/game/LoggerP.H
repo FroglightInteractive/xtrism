@@ -14,6 +14,7 @@
 #define _LoggerP_H
 
 #include <math.h>
+#include "../basics/minmax.H"
 
 const unsigned int LOGGER_SIZE=10000; // prepare for 10000 events at a time
 
@@ -73,7 +74,7 @@ class LNode {
 inline unsigned int Logger_timerep(TTime const &now, TTime const &old) {
   int dt=now-old;
   unsigned int ldt=(unsigned int)(8*log(dt+1));
-  return ldt<?63;
+  return min(ldt, 63);
   }
 
 inline unsigned int Logger_invtimerep(unsigned int ldt) {

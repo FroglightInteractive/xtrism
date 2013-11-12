@@ -29,19 +29,19 @@ class GBox {
     bool hasfocus() const { return focus; }
   public: // virtual functions
     virtual void redraw(const BBox &bbox)=0;
-    virtual void motion(const Point &newpos) {}
+  virtual void motion(const Point &/*newpos*/) {}
     /* newpos is guaranteed to lie within this GBox's bbox, EXCEPT for
        the toplevel (of a popup). */
-    virtual void enterleave(bool in_not_out, const Point &newpos) {}
+  virtual void enterleave(bool /*in_not_out*/, const Point &/*newpos*/) {}
     /* Iff in_not_out, newpos is guaranteed to lie within this GBox's
        bbox, EXCEPT for the toplevel (of a popup). */
-    virtual bool mouse(int button, bool in_not_out, const Point &pos)
+  virtual bool mouse(int /*button*/, bool /*in_not_out*/, const Point &/*pos*/)
       { return false; }
     /* you will never receive a mouse() call before receiving an
        enterleave(true,xxx) call, or after an enterleave(false,xxx) call.
      ! This does NOT apply to a GBox (or more probably GBParent) that is
        the toplevel (of a popup). */
-    virtual bool key(int key, bool in_not_out) { return false; }
+  virtual bool key(int /*key*/, bool /*in_not_out*/) { return false; }
     virtual void shift(int dx, int dy) { bb.shift(dx,dy); }
     virtual void forcedlosefocus() { focus=false; }
     virtual void forcedloseselect() { selected=false; }

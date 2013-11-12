@@ -16,13 +16,13 @@ StatBoard::StatBoard(GBParent *p, int nlines, int labelw, int dataw,
                      TFont const &labelf, TFont const &dataf,
                      SharedBG &sbg, class PollServer &syncserv):
   GBox(p, Area(labelw+dataw+2*EDGEMARG+CENTREMARG,
-                    nlines*((labelf.height()>?dataf.height())+INTERL)+
-                    2*TBMARG-INTERL)),
+	       nlines*(max(labelf.height(),dataf.height())+INTERL)+
+	       2*TBMARG-INTERL)),
   BGSharer(sbg), Sleeper(syncserv),
   numlines(nlines), labelwidth(labelw), datawidth(dataw),
   labelfont(labelf), datafont(dataf) ,
   updlabels(0), upddata(0) {
-  dy=(labelf.height()>?dataf.height())+INTERL;
+  dy=max(labelf.height(),dataf.height())+INTERL;
   dy0=TBMARG+dataf.ascent();
   dxl=dxd=EDGEMARG;
   }
@@ -30,8 +30,8 @@ StatBoard::StatBoard(GBParent *p, int nlines, int labelw, int dataw,
 void StatBoard::setlabel(int i, string const &txt, bool update) {
   ensure(i);
   labels[i]=txt;
-  int ty=top()+dy0+i*dy;
-  int lx=left()+dxl;
+  //int ty=top()+dy0+i*dy;
+  //  int lx=left()+dxl;
   updlabels|=(1<<i);
   if (update)
     warn();
@@ -40,8 +40,8 @@ void StatBoard::setlabel(int i, string const &txt, bool update) {
 void StatBoard::setdata(int i, string const &txt, bool update) {
   ensure(i);
   data[i]=txt;
-  int ty=top()+dy0+i*dy;
-  int rx=right()-dxd;
+  //  int ty=top()+dy0+i*dy;
+  //int rx=right()-dxd;
   upddata|=(1<<i);
   if (update)
     { warn(); }

@@ -1,6 +1,6 @@
 // Player.C
 
-#include <iostream.h>
+#include <iostream>
 #include <string>
 #include "Player.H"
 #include "../basics/getline.H"
@@ -10,7 +10,7 @@
 
 const int PL_LLEN=1000;
 
-static char pl_linebuf[PL_LLEN];
+//static char pl_linebuf[PL_LLEN];
 
 istream &operator>>(istream &is, Player &pl) {
   string s(getline_nocmt(is));

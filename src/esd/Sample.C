@@ -30,7 +30,7 @@ Sample::Sample(char const *name) throw (SampleExc) {
   if (buf[0]=='/')
     strcpy(buf2,buf);
   else
-    { char *slash=strrchr(name,'/');
+    { char const *slash=strrchr(name, '/');
       memcpy(buf2,name,slash+1-name);
       strcpy(buf2+(slash+1-name),buf);
     }

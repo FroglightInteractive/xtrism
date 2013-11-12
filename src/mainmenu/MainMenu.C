@@ -18,7 +18,7 @@
 
 class ShadedTButton: public TextButton {
   public:
-    ShadedTButton(GBParent *p, const Area &area, char *txt,
+    ShadedTButton(GBParent *p, const Area &area, char const *txt,
                   class TImage &bg0, bool bgok0):
       TextButton(p,area,txt,tf()), bg(bg0), bgok(bgok0) {}
     virtual void redraw(BBox const &bb);

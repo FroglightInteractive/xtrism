@@ -13,6 +13,7 @@ const int USLEEP_ACTUAL_COMPENSATION=20; // time lost in usleep(1) [ms]
 
 bool tbusy;
 
+#include <string.h>
 #include <stdio.h>
 #include "../basics/Throw.H"
 #include "TEnv.H"
@@ -23,7 +24,7 @@ bool tbusy;
 
 #include <X11/keysym.h>
 
-TEnv::TEnv(const TReso &reso, int argc, char **argv, char *addit):
+TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
   TGFX(TGFX_MAGIC), confined(0), containspointer(0),
   repclaimed(0), wishautorep(0),
   lastkey(0),
@@ -96,7 +97,7 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char *addit):
   */
 
   XClassHint xch;
-    xch.res_name="xtrism"; xch.res_class="XTrism";
+  strcpy(xch.res_name, "xtrism"); strcpy(xch.res_class, "XTrism");
   XSetClassHint(display,window,&xch);
 
   wmdelw=XInternAtom(display,"WM_DELETE_WINDOW",False);
@@ -110,7 +111,7 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char *addit):
 
 /* -------------------------------- loop ---------------------------------- */
 /* Main loop */
-void TEnv::loop(int nice) {
+void TEnv::loop(int /*nice*/) {
   dbx(1,"TEnv::loop()");
   dbx(3,"sync = %p",&sync);
   dbx(3,"poll = %p",&poll);

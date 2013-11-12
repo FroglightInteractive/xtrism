@@ -5,8 +5,9 @@
 #ifndef _Probability_H
 #define _Probability_H
 
-#include <vector.h>
-#include <iostream.h>
+#include <vector>
+#include <iostream>
+using namespace std;
 
 class ProbLevel {
   public:

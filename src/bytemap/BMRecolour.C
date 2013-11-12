@@ -10,14 +10,14 @@ inline void recolour(ByteMap *img,
                      int x, int y,
                      float mul, int add) {
   byte &c=img->c(x,y);
-  c=byte(((c*mul+add)>?0)<?255);
+  c=byte(min(max(int(c*mul+add), 0), 255));
   }
 
 inline void recolour(ByteMap *img,
                      int x, int y,
                      int add) {
   byte &c=img->c(x,y);
-  c=byte(((c+add)>?0)<?255);
+  c=byte(min(max(int(c+add), 0), 255));
   }
 
 void recolour_rectangle(ByteMap *img, BBox const &bbox,
@@ -54,7 +54,7 @@ void recolour_circle(ByteMap *img,
   int r12=r1*r1;
   for (int y=-r1; y<=r1; y++)
     { int y2=y*y;
-      int bdx=int(sqrt(rad2-y2));
+      //int bdx=int(sqrt(rad2-y2));
       int bdx1=int(sqrt(r12-y2));
       for (int x=-bdx1; x<=bdx1; x++)
         { int x2=x*x;

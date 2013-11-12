@@ -76,7 +76,7 @@ void recolour_circle(TImage *img,
   int r12=r1*r1;
   for (int y=-r1; y<=r1; y++)
     { int y2=y*y;
-      int bdx=int(sqrt(rad2-y2));
+      //      int bdx=int(sqrt(rad2-y2));
       int bdx1=int(sqrt(r12-y2));
       for (int x=-bdx1; x<=bdx1; x++)
         { int x2=x*x;
@@ -93,7 +93,7 @@ void recolour_circle(TImage *img,
 
 void recolour_topline(TImage *dst, 
                       TImage const *src, Point const &srctopleft,
-                      int depth, bool left, bool right) {
+                      int depth, bool /*left*/, bool right) {
   int bw=dst->height();
   int w=dst->width();
   for (int y=1; y<=bw; y++)
@@ -106,7 +106,7 @@ void recolour_topline(TImage *dst,
 void recolour_bottomline(TImage *dst, 
                          TImage const *src,
                          Point const &srctopleft,
-                         int depth, bool left, bool right) {
+                         int depth, bool left, bool /*right*/) {
   int bw=dst->height();
   int w=dst->width();
   for (int y=1; y<=bw; y++)

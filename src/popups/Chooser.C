@@ -1,6 +1,7 @@
 // Chooser.C
 
 #include "Chooser.H"
+#include <stdio.h>
 
 //////////////////////////////////// CItem ///////////////////////////////////
 
@@ -8,8 +9,8 @@ static string::size_type findword(string const &haystack,
 				  string const &needle,
 		    string::size_type pos=0) {
   string::size_type k=haystack.find(needle,pos);
-  printf("findword %s / %s %i -> %i\n",haystack.c_str(),needle.c_str(),
-	 pos,k);
+  printf("findword %s / %s %i -> %i\n",haystack.c_str(), needle.c_str(),
+	 int(pos), int(k));
   if (k==string::npos)
     return k; // at beginning, or not at all
   string b=" "; b+=needle;

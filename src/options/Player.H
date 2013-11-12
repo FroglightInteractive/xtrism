@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <iostream.h>
+#include <iostream>
 using namespace std;
 
 #include "../basics/KeyCode.H"

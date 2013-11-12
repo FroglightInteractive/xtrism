@@ -113,8 +113,8 @@ void Game::start() {
 
 void Game::quit(bool natural) {
   dbx(1,"Game::quit(natural=%i)",natural);
-  if (score)
-    ; // guinness->enter_hi();
+  // if (score)
+  //   guinness->enter_hi();
   del_lp_rk_sc();
   del_plpls();
   if (logger)
@@ -128,7 +128,7 @@ void Game::showbrick(FBPos const &pos, class PlPlayer *plp,
   vispit->addbrick(pos,plp!=plplayers[0],definitive);
   }
 
-void Game::hidebrick(FBPos const &pos, class PlPlayer *plp) {
+void Game::hidebrick(FBPos const &/*pos*/, class PlPlayer *plp) {
   vispit->rembrick(plp!=plplayers[0]);
   }
 

@@ -4,7 +4,7 @@
 #define _StatBoard_H
 
 #include <string>
-#include <vector.h>
+#include <vector>
 using namespace std;
 
 #include "../gfx/GBox.H"

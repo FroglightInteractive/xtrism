@@ -3,7 +3,7 @@
 #ifndef _Waker_H
 #define _Waker_H
 
-#include <list.h>
+#include <list>
 
 /* Suggestion: those classes that use sendwarn()'s code are _strongly_
    encouraged to contain a public anonymous enum containing labels for
@@ -17,7 +17,7 @@ class Waker {
     void dereg(class Sleeper const *sleeper);
   protected:
     void sendwarn(int code=0);
-    list<class Sleeper *> sleepers;
+  std::list<class Sleeper *> sleepers;
   };
 
 #endif
