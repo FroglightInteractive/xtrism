@@ -1,0 +1,77 @@
+# list of players
+# format is
+#   <plr nr> <full name>
+#   <start levels: bs1 .. bs4>
+#   <next box to the right or left (indicated by `<' or `>')>
+#   <keys alone: LEFT RIGHT ROT_CW ROT_CCW DROP ZAP>
+#   <keys when playing left: id>
+#   <keys when playing right: id>
+#   
+#   etc
+
+# * In current vsn, only the first plr is actually used!
+# * Start level is in terms of `virtual lines': speed is s.t. it will
+#   start to increase after <virtual lines> lines.
+# * <keys> are LL keycodes: use xev to find them for your keyboard
+# * In future vsn, the left/right keys are only used as defaults: they
+#   are really read from the `teams' file.
+# + Development note: how should xtrism write to this file w/o destroying
+#   the comments. Or shouldn't it preserve comments?
+
+
+
+1 Daniel Wagenaar
+25 35 30 20
+#128 95 80 40
+>D
+59 60 115 38 66 62
+39 40 115 38 66 41
+#59 60 64 38 66 62
+44 46 31 47 45 65
+#84 85 104 107 51 86
+
+5 Jennifer Lanski
+50 35 30 25
+>D
+44 46 31 47 45 50
+40 41 115 24 23 42 
+44 46 31 47 45 50
+
+1 Daniel Wagenaar
+#25 35 30 20
+128 95 80 40
+>D
+59 60 115 38 66 62
+39 40 115 38 66 41
+#59 60 64 38 66 62
+44 46 31 47 45 65
+#84 85 104 107 51 86
+
+11 Guest
+40 60 80 30
+>D
+59 60 64 38 66 62
+59 60 64 38 66 62
+84 85 104 107 51 86
+
+2 Steven de Rooy
+123 80 50 20
+>
+59 60 64 38 66 62
+59 60 64 38 66 62
+84 85 104 107 51 86
+
+3 Mischa Sallé
+123 80 50 20
+>
+59 60 64 38 66 62
+59 60 64 38 66 62
+84 85 104 107 51 86
+
+4 Arthur Wagenaar
+100 90 70 30
+>
+59 60 64 38 66 62
+59 60 64 38 66 62
+84 85 104 107 51 86
+
