@@ -31,16 +31,21 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
   _bpp(0), _scanlpad(0) {
 
   // going to open the Display
-  dbx(1,"TEnv::TEnv going to open display; addit=%p",addit);
-  fthrow((display=XOpenDisplay(addit)),"TEnv: Cannot open display");
-  dbx(2,".. display opened");
+  dbx(1,"TEnv::TEnv going to open display; addit=%s", addit);
+  //  char buffer[1000]; strncpy(buffer, addit, 999); buffer[999]=0;
+  display = XOpenDisplay(addit);
+  dbx(1, "display = %p", display);
+  if (!display)
+    athrow("TEnv: Cannot open display");
+  dbx(1, ".. display opened");
   screen=DefaultScreenOfDisplay(display);
 
   // going to determine optimal size for window
   int swidth=WidthOfScreen(screen);
   int sheight=HeightOfScreen(screen);
   actfactor=reso.best(swidth,sheight);
-
+  dbx(1,"best");
+  
   if (reso.fullscreen()) {
     wid = swidth;
     hei = sheight;
@@ -49,10 +54,12 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
     hei=reso.acty(actfactor);
   }
 
+  dbx(1, "cmap?");
   // going to create a suitable Colormap
   tcmap=new TCmap(display);
   visual=tcmap->visual();
-  
+  dbx(1, "cmap!");
+    
   // going to open a window
   XSetWindowAttributes attr;
     attr.background_pixel=rgb(TRGB(0,0,0));
@@ -63,6 +70,7 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
     attr.override_redirect=False; // [True for full screen shell?]
     attr.colormap=tcmap->colormap();
     attr.cursor=None; // [something nice in later vsn?]
+    dbx(1,"attr");
   drwb=window
     =XCreateWindow(display,DefaultRootWindow(display),  // display,parent
                    (swidth-wid)/2,(sheight-hei)/2,      // x,y
@@ -74,6 +82,7 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
                     CWCursor|CWColormap)                // valuemask
                    ,&attr                               // attributes
                    );
+  dbx(1,"win");
   XSizeHints xsh;
     xsh.flags=PAllHints;
     xsh.x=(swidth-wid)/2; xsh.y=(sheight-hei)/2;
@@ -97,7 +106,9 @@ TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
   */
 
   XClassHint xch;
-  strcpy(xch.res_name, "xtrism"); strcpy(xch.res_class, "XTrism");
+  char xtr[] = "xtrism";
+  char Xtr[] = "XTrism";
+  xch.res_name = xtr; xch.res_class = Xtr;
   XSetClassHint(display,window,&xch);
 
   wmdelw=XInternAtom(display,"WM_DELETE_WINDOW",False);

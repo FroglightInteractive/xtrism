@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "../basics/dbx.H"
 
 ////////////////////////////// TMFont ////////////////////////////////////////
 TMFont::TMFont(const TGFX &tgfx0, char *name, int size):
@@ -19,6 +20,7 @@ TMFont::TMFont(const TGFX &tgfx0, char *name, int size):
       name=buf;
     }
   font=XLoadQueryFont(tgfx.disp(),name);
+  dbx(1, "TMFont: name = %s", name);
   fthrow(font,"TFont: cannot find font");
   }
 

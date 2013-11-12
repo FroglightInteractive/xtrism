@@ -56,7 +56,7 @@ void global_init(int argc, char **argv) {
   gl_tenvp=new TEnv(TReso(16,12,minf,maxf,true),argc,argv,":0.0");
   dbx(1,"Actual factor: %i\n", gl_tenvp->actualfactor());
 
-  char fontpattern[]="-*-lucida-bold-r-*-*-%i-*-*-*-*-*-*-*";
+  char fontpattern[]="-*-bitstream charter-bold-r-*-*-%i-*-*-*-*-*-*-*";
   int fontsizes[]={ 8,10,12,14,18,24,INFTY };
   int maxsize=int(gl_tenvp->actualfactor()*.32);
   int idx=0;
