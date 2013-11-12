@@ -1,0 +1,20 @@
+// main.H
+
+#include "TestBed.H"
+#include "../env/TEnv.H"
+#include "../bytemap/RGBImage.H"
+
+class THP: public THPoll, public THRedraw {
+  public:
+    THP(TEnv const &env);
+    virtual ~THP();
+    TEnv const &tenv;
+    TestBed testbed;
+    void tpoll();
+    void done(class BBox const &bb);
+    void initdither(unsigned int noise);
+    unsigned int init(); // supposed to return noise level
+    void tredraw(int x, int y, int w, int h);
+  private:
+    RGBDither *dith;
+  };

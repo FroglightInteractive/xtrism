@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+# usage: diffsteef filename
+# compares ~/xtrism/src/filename with /tmp/trismstuff/filename
+
+diff ~/xtrism/src/$1 /tmp/trismstuff/$1

@@ -1,0 +1,7 @@
+log ccmalloc.report
+set only-count 0
+set check-overwrites 16
+set check-underwrites 16
+set check-free-space 1
+set keep-deallocated-data 1
+set library-chains 1

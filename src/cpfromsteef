@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+# usage: cpsteef filename
+# copies a file /tmp/trismstuff/filename to ~/xtrism/src/filename,
+# and checks it in
+
+co -l ~/xtrism/src/$1
+cp  /tmp/trismstuff/$1 ~/xtrism/src/$1
+ci -u -m"From Steef" ~/xtrism/src/$1

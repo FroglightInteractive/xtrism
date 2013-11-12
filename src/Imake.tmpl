@@ -1,0 +1,28 @@
+XCOMM Standard makefile for XTrism
+XCOMM Do not edit Makefiles - edit the Imakefile and Imake.tmpl!
+XCOMM Do not even edit Imakefiles - use `make makefiles' to re-create them!
+
+#include INCLUDE_IMAKEFILE
+
+SRCS =	*.C
+INCS =	$(R6XINCDIR) -I/usr/include/g++
+XCOMM DEBUG = 
+XCOMM DEBUG = -g
+
+R6XINCDIR = -I/usr/X11R6/include
+
+CFLAGS = ${DEBUG} -Wall -W -Wno-inline -Woverloaded-virtual -Wno-unused -c ${PROFILE} -mpentium
+
+lib.a: lib.a($(OBJS))
+
+depend: $(SRCS)
+	makedepend -Y -- $(CFLAGS) -- $(SRCS) 2> /dev/null
+
+(%.o):	%.o
+	ar cr $@ $<
+%.o:	%.c
+	@echo -e '\n$<'
+	gcc $(CFLAGS) -o $@ $< $(INCS)
+%.o:	%.C
+	@echo -e '\n$<'
+	g++ $(CFLAGS) -o $@ $< $(INCS)

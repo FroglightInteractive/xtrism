@@ -1,0 +1,92 @@
+Notes on `basics'
+
+* This file last updated on 7 Feb.
+* All source files checked for possible dangers, and appropriate warnings
+  included here. (7 Feb)
+
+1. BBox: contains classes Point and BBox
+
+1.1 Point
+  constr.: Point(x,y)
+  methods: int x(), y()
+  warning: -
+
+1.2 Area
+  constr.: Area(w,h), Area(wh)
+  methods: int w(), h()
+  warning: -
+
+1.3 BBox
+  constr.: BBox(lx,ty,rx,by), BBox(Point,Area), BBox()
+  methods: |= &= & (bbox); 
+           bool empty(), intersect(bbox), contains(x,y), contains(pt);
+	   int left(), top(), right(), bottom(), width(), height();
+	   Point topleft(); Area area();
+	   addmargin(l,t,r,b), moveto(x,y), moveto(Point),
+	   resize(w,h), resize(Area)
+  warning: construction and resize() may leave r<l or b<t. Use empty() to
+	   test for emptyness before assuming +ve area.
+
+2. Byte: class Byte = unsigned char
+   warning: -
+
+3. Filename: filename representation
+   constr.: Filename(string fn), ()
+   methods: +=(string/char*), addsuffix(string/char*);
+	    char *name(); bool exist(bool cdir)
+   notes:   +=() adds an OS-dependent directory separator (UNIX: `/')
+            addsuffix() adds an OS-dependent suffix separator (UNIX: `.')
+   warning: exist(true) tries to create the containing directory if the
+	    file doesn't exist. There is no guarantee that this succeeds:
+	    errors in mkdir() remain unreported.
+
+4. Infty: defines INFTY=10^8
+   warning: INFTY != MAXINT 
+
+5. KeyCode: class TKeyCode = short int
+   warning: -
+
+6. Throw: defines fthrow, tthrow and athrow
+   note:    Use of athrow() is recommended, because it writes the message
+	    to stderr before continuing. This avoids losing error messages
+	    in the case of throw before exception caught.
+   warning: -
+
+7. Word: class Word = 32 bits unsigned
+   warning: This is impl.dep. Current vsn uses unsigned long and doesn't
+	    explicitly check its size.
+
+8. dbx: void dbx(lvl,fmt,...): Debug output, printf style.
+	lvl = priority; 0=extreme, 1=almost toplevel, 4=happens every poll
+   warning: -
+
+9. getline:
+   : string getline_nocmt(istream): Reads one line from an istream
+	into a string, skipping any empty lines, and lines starting with
+	any of [%#!;/]. Returns "" on eof only.
+   : skipwhite(istream): Skips spaces and tabs, but not newlines
+	on istream.
+   : skipcmt(istream): Skips commentary lines
+   : skiptoeol(istream): Skips upto and incl. next eol
+   warning: -
+
+10. stringtok: class stringtok
+   constr.: stringtok(string), ()
+   methods: =(string): resets.
+	    string token(char delim/char *delims)
+   notes:   cf. strtok, but for class string.
+            token() returns "" if there are no more tokens.
+   warning: Avoid inf. loop at end of string
+
+11. timetest: class TimeTest
+   constr.: TimeTest()
+   methods: reset(), print()
+   note: For testing purposes
+
+12. vecio: stream operators on vectors
+   : ostream << vector<T>
+   : istream >> vector<T>
+   : string >> vector<T>
+   warning: - Elements must be <whitespace> separated on the istream.
+	    - operator>>(istream,T) must exist.
+	    - The data is APPENDED to the vector.

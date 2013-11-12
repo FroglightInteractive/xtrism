@@ -1,0 +1,51 @@
+         Pudding
+
+           or
+
+ How to Collapse a Pit?
+
+
+Consider the following situation in a team game:
+ 
+|  bb     |
+|  b      |
+|  b a    |
+|X   a XX |
+|XXXXaXXXX| 1
+|XXXXaXXXX| 2
+|XXXX XXXX| 3
+|XXXX XXXX| 4
+|XX XXXXXX| 5
+|XX XXXXXX| 6
+|XXX XXX X| 7
+|XXXX XX X| 8
+|=========|
+
+Player A drops brick a, causing lines 1..4 to disappear. When player B
+drops brick b, lines 4 and 6 should disappear as well. However, in the
+Archimedes version, if plr B is quick enough, brick b may be stuck in
+the air, since not all of lines 1..4 may have disappeared at the time
+of the drop of brick b. This is a bug.
+
+Proper way to deal with this situation:
+
+  1. When brick a is dropped, flag A as no brick, and if there are any
+lines to be collapsed, set a flag (in LogPit) `COLLAPSING'.
+  2. Every dt_COLLAPSE ms, collapse one line (starting from the top).
+As soon as no further lines are collapsable, wait a further
+dt_NEWBRICK before producing a new brick for player A, and unflagging
+him `NOBRICK'.
+  3. While a plr A is marked `NOBRICK', his WishList is not polled *):
+there is no brick in the air. In particular, plr A cannot drop another
+brick before the previous collapse has been fully handled.
+  4. In the mean time, each time a line disappears _below_ brick b,
+the latter is moved down as well. This does not interfere with b's
+normal godown.
+  5. If b lands (or is dropped) while the LogPit is still
+`COLLAPSING', the time of the attempted drop is recording for the
+purpose of scoring, and B is marked `NOBRICK: DELAYED_DROP'.
+  6. When unmarking `NOBRICK', check if any plr is marked DELAYED_DROP,
+and if so, execute the landing.
+
+
+*) WishList::logkey is called, but ::poll is not.

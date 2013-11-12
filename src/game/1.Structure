@@ -1,0 +1,95 @@
+Objects involved in a game of Trism
+-----------------------------------
+
+Kronos: Timekeeper.
+ - Knows when a brick is about to godown() next. (Each brick has its own
+Kronos.)
+
+LogPit: Logical state of a pit.
+ - In fight mode, there are several LogPits.
+
+BrickEnv: The environment for a falling brick.
+ - Contains pointers to all relevant LogPits, and to the other
+player's falling brick for 2p games.
+
+FallBrick: The falling brick.
+ - Its bno, rot, x, y. Also willing_to_swap and pending_godown flags
+
+Referee: Assigns score to a fallen brick.
+ - Note that even in team mode, each player has its own Kronos and Referee.
+
+Score: The score itself: a number.
+
+Ranker: score->rank function.
+ - Knows about other attained scores; can rank the present score quickly.
+
+Guinness: The book of records.
+
+Keyboard: Virtual keyboard hardware.
+ - Distributes raw keyboard events to all interested parties.
+
+Controls: Generic form of the above mentioned interested party.
+
+KbdBuffer: Buffers controls-state changes.
+
+ControlBuf: specific form of Controls to interface to a KbdBuffer.
+
+WishList:
+ - Holds wishes read from the KBuffer until they can be realised by
+the FallBrick. eg `drop protection' is managed at this level.
+
+Fortuna: Provider of `next' bnos.
+ - For 2p modes, there are 2 Fortunas. They will have to communicate.
+
+VisPit: backup of screen.
+ - For each cell in the pit, maintains the brickcell contained
+therein. (As a TSprite *.)
+ - In fight mode, special codes must be provided for recoloured bricks.
+
+ScreenPit: the pit as seen on screen.
+ - Not the actual pixmap, but the positions and such. This object will
+perform the drawing and undrawing of bricks, and the visual
+representation of pudding. It will rely on the VisPit to handle redraw()
+events.
+
+NextBox: shows the next brick on screen.
+ - As for ScreenPit, no pixmaps are kept here.
+
+StatBoard: notice board for score, lines, ranking etc.
+
+---
+
+PlPlayer: collection of all data pertaining to a playing player.
+ - A Player&, Kronos, FallBrick, BrickEnv, Referee, KbdBuffer,
+ControlBuf, WishList, Fortuna, NextBox*
+Note: PlPlayer doesn't destruct the NextBox at the end of the game:
+this is the responsibility of the Game descendant..
+
+---
+
+Game: all the stuff for one game.
+ - Basically pointers to some of the above objects. Registers itself with
+a Session (see below).
+
+Session: one or more games.
+ - Session records all games that are being played simultaneously.
+This is usu. just one, but for 2p2p mode it will be two.
+
+----------------------------------------------------------------------
+
+Rough sketch of how to set up a game:
+- Construct a Session.
+- Construct one or more Game descendants (ie a SoloGame/TeamGame/etc).
+- Call session.start_game(game).
+Either:
+- Poll TEnv until session.quitable() returns true.
+- Destruct first the Game descendants, then the Session.
+- Return to the main loop.
+Or:
+- Return to main loop directly, and register some wrapper that is a descendant
+  of VirtHandler<Game*>, when constructing the Session. This wrapper is
+  then called when any Game ends. At this point, check session.quitable(),
+  and destruct the Games and Session if applicable. Such a wrapper could also
+  display some end of game statistics before destroying the Session, by
+  creating a new TopBox over the Session. To avoid the Session redrawing 
+  itself once during destruction of the statistics screen, call setdefunct().

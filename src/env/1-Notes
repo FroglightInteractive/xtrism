@@ -1,0 +1,200 @@
+Notes on the Trism Environment
+------------------------------
+
+(This doc typed on 30 Oct 1997)
+(Last update: 7 Feb 1998)
+
+A. TEnv.H
+
+A.1. Redrawing
+
+  A.1.1. Redrawing is generally initiated by the operating system.
+  A.1.2. When a redraw handler is removed from the stack, the one
+directly below is called to do a full redraw.
+  A.1.3. Note that the converse isn't true: no special action is
+undertaken at the moment a redraw handler is registered.
+
+A.2. Enter/leave
+
+  A.2.1. At the moment new mouse, motion and leave handlers are
+registered, the old leave handler is called if the mouse was in the
+window.
+  A.2.2. A newly installed motion handler will be called immediately
+to notify it of the current mouse position.
+  A.2.3. When mouse, motion and leave handlers are deregistered, the
+next highest motion handler will be called immediately to notify it of
+the current mouse position.
+
+A.3. Synchronised polling
+
+  A.3.1. The THStack sync may be used to request calls at the moment
+of a VSYNC event.
+  A.3.2. Routines on this stack should return quickly.
+  A.3.3. In XWindows, no VSYNC information is available. The sync
+stack is therefore called just after the poll stack. Using the sync
+stack instead of the poll stack may reduce flickering when porting to
+other environments where VSYNC events are available.
+
+A.4. Multithreading
+
+  A.4.1. In theory, TEnv should be multithreaded. That is, it should be
+OK to (de)register handlers from within such handlers. Multithreadedness
+hasn't been tested very seriously though, so if you plan to do something
+wild, check the source...
+
+A.5. class TReso: Helper for TEnv: finds optimal ww/wh given screensize
+
+A.6. classes THMML, THKey, THRedraw, THPoll, THSync, THQuit:
+       event handler prototypes
+  constr.: -
+  methods: MML: tmbc, tmotion, tleave; 
+	   Key: tkey; Redraw: tredraw; Poll: tpoll; Sync: tsync; Quit: tquit
+  warning: -
+
+A.7. class template THStack: a stack of event handlers
+  constr.: THStack()
+  methods: push(), pop(), top()
+  warning: Make sure that the handlers stay in existence until popped.
+
+A.8. class TCallBack: general callback mechanism
+  constr.: -
+  methods: virtual void callback(int code=0)
+  notes:   abstract base class
+
+A.9. class TCBList: a list of TCallBack*,code.
+  constr.: -
+  methods: empty(), bool();
+	   callpop(): call'n'pops oldest TCallBack in list
+	   callpopall(): call'n'pops all.
+	   reg(TCallBack*,code): register a new callback
+	   dereg(TCallBack* cb): dereg. all call backs for cb
+  note: - A TCallBack may dereg. itself even while threaded.
+
+A.10. class TEnv: see above
+  notes: - It is allowable for handlers to deregister while threaded.
+  warning: - See THStack::warning
+	   - This class can change the auto-repeat setting of the display.
+	     If it is not properly destructed (ie the program terminates
+	     ungracefully), this setting is not reset. Whether pointer-grab
+	     is reset under such conditions depends on the X implementation.
+
+A.11. Keyboard handling
+During a key() event (only), you may use lastchar() to obtain an ASCII repr.
+Apart from codes 32-126, the following are returned:
+       8      Backspace
+       9      Tab
+      13      Return/Enter
+      27      Escape/Pause/Break
+     127      Delete
+256+8/9/10/11 Left/Right/Down/Up
+512+8/9/10/11 Home/End/PgDn/PgUp
+
+B. TCmap
+
+B.1 class TRGB: RGB 8+8+8 bit colour rep
+  constr.: TRGB(r,g,b), TRGB(grey), TRGB(), TRGB(char*/string)
+  methods: =(TRGB), +=(TRGB), -=(TRGB), +=(int), -=(int)
+  notes: - RGB values are automatically clipped to 0..255 after every op.
+         - TRGB(string) takes "int int int" or "float,float,float",
+	   with int in 0..255 resp. float in [0,1).
+  warning: TRGB(string) does NOT take an X colour name.
+
+B.2 class TCmap: colour map abstraction
+  constr.: TCmap(/* Display * */)
+  methods: TCol(TRGB); TRGB(TCol);
+	   TCol lighter(TCol, int).
+  warning: Depending on the visual class, either table lookup or direct
+	   calculation is used for the conversions. Either way, the
+	   conversion is fairly quick, but NOT negligible in general.
+
+C. TDrawCol: a colour for plotting
+  constr.: TDrawCol(TGFX, TRGB/TCol, (TSprite*))
+  methods: point(x,y), line(x,y,x',y'), rline(x,y,dx,dy),
+	   rectangle(lx,ty,w,h,fill), rectangle(BBox,fill),
+	   ellipse(cx,cy,hw,hh,fill), circle(cx,cy,r,fill)
+  warning: -
+
+D. TFont
+
+D.1. class TMFont: master font
+  constr.: TMFont(TGFX, fontname, (size))
+  methods: -
+  note:    The fontname may contain %i, in which case the size is inserted
+	   at that point.
+  warning: Fontnames are device dependent. 
+
+D.2. class TFont: usable font
+  constr.: TFont(TMFont, TRGB, TRGB)
+  methods: int stringwidth(str);
+           int ascent(), descent(), height(), xheight();
+	   TDrawCol backg();
+           write/writebg(str,x,y,align,totalw).
+
+E. TGFX
+
+E.1. class TGFXP: base class for TEnv.
+  constr.: for use by TEnv only
+  methods: TCol rgb(rgb);
+	   TCol grey(grey);
+	   TCmap &cmap();
+	   disp(), win() iff TPRIVATE
+  note:    This header is intended to avoid having to include TEnv in code
+	   that doesn't really need it. However, the success rate is not
+	   very high.
+
+E.2. class TGFX: A pointer to TGFXP. A relict, really: use TGFXP& instead
+  constr.: TGFX(TGFXP)
+  methods: rgb,grey,cmap as TGFXP
+  warning: This class needn't exist: just use TGFXP& directly...
+
+F. TImage
+  constr.: TImage(TEnv,w,h)
+  methods: int width(), height(), depth(); TEnv tenv();
+	   void putpix(x,y,TCol);
+	   TCol getpix(x,y);
+  notes: - In the UNIX vsn, TImage is based on XImage.
+	 - putpix() and getpix() are supposed to be quick. In the UNIX vsn,
+	   they are inline and use the XImage's put_pixel() and get_pixel()
+	   routines directly.
+  warning: - Device dependent header file...	
+	   - TSprites can be written to the main window *much* quicker in the
+	     UNIX vsn.
+
+G. TImageFile
+  constr.: TImageFile(TEnv, basename, read, write)
+  methods: TImage *readimage(name/num, dest=0)
+	   int addimage(TImage*, name)
+	   static bool exist(TEnv, basename)
+  notes: - The actual filename is the basename plus the cmap's id().
+	 - Exceptions of type TImageFile::Error may be thrown.
+	 - For readimage() with dest!=0, the sizes must match.
+	 - ATM, no direct rendering is available: construct a TSprite.
+  warning: For readimage() with dest==0, new TImage is used to allocate space.
+	   YOU are responsible for deleting the TImage after use.
+
+G.1 class TImageFile::Error
+  constr.: private
+  methods: char *descr()
+	   TImageFile::Code code()
+  notes:   code() is one of FILENOTFOUND, READERROR, WRITEERROR,
+	   IMAGENOTFOUND, NOMEMORY, BADMATCH or UNK.
+
+H. TSprite
+  constr.: TSprite(TGFX, w,h), TSprite(TSprite), TSprite(TImage)
+  methods: read(const TImage);
+	   tilerectangle(BBox), put(x,y), partput(BBox, x,y);
+	   int width(), height().
+  notes: - In UNIX vsn, based on Pixmap, therefore much quicker rendering
+	   than TImage.
+	
+I. TTime
+  constr.: TTime(TTime::Setup)
+  methods: static int ttime(double t); static double sec(int t);
+	   =(Setup);
+	   += -=(dt)
+	   + -(dt), -(TTime);
+	   < <= > >=(TTime)
+	  int intrep()
+	
+
+J. TXID: An alias for XID to avoid having to include X headers in header files

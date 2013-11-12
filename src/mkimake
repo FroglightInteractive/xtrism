@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# Usage: mkimake <stripdirs>
+
+ORIGDIR=`pwd`
+DIR=`basename $ORIGDIR`
+STRP=0
+for POSSI in $*; do
+  [[ $DIR == $POSSI ]] && STRP=1
+done
+{ echo -n 'OBJS = ' ; ls *.(C|c) | grep -vi test |grep -vi tst | sed -e 's/\.\(C\|c\)$/\.o/' | tr '\n' ' ' } >| Imakefile
+echo >> Imakefile
+[[ $STRP == 1 ]] && echo "DEBUG = " >> Imakefile || echo "DEBUG = -g" >>Imakefile
+

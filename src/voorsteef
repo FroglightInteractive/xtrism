@@ -1,0 +1,5 @@
+#!/bin/zsh
+tar cvzf /tmp/trism.tgz Makefile mkclean mkimake Imake.tmpl */Makefile */*.(C|H)
+
+# cd /usr/local/lib/xtrism
+# tar cvzf /tmp/trismdat.tgz bricks glopts hisc players probs teams sound/*.sw

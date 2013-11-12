@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+# mkclean for XTrism
+
+echo Removing backup files
+rm -f *~ \#*\#
+rm -f */*~ */\#*\#
+
+echo Removing core dumps
+rm -f core */core
+
+echo Removing libraries
+rm -f */*.a
+
+echo Removing objects
+rm -f */*.o
+
+echo Removing Makefiles
+rm -f */Makefile*
+
+echo Removing Imakefiles
+rm -f */Imakefile*
+
+echo Done

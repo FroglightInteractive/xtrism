@@ -1,0 +1,35 @@
+options
+-------
+
+Player: information for one player:
+- id = identification number (a short)
+- name
+- level = levels for each blockset (vector of unspecified size)
+- position of next box: left or right
+- keys when playing alone, at the left, at the right.
+
+It can read and write its contents from/to an istream/ostream in the
+following format:
+
+ID PLAYER_NAME
+LEVEL0 LEVEL1 ...
+LEFT/RIGHT_INDICATOR (`<' or `>')
+KEYS_ALONE0 KEYS_ALONE1 ...
+KEYS_LEFT0 KEYS_LEFT1 ...
+KEYS_RIGHT0 KEYS_RIGHT1 ...
+
+Empty lines and those starting with ; # % or / are ignored. Spacing is
+not critical, but tabs ('\t') haven't been tested.
+
+
+GlobalOpts: global options:
+- default keys alone/left/right
+
+It can read and write its contents from/to an istream/ostream in the
+following format:
+
+KEYS_ALONE0 KEYS_ALONE1 ...
+KEYS_LEFT0 KEYS_LEFT1 ...
+KEYS_RIGHT0 KEYS_RIGHT1 ...
+
+More global options are likely to be added later.

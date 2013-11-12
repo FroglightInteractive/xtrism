@@ -1,0 +1,28 @@
+Inherent security of classes
+----------------------------
+
+Aim: All XTrism classes should be inherently safe, ie, it should not be
+     possible to use them in such a way that `strange errors' occur.
+
+Obviously, this aim is unattainable, since it would involve too much
+asserting. However, a file `1-Notes' in each directory specifies what
+dangers exist for each class. These dangers mostly have to do with unsafe
+memory management: ie risk of dangling pointers.
+
+Progress is as follows:
+
+- On 7 Feb, I have checked all sources in `basics' and `env', and created
+  `warning' sections in their `1-Notes'.
+
+* $Id: 1-Certification,v 1.1 1998/05/15 10:25:00 root Exp $
+
+> $Log: 1-Certification,v $
+> Revision 1.1  1998/05/15 10:25:00  root
+> Initial revision
+>
+> Revision 1.2  1998/05/15 10:11:40  root
+> *** empty log message ***
+>
+> Revision 1.1  1998/05/15 10:08:53  root
+> Initial revision
+>

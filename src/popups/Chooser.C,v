@@ -1,0 +1,88 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	98.12.14.15.26.17;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@// Chooser.C
+
+#include "Chooser.H"
+
+//////////////////////////////////// CItem ///////////////////////////////////
+
+static int findword(string const &haystack, string const &needle) {
+  int k=haystack.find(needle);
+  if (k<=0)
+    return k; // at beginning, or not at all
+  string b=" "; b+=needle;
+  return haystack.find(b);
+  }
+
+bool CItem::match(string const &a) const {
+  // Warning: incorrectly thinks that "S d d" matches "Steven de Rooy"
+  // Insert search for initials here?
+  if (a.size()==0)
+    return true;
+  int i=0;
+  while (i>=0)
+    { int j=a.find(' ',i);
+      if (j<0)
+        j=a.size();
+      string b=a.substr(i,j-i);
+      int k=findword(text,b);
+      if (k<0)
+        return false;
+      i=a.find_first_not_of(' ',j);
+    };
+  return true;
+  }
+
+/////////////////////////////////// Chooser //////////////////////////////////
+
+Chooser &Chooser::operator<<(CItem const &item) {
+  list<CItem>::iterator i=items.begin();
+  while (i!=items.end() && before(*i,item))
+    ++i;
+  items.insert(i,item);
+  return *this;
+  }
+
+void Chooser::resort(bool history) {
+  before=CItemBefore(history);
+  items.sort(before);
+  }
+
+////////////////////////////// Chooser::Iterator /////////////////////////////
+Chooser::Iterator::Iterator(string const &pattern0, list<CItem> const &lst):
+  pattern(pattern0), end(lst.end()) {
+  i=lst.begin();
+  if (i==end || (*i).match(pattern))
+    return;
+  operator++();
+  }
+
+Chooser::Iterator &Chooser::Iterator::operator++() {
+  if (i!=end)
+    while (++i!=end)
+      if ((*i).match(pattern))
+        break;
+  return *this;
+  }
+
+@

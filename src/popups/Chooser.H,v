@@ -1,0 +1,85 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	98.12.14.15.26.23;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@// Chooser.H
+
+#ifndef _Chooser_H
+#define _Chooser_H
+
+#include <string>
+#include <list.h>
+
+class CItem {
+  public:
+    CItem(string const &txt, int hist=0, int idv=0): text(txt),
+      id(idv), histval(hist) { }
+    bool match(string const &a) const;
+    bool beforealpha(CItem const &other) const { return text<other.text; }
+    bool beforehistory(CItem const &other) const {
+      return histval<other.histval; }
+    string const &gettext() const { return text; }
+  private:
+    string text;
+    int id;
+    int histval;
+  };
+
+class CItemBefore {
+  public:
+    CItemBefore(bool hist_not_alph):
+      before(hist_not_alph?&CItem::beforehistory:&CItem::beforealpha) { }
+    bool operator()(CItem const &a, CItem const &b) const {
+      return (a.*before)(b); }
+  private:
+    bool (CItem::*before)(CItem const &b) const;
+  };
+
+class Chooser {
+  public:
+    class Iterator {
+      public:
+        string const &text() const { return (*i).gettext(); }
+        bool good() const { return i!=end; }
+        Iterator &operator++();
+      private:
+        friend class Chooser;
+        Iterator(string const &pattern, list<CItem> const &lst);
+      private:
+        string pattern;
+        const list<CItem>::const_iterator end;
+        list<CItem>::const_iterator i;
+      };
+  public:
+    Chooser(bool history): before(history) { }
+    Chooser &operator<<(CItem const &);
+    Iterator grep(string const &pattern) { return Iterator(pattern,items); }
+    void resort(bool history);
+  private:
+    list<CItem> items;
+    CItemBefore before;
+  };
+
+
+
+
+#endif
+@

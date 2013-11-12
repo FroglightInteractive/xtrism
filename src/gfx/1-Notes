@@ -1,0 +1,102 @@
+* This doc typed on 8 Feb 1998
+
+A. GBox
+
+A.1 Construction
+
+  1.1 At construction time, the parent and size must be specified, but
+placement is done at a later stage.
+  1.2 The caller is responsible for calling the GBParent's newchild().
+
+A.2 Placement
+
+  2.1 GBoxes are positioned through their GBParent's placechildren().
+  2.2 To resize a GBox at a later stage, use its resize(). This does NOT
+force the parent to re-layout it, or its siblings. After a batch of resize()
+calls, YOU must call the GBParent's placechildren().
+  2.3 The only way to move a GBox, is to call its parent's losechild(), and
+then call newchild with new positioning. Any siblings that were placed
+relative to this child, will however be undepend()-ed.
+
+A.3 Destruction
+
+  3.1 On destruction, GBox calls its parent's losechild(), so all siblings
+are properly undepend()ed.
+
+A.4 Redrawing
+
+  4.1 No automatic redraw is forced by placechildren().
+  4.2 To force a redraw, call draw().
+  4.3 Automatic redrawing will not work if there's no TopBox as grandparent.
+
+A.5 Focus and selection
+
+  5.1 Keyboard focus means that a GBox will receive key() events before any
+other GBox. If a GBox has keyboard focus, then so does its parent, and
+its parent's parent, etc, but NO OTHER GBox has focus at the same time.
+  5.2 Keyboard focus is offered by the parent through offerfocus(). To accept
+the offer, call takefocus() and return true.
+  5.3 Keyboard focus may be voluntarily released through losefocus(). This
+may cause the parent to call offerfocus() immediately. Do not accept focus
+just after you've released it. This confuses the user.
+  5.4 The parent may reclaim focus (eg for a sibling) through 
+forcedlosefocus().
+  5.5 Being selected doesn't give any similar priviliges. Selection may not
+be unique, if an ancestor has its sharedsel flag true. Otherwise, the
+process of gaining and losing selection is as for focus.
+
+A.6 Key events
+  6.1 Key events are offered first to the focus GBox, and then to all others
+in reverse creation order, until one key() handler returns true, or a GBox
+with popup status is encountered.
+
+A.7 Mouse, motion, enterleave
+  7.1 Mouse events are passed through mouse().
+  7.2 All-button release is marked by a special mouse(0,0,pt) call.
+  7.3 You will never receive a mouse() call before receiving an
+enterleave(true,xxx) call, or after an enterleave(false,xxx) call.
+  7.4 If you want to be told about mouse-button-release even if the mouse
+has left your window (eg for a popup menu), call claimmouse().
+  7.4.1 You may only call claimmouse() in direct response to a mouse() call,
+and you must return true from this mouse() call.
+  7.4.2 You may call relmouse() to give up your special status. Otherwise,
+you will lose it as soon as all buttons are released.
+
+A.3 Warnings: see GBParent
+
+B. GBParent
+
+B.1 Placement of children
+
+  1.1 Children's placement is defined though newchild(), and executed through
+placechildren().
+  1.2 The positions of each of the four edges of a child may be defined
+relative to a sibling or to the parent.
+  1.3 If both left and right, (or top and bottom) edges are specified, the
+child is part of a `chain'. A chain is a list of one or more children that
+fill up a space (ends determined by parent or siblings). If this space is
+fixed, the margins between each chain element is scaled to fit. If it is
+variable - as in the case of an autoresizing parent - the size of the chain
+determines the size of the environment.
+  1.4 A child is placeable if it is fixed to the parent, or to other placeable
+children. A chain is placeable if both of its edges are placeable.
+  1.5 Children are checked for placeability iteratively. If at some point
+no more children are placeable, an exception is thrown. Note that placeability
+in the horizontal and vertical directions is completely independent.
+
+B.2 Warnings
+
+When a parent is dying, it checks all its children for killability. If any
+non-killable children remain, an exception is thrown.
+
+C. TopBox
+
+B.1 Deregistration of handlers
+
+  1.1 It's OK for poll and sync handlers to dereg themselves during the call.
+
+B.2 Self-destruction of children
+
+  2.1 Children must not destruct themselves while threaded through any of
+their handlers: TopBox does not like children dying while it is tending them.
+  2.2 To self-destruct from a handler, request a callback from TEnv.

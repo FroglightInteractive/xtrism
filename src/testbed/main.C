@@ -1,0 +1,83 @@
+#include <string>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "main.H"
+#include <exception>
+
+void my_exc() {
+  fprintf(stderr,"XTrism: my_exc (Unexpected exception)\n");
+  exit(1);
+  }
+  
+void my_term() {
+  fprintf(stderr,
+          "XTrism: my_term (eg. exception thrown before exception caught)\n");
+  exit(1);
+  }
+
+THP::THP(TEnv const &env): tenv(env), testbed(env) {
+  dbx(2,"THP::THP");
+  dith=0;
+  int mm=env.height()<?env.width();
+  for (int a=0; a<mm; a++)
+    { testbed.timage.putpix(a,a,123);
+      testbed.timage.putpix(env.width()-1-a,a,191);
+    }
+  testbed.tsprite.read(testbed.timage);
+  unsigned int noise=init();
+  if (noise)
+    initdither(noise);
+  }
+
+void THP::initdither(unsigned int noise) {
+  dith=new RGBDither(testbed.timage,testbed.rgbmap,noise);
+  }
+
+THP::~THP() {
+  if (dith)
+    delete dith;
+  }
+
+void THP::tredraw(int x, int y, int w, int h) {
+  testbed.tsprite.partput(BBox(x,y,x+w,y+h),Point(x,y));
+  }
+
+void THP::done(BBox const &bb) {
+  if (dith)
+    { if (bb.left()!=0 || bb.width()!=testbed.rgbmap.width())
+        athrow("THP: When dithering, must do per entire line");
+      dith->dither(bb.top(),bb.bottom());
+    }
+  else
+    rgbimage(testbed.timage,testbed.rgbmap,bb);
+  testbed.tsprite.read(testbed.timage,bb,bb.topleft());
+  tredraw(bb.left(),bb.top(),bb.right(),bb.bottom());
+  }
+
+int main(int argc, char **argv) {
+  try {
+    int r=0;
+    set_terminate(&my_term);
+    set_unexpected(&my_exc);
+    dbx(1,"start of main");
+    
+    int minf=80;
+    int maxf=500;
+    if (argc>2 && strcmp(argv[1],"-size")==0)
+      minf=maxf=atoi(argv[2]);
+    TEnv tenv(TReso(4,3,minf,maxf),argc,argv,":0.0");
+    THP thp(tenv);
+    tenv.reg_poll(&thp);
+    tenv.reg_redraw(&thp);
+    tenv.loop(10);
+    }
+  catch (string &s)
+    { printf("exc:main.string: %s\n",s.c_str()); }
+  catch (char *s)
+    { printf("exc:main.char*: %s\n",s); }
+  catch (...)
+    { printf("exc:main....: unknown expection\n"); }
+  dbx(1,"end of main");
+  return 0;
+  }
