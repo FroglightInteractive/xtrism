@@ -30,6 +30,8 @@ class TEnv: public TGFX {
          char const *addit=0 /* display name for X */);
     ~TEnv();
 
+    void hideCursor();
+    void restoreCursor();
     int actualfactor() const { return actfactor; };
     void loop(int nice=0);
     void reg_keyboard(THKey *h) { keyboard.push(h); }

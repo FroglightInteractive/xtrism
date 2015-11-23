@@ -105,7 +105,10 @@ inline float zetag(float x, float y) { // z coord for ground
   float b=y+2*BETA_g*H_g*x2;
   float a=DELTA*BETA_g*H_g+BETA_g*H_g*x2/DELTA;
   float c=DELTA*(y-H_0)+DELTA*BETA_g*H_0*x2;
-  return (sqrt(b*b-4*a*c)-b)/(2*a);
+  float D = b*b-4*a*c;
+  if (D<0)
+    D = 0;
+  return (sqrt(D)-b)/(2*a);
   }
 
 inline float xi(float x, float zeta) { // x coordinate for clouds & ground

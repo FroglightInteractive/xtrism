@@ -19,11 +19,14 @@ Session::Session(TEnv &tenv0, class GBParent *gbp0,
   t=float(bgbbox.top())/tenv.height();
   r=float(bgbbox.right())/tenv.width();
   b=float(bgbbox.bottom())/tenv.height();
+  tenv.hideCursor();
   }
 
 Session::~Session() {
   dbx(1,"Session::~Session");
+  tenv.restoreCursor();
   }
+
 
 class ByteMap *Session::makebm(BBox const &bb) {
   return new BrickCell(bb.width(),bb.height());
