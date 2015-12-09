@@ -8,7 +8,7 @@ BINDIR = /usr/local/bin
 DATADIR = /usr/local/lib/xtrism
 
 TRISM_ESD = false
-#true
+#TRISM_ESD = true
 SND = dsp
 #SND = esd
 

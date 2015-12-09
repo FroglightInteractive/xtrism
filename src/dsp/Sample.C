@@ -17,9 +17,14 @@ Sample::Sample(char const *name) throw (SampleExc) {
   data=0;
   char buf[1000];
   int i;
-  if ((i=readlink(name,buf,1000))<0)
-    { perror("Sample: readlink"); throw SampleExc(); }
-  buf[i]='\0';
+  if ((i=readlink(name,buf,1000))<0) {
+    strncpy(buf, name, 999);
+    // perror("Sample: readlink");
+    // perror(name);
+    // throw SampleExc();
+  } else {
+    buf[i]='\0';
+  }
   
   char *minus=strrchr(buf,'-');
   if (!minus)
