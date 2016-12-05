@@ -46,7 +46,7 @@ static int gl_inited=false;
 
 void global_init(int argc, char **argv) {
   int minf=20;
-  int maxf=100;
+  int maxf=300;
   if (argc>2 && strcmp(argv[1],"-size")==0)
     minf=maxf=atoi(argv[2]);
   dbx(1,"global_init()");
@@ -57,7 +57,7 @@ void global_init(int argc, char **argv) {
   dbx(1,"Actual factor: %i\n", gl_tenvp->actualfactor());
 
   char fontpattern[]="-*-bitstream charter-bold-r-*-*-%i-*-*-*-*-*-*-*";
-  int fontsizes[]={ 8,10,12,14,18,24,INFTY };
+  int fontsizes[]={ 8,10,12,14,18,24,36,48,72,96,INFTY };
   int maxsize=int(gl_tenvp->actualfactor()*.32);
   int idx=0;
   while (fontsizes[idx+1]<=maxsize)

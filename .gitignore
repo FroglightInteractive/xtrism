@@ -1,4 +1,5 @@
+src/Makefile
+xtrism.pri
 xtrism
-Imakefile
-*.bak
-*.timg
+cache
+build
