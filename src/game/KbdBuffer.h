@@ -4,8 +4,8 @@
 #define _KbdBuffer_H
 
 #include <vector>
-#include "../basics/KeyCode.H"
-#include "../poll/Waker.H"
+#include "../basics/KeyCode.h"
+#include "../poll/Waker.h"
 using namespace std;
 
 enum KeyNumber {

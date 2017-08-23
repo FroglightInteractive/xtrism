@@ -1,13 +1,13 @@
 // NiceSession.C
 
-#include "NiceSession.H"
-#include "../globals/Globals.H"
-#include "SessionQuit.H"
-#include "../game/NiceGame.H"
-#include "../game/Session.H"
-#include "../basics/Filename.H"
-#include "../env/TImageFile.H"
-#include "../sound/Sounds.H"
+#include "NiceSession.h"
+#include "../globals/Globals.h"
+#include "SessionQuit.h"
+#include "../game/NiceGame.h"
+#include "../game/Session.h"
+#include "../basics/Filename.h"
+#include "../env/TImageFile.h"
+#include "../sound/Sounds.h"
 
 NiceSession::NiceSession(BBox const &bb, char const *id,
                          Player const &p1, int bset, class SessionQuit *sq):

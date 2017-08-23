@@ -1,10 +1,10 @@
 // GBParent.C
 
 #include <string>
-#include "GBParent.H"
-#include "../basics/Throw.H"
+#include "GBParent.h"
+#include "../basics/Throw.h"
 #include <vector>
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 ///////////////////////////////// GBChildInfo ////////////////////////////////
 GBox &GBChildInfo::sib(bool vnoth, bool side) {

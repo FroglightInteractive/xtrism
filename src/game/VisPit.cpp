@@ -1,12 +1,12 @@
 // VisPit.C
 
-#include "VisPit.H"
-#include "../env/TSprite.H"
-#include "../bricks/data.H"
-#include "../bricks/bsprites.H"
-#include "Logger.H"
-#include "../basics/dbx.H"
-#include "../basics/Throw.H"
+#include "VisPit.h"
+#include "../env/TSprite.h"
+#include "../bricks/data.h"
+#include "../bricks/bsprites.h"
+#include "Logger.h"
+#include "../basics/dbx.h"
+#include "../basics/Throw.h"
 
 // Waker info: sends warn() whenever contents change
 

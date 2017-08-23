@@ -11,10 +11,10 @@
  */
 
 #include <string>
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
-#include "Probability.H"
-#include "../basics/getline.H"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
+#include "Probability.h"
+#include "../basics/getline.h"
 #include <stdio.h>
 void Probability::add(float prob, int res) {
   data.push_back(ProbLevel(max += prob, res));

@@ -1,12 +1,12 @@
 // gfx/GBox.C
 
 #include <string>
-#include "GBox.H"
-#include "GBParent.H"
-#include "TopBox.H"
-#include "../basics/Throw.H"
+#include "GBox.h"
+#include "GBParent.h"
+#include "TopBox.h"
+#include "../basics/Throw.h"
 
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 //////////////////////////////////// GBox ////////////////////////////////////
 GBox::GBox(GBParent *par0, Area const &area):

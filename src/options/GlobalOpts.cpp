@@ -1,13 +1,13 @@
 // GlobalOpts.C
 
-#include "GlobalOpts.H"
-#include "../basics/getline.H"
-#include "../basics/vecio.H"
+#include "GlobalOpts.h"
+#include "../basics/getline.h"
+#include "../basics/vecio.h"
 #include <backward/strstream>
 
 using namespace std;
 
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 istream &operator>>(istream &is, GlobalOpts &go) {
   dbx(2, "istream >> GlobalOpts");

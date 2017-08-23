@@ -8,9 +8,9 @@
    may loop forever.
  */
 
-#include "Fortuna.H"
+#include "Fortuna.h"
 #include <stdlib.h>
-#include "../env/TTime.H"
+#include "../env/TTime.h"
 
 bool Fortuna::inited = false;
 

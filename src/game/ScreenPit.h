@@ -3,10 +3,10 @@
 #ifndef _ScreenPit_H
 #define _ScreenPit_H
 
-#include "../gfx/GBox.H"
-#include "VisPit.H"
-#include "../pics/SharedBG.H"
-#include "../poll/Sleeper.H"
+#include "../gfx/GBox.h"
+#include "VisPit.h"
+#include "../pics/SharedBG.h"
+#include "../poll/Sleeper.h"
 
 class ScreenPit: public GBox, public BGSharer, public Sleeper {
 public:

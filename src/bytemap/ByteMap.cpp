@@ -1,9 +1,9 @@
 // ByteMap.C
 
 #include <stdlib.h>
-#include "ByteMap.H"
-#include "../basics/dbx.H"
-#include "../env/TCompress.H"
+#include "ByteMap.h"
+#include "../basics/dbx.h"
+#include "../env/TCompress.h"
 #include <string.h>
 
 // #define SAFETY

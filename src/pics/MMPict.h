@@ -3,7 +3,7 @@
 #ifndef _MMPict_H
 #define _MMPict_H
 
-#include "../basics/Byte.H"
+#include "../basics/Byte.h"
 
 class MMPict {
 public:

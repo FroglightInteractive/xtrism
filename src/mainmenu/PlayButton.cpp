@@ -1,14 +1,14 @@
 // PlayButton.C
 
-#include "PlayButton.H"
+#include "PlayButton.h"
 
-#include "../basics/dbx.H"
-#include "../sessions/NiceSession.H"
-#include "../options/PlayerList.H"
-#include "../pics/MarbleBG.H"
-#include "../env/TImage.H"
+#include "../basics/dbx.h"
+#include "../sessions/NiceSession.h"
+#include "../options/PlayerList.h"
+#include "../pics/MarbleBG.h"
+#include "../env/TImage.h"
 
-#include "../globals/Globals.H"
+#include "../globals/Globals.h"
 
 PlayButton::~PlayButton() {
   tenv().dereg_callback(this);

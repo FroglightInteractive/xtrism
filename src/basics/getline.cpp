@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "dbx.H"
+#include "dbx.h"
 
 const int GL_LLEN = 1000;
 

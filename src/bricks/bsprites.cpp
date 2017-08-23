@@ -5,17 +5,17 @@
    creating BCImageFiles and BCellFiles if necessary.
  */
 
-#include "data.H"
-#include "bsprites.H"
-#include "brickcell.H"
-#include "../basics/Throw.H"
-#include "../basics/Filename.H"
-#include "../basics/dbx.H"
-#include "../env/TImage.H"
-#include "../env/TSprite.H"
-#include "../env/TImageFile.H"
-#include "../bytemap/WideRGB.H"
-#include "../bytemap/ByteImage.H"
+#include "data.h"
+#include "bsprites.h"
+#include "brickcell.h"
+#include "../basics/Throw.h"
+#include "../basics/Filename.h"
+#include "../basics/dbx.h"
+#include "../env/TImage.h"
+#include "../env/TSprite.h"
+#include "../env/TImageFile.h"
+#include "../bytemap/WideRGB.h"
+#include "../bytemap/ByteImage.h"
 
 #include <stdio.h>
 

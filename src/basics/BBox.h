@@ -3,7 +3,7 @@
 #ifndef _BBox_H
 #define _BBox_H
 
-#include "../basics/minmax.H"
+#include "../basics/minmax.h"
 
 const int BB_NoChange = -100000000; // -1e8 == -INFTY
 

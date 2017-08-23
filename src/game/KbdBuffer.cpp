@@ -5,8 +5,8 @@
 
 #include <string>
 
-#include "KbdBuffer.H"
-#include "../basics/Throw.H"
+#include "KbdBuffer.h"
+#include "../basics/Throw.h"
 
 /////////////////////////////////////////////////////////////////////////////
 KeyCodes::KeyCodes(TKeyCode const *kcs) {

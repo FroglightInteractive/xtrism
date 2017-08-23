@@ -1,8 +1,8 @@
 // Controls.C
 
-#include "Controls.H"
+#include "Controls.h"
 
-#include "Keyboard.H"
+#include "Keyboard.h"
 
 Controls::Controls(Keyboard *kbd): keybd(kbd) {
   keybd->reg(this);

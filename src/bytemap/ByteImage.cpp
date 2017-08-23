@@ -1,10 +1,10 @@
 // ByteImage.C
 
-#include "ByteImage.H"
-#include "ByteMap.H"
-#include "WideRGB.H"
-#include "../env/TImage.H"
-#include "../env/TEnv.H"
+#include "ByteImage.h"
+#include "ByteMap.h"
+#include "WideRGB.h"
+#include "../env/TImage.h"
+#include "../env/TEnv.h"
 
 /* ------------------------------- byteimage ------------------------------ */
 void byteimage(TImage &dst, ByteMap const &src,

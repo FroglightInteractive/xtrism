@@ -2,19 +2,19 @@
 
 #include <string>
 
-#include "Globals.H"
-#include "../env/TEnv.H"
-#include "../env/TFont.H"
-#include "../bricks/bsprites.H"
-#include "../basics/dbx.H"
-#include "../options/GlobalOpts.H"
-#include "../options/PlayerList.H"
-#include "../bricks/Probability.H"
-#include "../bricks/data.H"
-#include "../basics/Infty.H"
-#include "../basics/Filename.H"
-#include "../sound/Sounds.H"
-#include "../env/TReso.H"
+#include "Globals.h"
+#include "../env/TEnv.h"
+#include "../env/TFont.h"
+#include "../bricks/bsprites.h"
+#include "../basics/dbx.h"
+#include "../options/GlobalOpts.h"
+#include "../options/PlayerList.h"
+#include "../bricks/Probability.h"
+#include "../bricks/data.h"
+#include "../basics/Infty.h"
+#include "../basics/Filename.h"
+#include "../sound/Sounds.h"
+#include "../env/TReso.h"
 
 #include "../.datadir"
 

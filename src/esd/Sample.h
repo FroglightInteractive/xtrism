@@ -4,7 +4,7 @@
 #define _Sample_H
 
 #include <stdio.h>
-#include "SampleExc.H"
+#include "SampleExc.h"
 
 typedef signed short SampleVal;
 

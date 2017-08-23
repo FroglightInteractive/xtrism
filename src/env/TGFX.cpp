@@ -2,8 +2,8 @@
 
 #define TPRIVATE
 
-#include "TGFX.H"
-#include "TSprite.H"
+#include "TGFX.h"
+#include "TSprite.h"
 
 /*
    TGFX::TGFX(TGFX const &oth, TSprite const &ts):

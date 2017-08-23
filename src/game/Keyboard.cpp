@@ -1,7 +1,7 @@
 // Keyboard.C
 
-#include "Keyboard.H"
-#include "Controls.H"
+#include "Keyboard.h"
+#include "Controls.h"
 
 bool Keyboard::key(int code, bool in_not_out) {
   CtrlSet::iterator i;

@@ -1,7 +1,7 @@
 // Ranker.C
 
-#include "Ranker.H"
-#include "../basics/Infty.H"
+#include "Ranker.h"
+#include "../basics/Infty.h"
 
 // The highest high-score is stored first in the vector `scores'.
 

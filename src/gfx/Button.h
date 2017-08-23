@@ -4,9 +4,9 @@
 #define _Button_H
 
 #include <string>
-#include "GBParent.H"
-#include "../env/TDrawCol.H"
-#include "../env/TFont.H"
+#include "GBParent.h"
+#include "../env/TDrawCol.h"
+#include "../env/TFont.h"
 #include <stdio.h>
 
 class Button: public GBox {

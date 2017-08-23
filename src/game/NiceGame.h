@@ -4,10 +4,10 @@
 #ifndef _NiceGame_H
 #define _NiceGame_H
 
-#include "Game.H"
+#include "Game.h"
 
-#include "../gfx/GBParent.H"
-#include "../poll/Sleeper.H"
+#include "../gfx/GBParent.h"
+#include "../poll/Sleeper.h"
 
 class NiceGame: public GBParent, public Game, public Sleeper {
 public:

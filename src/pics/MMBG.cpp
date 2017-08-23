@@ -1,10 +1,10 @@
 // MMBG.C
 
-#include "MMBG.H"
-#include "MMPict.H"
-#include "../env/TImageFile.H"
-#include "../env/TEnv.H"
-#include "../bytemap/RGBImage.H"
+#include "MMBG.h"
+#include "MMPict.h"
+#include "../env/TImageFile.h"
+#include "../env/TEnv.h"
+#include "../bytemap/RGBImage.h"
 
 MMBG::MMBG(TEnv const &env, TImageFile *timf):
   TImage(env, env.width(), env.height()) {

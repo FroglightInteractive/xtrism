@@ -6,12 +6,12 @@
 #include <time.h>
 #include <string.h>
 
-#include "../env/TEnv.H"
-#include "../globals/Globals.H"
-#include "../mainmenu/MainMenu.H"
+#include "../env/TEnv.h"
+#include "../globals/Globals.h"
+#include "../mainmenu/MainMenu.h"
 #include <exception>
 #include "../.datadir"
-#include "../basics/Filename.H"
+#include "../basics/Filename.h"
 
 void my_exc() {
   fprintf(stderr, "XTrism: my_exc (Unexpected exception)\n");
@@ -24,7 +24,7 @@ void my_term() {
   exit(1);
 }
 
-#include "../gfx/Button.H"
+#include "../gfx/Button.h"
 MainMenu *mmp;
 void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
   char buf[300];

@@ -1,10 +1,10 @@
 // Sounds.C
 
-#include "Sounds.H"
-#include "Sample.H"
-#include "SPlayer.H"
-#include "../basics/Filename.H"
-#include "../basics/dbx.H"
+#include "Sounds.h"
+#include "Sample.h"
+#include "SPlayer.h"
+#include "../basics/Filename.h"
+#include "../basics/dbx.h"
 
 class Sounds *sounds = 0;
 

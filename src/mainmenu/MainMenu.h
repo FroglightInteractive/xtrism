@@ -1,6 +1,6 @@
 // MainMenu.H
 
-#include "../gfx/TopBox.H"
+#include "../gfx/TopBox.h"
 
 class MainMenu: public TopBox {
 public:

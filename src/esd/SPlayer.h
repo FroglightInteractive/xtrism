@@ -11,7 +11,7 @@
 typedef int SPHandle;
 const int MAXSAMPLES = 10;
 
-#include "SampleExc.H"
+#include "SampleExc.h"
 
 class SPlayer {
 public:

@@ -2,11 +2,11 @@
 
 #include <iostream>
 #include <string>
-#include "Player.H"
-#include "../basics/getline.H"
-#include "../basics/vecio.H"
+#include "Player.h"
+#include "../basics/getline.h"
+#include "../basics/vecio.h"
 #include <backward/strstream>
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 const int PL_LLEN = 1000;
 

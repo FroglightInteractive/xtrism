@@ -4,7 +4,7 @@
 #define _PollServer_H
 
 #include <list>
-#include "../env/TTime.H"
+#include "../env/TTime.h"
 
 class PollServer {
 public:

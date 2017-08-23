@@ -1,11 +1,11 @@
 // MarbleBG.C
 
-#include "../env/TImage.H"
-#include "../bytemap/ByteMap.H"
-#include "../bricks/brickcell.H"
-#include "../env/TEnv.H"
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
+#include "../env/TImage.h"
+#include "../bytemap/ByteMap.h"
+#include "../bricks/brickcell.h"
+#include "../env/TEnv.h"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
 
 #include <math.h>
 #ifndef PI

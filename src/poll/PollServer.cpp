@@ -1,11 +1,11 @@
 // PollServer.C
 
-#include "PollServer.H"
+#include "PollServer.h"
 
-#include "../env/TTime.H"
-#include "Sleeper.H"
-#include "../basics/Infty.H"
-#include "../basics/dbx.H"
+#include "../env/TTime.h"
+#include "Sleeper.h"
+#include "../basics/Infty.h"
+#include "../basics/dbx.h"
 
 PollServer::PollServer(): first(TTime::INFINITE_FUTURE) {
 }

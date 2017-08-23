@@ -3,10 +3,10 @@
 #ifndef _LogPit_H
 #define _LogPit_H
 
-#include "../bricks/CellMatrix.H"
-#include "../basics/Word.H"
-#include "../basics/Throw.H"
-#include "../poll/Waker.H"
+#include "../bricks/CellMatrix.h"
+#include "../basics/Word.h"
+#include "../basics/Throw.h"
+#include "../poll/Waker.h"
 
 class LogPit: public CellMatrix, public Waker {
 public:

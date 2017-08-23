@@ -2,11 +2,11 @@
 
 #define TPRIVATE
 
-#include "TImageFile.H"
-#include "TImage.H"
-#include "TEnv.H"
-#include "TCompress.H"
-#include "../basics/Filename.H"
+#include "TImageFile.h"
+#include "TImage.h"
+#include "TEnv.h"
+#include "TCompress.h"
+#include "../basics/Filename.h"
 
 static Filename fullname(TEnv const &tenv, Filename const &basename) {
   Filename fn(basename);

@@ -1,10 +1,10 @@
 // MidPtDisp.C
 
-#include "MidPtDisp.H"
+#include "MidPtDisp.h"
 #include <math.h>
 #include <stdlib.h>
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
 
 /* ------------------------------- normalrnd ------------------------------ */
 // return value in [-446,446], more or less normally distr'd

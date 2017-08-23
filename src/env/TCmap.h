@@ -6,13 +6,13 @@
 #include <string>
 using namespace std;
 
-#include "../basics/minmax.H"
+#include "../basics/minmax.h"
 
 #ifdef TPRIVATE
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #else
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
 typedef int TCol;

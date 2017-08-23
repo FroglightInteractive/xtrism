@@ -1,13 +1,13 @@
 // Sleeper.C
 
-#include "Sleeper.H"
-#include "Waker.H"
-#include "PollServer.H"
-#include "../basics/Throw.H"
+#include "Sleeper.h"
+#include "Waker.h"
+#include "PollServer.h"
+#include "../basics/Throw.h"
 
 #include <algorithm>
 
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 Sleeper::Sleeper(PollServer &serv0): server(serv0), warned(false) {
 }

@@ -24,12 +24,12 @@
 #ifndef _bricks_data_H
 #define _bricks_data_H
 
-#include "../basics/Byte.H"
-#include "CellMatrix.H"
+#include "../basics/Byte.h"
+#include "CellMatrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "Consts.H"
+#include "Consts.h"
 
 class BDLine {
 public:

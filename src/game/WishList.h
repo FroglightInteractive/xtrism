@@ -3,10 +3,10 @@
 #ifndef _WishList_H
 #define _WishList_H
 
-#include "FallBrick.H"
-#include "KbdBuffer.H"
-#include "Kronos.H"
-#include "../basics/Byte.H"
+#include "FallBrick.h"
+#include "KbdBuffer.h"
+#include "Kronos.h"
+#include "../basics/Byte.h"
 
 class WLResult {
 public:

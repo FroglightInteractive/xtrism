@@ -1,8 +1,8 @@
 // WishList.C
 
-#include "WishList.H"
-#include "../basics/dbx.H"
-#include "../sound/Sounds.H"
+#include "WishList.h"
+#include "../basics/dbx.h"
+#include "../sound/Sounds.h"
 
 ////////////////////////////////// WLResult //////////////////////////////////
 

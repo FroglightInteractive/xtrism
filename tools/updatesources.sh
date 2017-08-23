@@ -11,10 +11,10 @@ echo "" >> xtrism.pri
 for DIR in $SUBDIRS; do
 
     echo "HEADERS += \\" >> xtrism.pri
-    find $DIR -maxdepth 1 -name \*.H -exec echo "    " '{}' " \\" ';' >> xtrism.pri
+    find $DIR -maxdepth 1 -name \*.h -exec echo "    " '{}' " \\" ';' >> xtrism.pri
     echo "" >> xtrism.pri
 
     echo "SOURCES += \\" >> xtrism.pri
-    find $DIR -maxdepth 1 -name \*.C -exec echo "    " '{}' " \\" ';' >> xtrism.pri
+    find $DIR -maxdepth 1 -name \*.cpp -exec echo "    " '{}' " \\" ';' >> xtrism.pri
     echo "" >> xtrism.pri
 done

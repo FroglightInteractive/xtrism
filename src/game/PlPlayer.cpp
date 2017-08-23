@@ -6,27 +6,27 @@
  */
 
 #include <string>
-#include "PlPlayer.H"
+#include "PlPlayer.h"
 
-#include "Kronos.H"
-#include "BrickEnv.H"
-#include "FallBrick.H"
-#include "Referee.H"
-#include "KbdBuffer.H"
-#include "ControlBuf.H"
-#include "WishList.H"
-#include "Fortuna.H"
-#include "NextBox.H"
-#include "VisPit.H"
-#include "LogPit.H"
-#include "GameTime.H"
-#include "Game.H"
+#include "Kronos.h"
+#include "BrickEnv.h"
+#include "FallBrick.h"
+#include "Referee.h"
+#include "KbdBuffer.h"
+#include "ControlBuf.h"
+#include "WishList.h"
+#include "Fortuna.h"
+#include "NextBox.h"
+#include "VisPit.h"
+#include "LogPit.h"
+#include "GameTime.h"
+#include "Game.h"
 
-#include "../bricks/Probability.H"
-#include "../options/Player.H"
-#include "../options/GlobalOpts.H"
-#include "../basics/dbx.H"
-#include "../sound/Sounds.H"
+#include "../bricks/Probability.h"
+#include "../options/Player.h"
+#include "../options/GlobalOpts.h"
+#include "../basics/dbx.h"
+#include "../sound/Sounds.h"
 
 const int AUTOREP_IVAL = 50;
 const int AUTOREP_DELAY = 500;

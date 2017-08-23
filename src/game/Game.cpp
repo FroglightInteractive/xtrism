@@ -1,19 +1,19 @@
 // Game.C
 
-#include "Game.H"
-#include "Score.H"
-#include "Ranker.H"
-#include "StatBoard.H"
-#include "ScreenPit.H"
-#include "VisPit.H"
-#include "LogPit.H"
-#include "Session.H"
-#include "FBPos.H"
-#include "GameTime.H"
-#include "Logger.H"
-#include "PlPlayer.H"
+#include "Game.h"
+#include "Score.h"
+#include "Ranker.h"
+#include "StatBoard.h"
+#include "ScreenPit.h"
+#include "VisPit.h"
+#include "LogPit.h"
+#include "Session.h"
+#include "FBPos.h"
+#include "GameTime.h"
+#include "Logger.h"
+#include "PlPlayer.h"
 
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 /* Notes:
  * StatBoard, ScreenPit, VisPit, and LogPit and Ranker are constructed

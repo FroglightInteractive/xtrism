@@ -7,10 +7,10 @@
 #include <vector>
 using namespace std;
 
-#include "../gfx/GBox.H"
-#include "../basics/Word.H"
-#include "../pics/SharedBG.H"
-#include "../poll/Sleeper.H"
+#include "../gfx/GBox.h"
+#include "../basics/Word.h"
+#include "../pics/SharedBG.h"
+#include "../poll/Sleeper.h"
 
 class StatBoard: public GBox, public BGSharer, public Sleeper {
 public:

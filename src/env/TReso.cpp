@@ -1,8 +1,8 @@
 // TReso.C
 
-#include "TReso.H"
+#include "TReso.h"
 
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 int TReso::best(int sw, int sh) const {
   int f = minfact, af;

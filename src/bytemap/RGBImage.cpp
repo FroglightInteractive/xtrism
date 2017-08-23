@@ -1,12 +1,12 @@
 // RGBImage.C
 
-#include "../env/TImage.H"
-#include "../env/TEnv.H"
-#include "../basics/BBox.H"
-#include "../basics/Throw.H"
-#include "RGBMap.H"
-#include "RGBImage.H"
-#include "WideRGB.H"
+#include "../env/TImage.h"
+#include "../env/TEnv.h"
+#include "../basics/BBox.h"
+#include "../basics/Throw.h"
+#include "RGBMap.h"
+#include "RGBImage.h"
+#include "WideRGB.h"
 
 void rgbimage(TImage &dst, RGBMap const &src) {
   rgbimage(dst, src, BBox(0, 0, src.width(), src.height()));

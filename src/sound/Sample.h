@@ -1,7 +1,7 @@
 // Sample.H (generic vsn)
 
 #ifdef TRISM_ESD
-#include "../esd/Sample.H"
+#include "../esd/Sample.h"
 #else
-#include "../dsp/Sample.H"
+#include "../dsp/Sample.h"
 #endif

@@ -1,10 +1,10 @@
 // TCompress.C
 
-#include "TCompress.H"
+#include "TCompress.h"
 
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
-#include "../basics/minmax.H"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
+#include "../basics/minmax.h"
 
 #include <string.h>
 #include <errno.h>

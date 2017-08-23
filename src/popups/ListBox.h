@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 
-#include "../gfx/Box3D.H"
+#include "../gfx/Box3D.h"
 
 class ListBox: public Box3D {
 public:

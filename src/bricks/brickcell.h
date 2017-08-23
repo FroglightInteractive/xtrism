@@ -18,9 +18,9 @@
 #ifndef _brickcell_h
 #define _brickcell_h
 
-#include "../basics/Byte.H"
+#include "../basics/Byte.h"
 #include <stdio.h>
-#include "../bytemap/ByteMap.H"
+#include "../bytemap/ByteMap.h"
 
 class BCSurround {
 public:

@@ -3,8 +3,8 @@
 #ifndef _NiceSession_H
 #define _NiceSession_H
 
-#include "../game/GameQuit.H"
-#include "../gfx/TopBox.H"
+#include "../game/GameQuit.h"
+#include "../gfx/TopBox.h"
 
 class NiceSession: public TopBox, private GameQuit {
 public:

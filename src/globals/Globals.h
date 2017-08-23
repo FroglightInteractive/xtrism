@@ -1,6 +1,6 @@
 // Globals.H
 
-#include "../options/PlayerList.H"
+#include "../options/PlayerList.h"
 
 class TEnv &tenv();
 class TGFX &tgfx();

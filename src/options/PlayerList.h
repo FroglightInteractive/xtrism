@@ -3,7 +3,7 @@
 #ifndef _PlayerList_H
 #define _PlayerList_H
 
-#include "Player.H"
+#include "Player.h"
 #include <list>
 #include <string>
 

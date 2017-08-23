@@ -3,10 +3,10 @@
 #ifndef _Session_H
 #define _Session_H
 
-#include "../env/TEnv.H"
+#include "../env/TEnv.h"
 #include <vector>
-#include "Keyboard.H"
-#include "../pics/SharedBG.H"
+#include "Keyboard.h"
+#include "../pics/SharedBG.h"
 
 class Session: public SharedBG {
 public:

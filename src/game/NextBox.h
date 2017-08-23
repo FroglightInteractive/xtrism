@@ -3,9 +3,9 @@
 #ifndef _NextBox_H
 #define _NextBox_H
 
-#include "../gfx/GBox.H"
-#include "../pics/SharedBG.H"
-#include "../poll/Sleeper.H"
+#include "../gfx/GBox.h"
+#include "../pics/SharedBG.h"
+#include "../poll/Sleeper.h"
 
 class NextBox: public GBox, public BGSharer, public Sleeper {
 public:

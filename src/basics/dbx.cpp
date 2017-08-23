@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "dbx.H"
+#include "dbx.h"
 
 #define DBXDATE -980824
 #define DBXLEVEL 1

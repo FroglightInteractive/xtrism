@@ -1,10 +1,10 @@
 // Referee.C
 
-#include "Referee.H"
-#include "Kronos.H"
-#include "../env/TTime.H"
+#include "Referee.h"
+#include "Kronos.h"
+#include "../env/TTime.h"
 #include <math.h>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 /* ------------------------------ brickprepare ---------------------------- */
 void Referee::brickprepare(int y_drp, bool selfdrp) {

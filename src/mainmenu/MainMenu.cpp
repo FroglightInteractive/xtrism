@@ -1,20 +1,20 @@
 // MainMenu.C
 
-#include "MainMenu.H"
+#include "MainMenu.h"
 
-#include "../globals/Globals.H"
-#include "../pics/MMBG.H"
-#include "../env/TImageFile.H"
-#include "../basics/Filename.H"
-#include "../basics/minmax.H"
-#include "../pics/MarbleBG.H"
-#include "PlayButton.H"
-#include "PlayerSelector.H"
+#include "../globals/Globals.h"
+#include "../pics/MMBG.h"
+#include "../env/TImageFile.h"
+#include "../basics/Filename.h"
+#include "../basics/minmax.h"
+#include "../pics/MarbleBG.h"
+#include "PlayButton.h"
+#include "PlayerSelector.h"
 
-#include "../basics/dbx.H"
-#include "../pics/BoxMarbler.H"
-#include "../popups/ListBox.H"
-#include "../popups/InputField.H"
+#include "../basics/dbx.h"
+#include "../pics/BoxMarbler.h"
+#include "../popups/ListBox.h"
+#include "../popups/InputField.h"
 
 class ShadedTButton: public TextButton {
 public:

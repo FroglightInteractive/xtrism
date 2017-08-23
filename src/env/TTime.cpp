@@ -1,11 +1,11 @@
 // TTime.C
 
-#include "TTime.H"
+#include "TTime.h"
 
 #include <sys/time.h>
 #include <unistd.h>
-#include "../basics/Infty.H"
-#include "../basics/Throw.H"
+#include "../basics/Infty.h"
+#include "../basics/Throw.h"
 
 static TTime startuppseudotime(TTime::MAGIC_DONTUSE);
 

@@ -3,7 +3,7 @@
 #ifndef _Kronos_H
 #define _Kronos_H
 
-#include "GameTime.H"
+#include "GameTime.h"
 
 class Kronos {
 public:

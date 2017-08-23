@@ -1,9 +1,9 @@
 // BMRecolour.C
 // This code is almost entirely stolen from ../pics/Recolour.C vsn 1.1
 
-#include "BMRecolour.H"
-#include "ByteMap.H"
-#include "../basics/BBox.H"
+#include "BMRecolour.h"
+#include "ByteMap.h"
+#include "../basics/BBox.h"
 #include <math.h>
 
 inline void recolour(ByteMap *img,

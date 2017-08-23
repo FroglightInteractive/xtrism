@@ -1,6 +1,6 @@
 // TDate.C
 
-#include "TDate.H"
+#include "TDate.h"
 #include <time.h>
 
 const int TDLLEN = 50;

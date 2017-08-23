@@ -1,6 +1,6 @@
 // WideRGB.H
 
-#include "../env/TCmap.H"
+#include "../env/TCmap.h"
 
 class WideRGB {
 public:

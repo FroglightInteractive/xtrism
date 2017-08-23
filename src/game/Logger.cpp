@@ -1,9 +1,9 @@
 // Logger.C
 
-#include "Logger.H"
-#include "LoggerP.H"
+#include "Logger.h"
+#include "LoggerP.h"
 #include <math.h>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 //////////////////////////////////// LNode ///////////////////////////////////
 

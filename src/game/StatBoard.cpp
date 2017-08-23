@@ -1,11 +1,11 @@
 // StatBoard.C
 
-#include "StatBoard.H"
-#include "../env/TImage.H"
-#include "../env/TFont.H"
-#include "../bytemap/BMRecolour.H"
+#include "StatBoard.h"
+#include "../env/TImage.h"
+#include "../env/TFont.h"
+#include "../bytemap/BMRecolour.h"
 
-#include "../env/TBusy.H"
+#include "../env/TBusy.h"
 
 const int INTERL = 2;
 const int EDGEMARG = 4;

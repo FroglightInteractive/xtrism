@@ -4,8 +4,8 @@
 
 #define PLAYERSELECTOR_H
 
-#include "../gfx/Button.H"
-#include "../globals/Globals.H"
+#include "../gfx/Button.h"
+#include "../globals/Globals.h"
 
 class PlayerSelector: public TextButton {
 public:

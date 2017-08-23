@@ -1,9 +1,9 @@
 // ListBox.C
 
-#include "ListBox.H"
+#include "ListBox.h"
 
-#include "../basics/dbx.H"
-#include "../env/TFont.H"
+#include "../basics/dbx.h"
+#include "../env/TFont.h"
 
 #define LEFTMARGIN 10
 #define RIGHTMARGIN 10

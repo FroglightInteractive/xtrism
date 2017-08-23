@@ -15,12 +15,12 @@ bool tbusy;
 
 #include <string.h>
 #include <stdio.h>
-#include "../basics/Throw.H"
-#include "TEnv.H"
-#include "TReso.H"
-#include "TTime.H"
-#include "../basics/Infty.H"
-#include "../sound/SPlayer.H"
+#include "../basics/Throw.h"
+#include "TEnv.h"
+#include "TReso.h"
+#include "TTime.h"
+#include "../basics/Infty.h"
+#include "../sound/SPlayer.h"
 
 #include <X11/keysym.h>
 

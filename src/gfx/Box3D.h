@@ -3,9 +3,9 @@
 #ifndef _Box3D_H
 #define _Box3D_H
 
-#include "GBox.H"
+#include "GBox.h"
 #include <stdio.h>
-#include "../basics/Byte.H"
+#include "../basics/Byte.h"
 
 class Box3D: public GBox {
 public:

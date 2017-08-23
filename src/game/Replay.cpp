@@ -2,13 +2,13 @@
 
 // code to replay a game of trism from a Logger file
 
-#include "Replay.H"
-#include "Logger.H"
-#include "LoggerP.H"
+#include "Replay.h"
+#include "Logger.h"
+#include "LoggerP.h"
 
-#include "../basics/Throw.H"
-#include "NextBox.H"
-#include "VisPit.H"
+#include "../basics/Throw.h"
+#include "NextBox.h"
+#include "VisPit.h"
 
 Replay::Replay(Logger *logger, VisPit *vp0,
                NextBox *nb0, NextBox *nb1):

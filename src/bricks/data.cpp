@@ -1,8 +1,8 @@
 // bricks/data.C
 
-#include "data.H"
-#include "../basics/Throw.H"
-#include "../basics/Filename.H"
+#include "data.h"
+#include "../basics/Throw.h"
+#include "../basics/Filename.h"
 #include <errno.h>
 #include <string.h>
 

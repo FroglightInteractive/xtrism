@@ -10,10 +10,10 @@ const int CURSOR_BLINK_DELAY = 500; // ms
 #include <string>
 using namespace std;
 
-#include "../gfx/GBox.H"
-#include "../env/TTime.H"
-#include "../poll/Waker.H"
-#include "../poll/Sleeper.H"
+#include "../gfx/GBox.h"
+#include "../env/TTime.h"
+#include "../poll/Waker.h"
+#include "../poll/Sleeper.h"
 
 class InputField: public GBox, public Waker, public Sleeper {
 public:

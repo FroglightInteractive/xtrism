@@ -1,10 +1,10 @@
 // InputField.C
 
-#include "InputField.H"
-#include "../env/TEnv.H"
-#include "../env/TFont.H"
-#include "../gfx/GBParent.H"
-#include "../basics/Infty.H"
+#include "InputField.h"
+#include "../env/TEnv.h"
+#include "../env/TFont.h"
+#include "../gfx/GBParent.h"
+#include "../basics/Infty.h"
 
 InputField::InputField(class GBParent *par, class Area const &area,
                            string const &initcont, class TFont &font0,

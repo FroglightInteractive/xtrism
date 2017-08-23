@@ -6,11 +6,11 @@
 // baseclass for most other graphics objects s/a fonts, sprites
 
 #ifndef TPRIVATE
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
-#include "../basics/Throw.H"
-#include "TCmap.H"
+#include "../basics/Throw.h"
+#include "TCmap.h"
 
 const int TGFX_MAGIC = 13254707;
 

@@ -5,23 +5,23 @@
 
 #include <string>
 
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
 
 #ifdef TPRIVATE
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #else
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
-#include "TCmap.H"
-#include "../basics/BBox.H"
+#include "TCmap.h"
+#include "../basics/BBox.h"
 
-#include "THandlers.H"
-#include "TCallBack.H"
-#include "TGFX.H"
+#include "THandlers.h"
+#include "TCallBack.h"
+#include "TGFX.h"
 
 class TEnv: public TGFX {
 public:

@@ -1,6 +1,6 @@
 // Filename.C
 
-#include "Filename.H"
+#include "Filename.h"
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>

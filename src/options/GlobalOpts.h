@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../basics/KeyCode.H"
+#include "../basics/KeyCode.h"
 
 using namespace std;
 

@@ -14,10 +14,10 @@
 // #ifdef TPRIVATE
 #include <X11/Xlib.h>
 // #else
-// #include "TXID.H"
+// #include "TXID.h"
 // #endif
 
-#include "TCmap.H"
+#include "TCmap.h"
 
 class TImage {
 public:

@@ -3,11 +3,11 @@
 #ifndef _TFont_H
 #define _TFont_H
 
-#include "TGFX.H"
-#include "TDrawCol.H"
+#include "TGFX.h"
+#include "TDrawCol.h"
 
 #ifndef TPRIVATE
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
 class TMFont {

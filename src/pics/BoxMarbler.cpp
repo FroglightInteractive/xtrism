@@ -1,15 +1,15 @@
 // BoxMarbler.C
 
-#include "../env/TImage.H"
-#include "../env/TEnv.H"
-#include "../bytemap/ByteMap.H"
-#include "../bricks/brickcell.H"
-#include "../basics/BBox.H"
-#include "../bytemap/ByteImage.H"
-#include "../bytemap/WideRGB.H"
+#include "../env/TImage.h"
+#include "../env/TEnv.h"
+#include "../bytemap/ByteMap.h"
+#include "../bricks/brickcell.h"
+#include "../basics/BBox.h"
+#include "../bytemap/ByteImage.h"
+#include "../bytemap/WideRGB.h"
 
-#include "BoxMarbler.H"
-#include "../basics/dbx.H"
+#include "BoxMarbler.h"
+#include "../basics/dbx.h"
 
 const int TOPRAISE = 64;
 const int LEFTRAISE = 48;

@@ -3,9 +3,9 @@
 #ifndef _PlPlayer_H
 #define _PlPlayer_H
 
-#include "KbdBuffer.H"
-#include "Kronos.H"
-#include "../poll/Sleeper.H"
+#include "KbdBuffer.h"
+#include "Kronos.h"
+#include "../poll/Sleeper.h"
 
 class PlPlayer: public Sleeper {
 public:

@@ -1,11 +1,11 @@
 // brickcell.C
 
-#include "brickcell.H"
+#include "brickcell.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 BrickCell::BrickCell(unsigned int w, unsigned int h,
                      unsigned int depth): ByteMap(w, h ? h : w) {

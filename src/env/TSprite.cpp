@@ -3,12 +3,12 @@
 #define TPRIVATE
 
 #include <X11/Xlib.h>
-#include "TSprite.H"
+#include "TSprite.h"
 #include <stdio.h>
-#include "../basics/BBox.H"
-#include "TEnv.H"
-#include "TImage.H"
-#include "setclip.H"
+#include "../basics/BBox.h"
+#include "TEnv.h"
+#include "TImage.h"
+#include "setclip.h"
 
 TSprite::TSprite(const TGFX &tgfx0, int w, int h):
   tgfx(tgfx0), wid(w), hei(h) {

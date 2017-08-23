@@ -3,10 +3,10 @@
 // As ByteMap, but for full colour RGB pictures
 
 #include <stdio.h>
-#include "../basics/Byte.H"
-#include "../basics/minmax.H"
+#include "../basics/Byte.h"
+#include "../basics/minmax.h"
 #include <string>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 class RGB {
 public:

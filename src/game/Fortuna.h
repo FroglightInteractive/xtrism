@@ -3,7 +3,7 @@
 #ifndef _Fortuna_H
 #define _Fortuna_H
 
-#include "../bricks/Probability.H"
+#include "../bricks/Probability.h"
 
 class Fortuna {
 public:

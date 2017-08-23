@@ -3,9 +3,9 @@
 #define TPRIVATE
 
 #include <X11/Xlib.h>
-#include "../basics/BBox.H"
-#include "TGFX.H"
-#include "setclip.H"
+#include "../basics/BBox.h"
+#include "TGFX.h"
+#include "setclip.h"
 
 void setclip(TGFX const &tgfx, GC &gc, BBox const &bb) {
   XRectangle xr;

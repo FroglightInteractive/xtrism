@@ -2,8 +2,8 @@
 
 #define TPRIVATE
 
-#include "../basics/Throw.H"
-#include "TCmap.H"
+#include "../basics/Throw.h"
+#include "TCmap.h"
 
 #include <string.h>
 #include <stdio.h>

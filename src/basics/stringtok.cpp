@@ -1,6 +1,6 @@
 // stringtok.C
 
-#include "stringtok.H"
+#include "stringtok.h"
 
 string stringtok::token(char delim) {
   unsigned int a = str.find_first_not_of(delim, pos);

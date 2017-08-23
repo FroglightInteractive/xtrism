@@ -3,7 +3,7 @@
 // Naming convention for sample files:
 // name-freq.sw
 
-#include "Sample.H"
+#include "Sample.h"
 
 #include <sys/stat.h>
 #include <unistd.h>

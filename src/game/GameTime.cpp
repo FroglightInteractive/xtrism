@@ -1,6 +1,6 @@
 // GameTime.C
 
-#include "GameTime.H"
+#include "GameTime.h"
 
 int GameTime::dt_godown(int lines) {
   return int(770 * exp(-lines / 44.));

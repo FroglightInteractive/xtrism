@@ -4,7 +4,7 @@
 #define _TSprite_H
 
 #ifndef TPRIVATE
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
 class TSprite {

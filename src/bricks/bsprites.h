@@ -3,7 +3,7 @@
 #ifndef _bsprites_H
 #define _bsprites_H
 
-#include "Consts.H"
+#include "Consts.h"
 
 class BrickSprites {
 public:

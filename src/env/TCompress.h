@@ -5,9 +5,9 @@
 #ifndef _TCompress_H
 #define _TCompress_H
 
-#include "../basics/Filename.H"
-#include "../basics/Infty.H"
-#include "../basics/Byte.H"
+#include "../basics/Filename.h"
+#include "../basics/Infty.h"
+#include "../basics/Byte.h"
 #include <stdio.h>
 
 class TCompress {

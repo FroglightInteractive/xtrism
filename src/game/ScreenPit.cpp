@@ -2,12 +2,12 @@
 
 #include <math.h>
 
-#include "ScreenPit.H"
-#include "../env/TDrawCol.H"
-#include "../gfx/GBParent.H"
-#include "../env/TSprite.H"
-#include "../env/TImage.H"
-#include "../bytemap/BMRecolour.H"
+#include "ScreenPit.h"
+#include "../env/TDrawCol.h"
+#include "../gfx/GBParent.h"
+#include "../env/TSprite.h"
+#include "../env/TImage.h"
+#include "../bytemap/BMRecolour.h"
 
 ScreenPit::ScreenPit(GBParent *p, VisPit &vp, SharedBG &sbg,
                      class PollServer &syncserv):

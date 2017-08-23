@@ -3,11 +3,11 @@
 #ifndef _TDrawCol_H
 #define _TDrawCol_H
 
-#include "TGFX.H"
-#include "../basics/BBox.H"
+#include "TGFX.h"
+#include "../basics/BBox.h"
 
 #ifndef TPRIVATE
-#include "TXID.H"
+#include "TXID.h"
 #endif
 
 class TDrawCol {

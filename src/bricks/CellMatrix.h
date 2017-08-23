@@ -3,8 +3,8 @@
 #ifndef _CellMatrix_H
 #define _CellMatrix_H
 
-#include "../basics/Word.H"
-#include "../basics/Throw.H"
+#include "../basics/Word.h"
+#include "../basics/Throw.h"
 
 class CellMatrix {
 public:

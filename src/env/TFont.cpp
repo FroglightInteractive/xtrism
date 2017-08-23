@@ -2,14 +2,14 @@
 
 #define TPRIVATE
 
-#include "../basics/Throw.H"
-#include "TFont.H"
-#include "../basics/BBox.H"
-#include "setclip.H"
+#include "../basics/Throw.h"
+#include "TFont.h"
+#include "../basics/BBox.h"
+#include "setclip.h"
 
 #include <stdio.h>
 #include <string.h>
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 ////////////////////////////// TMFont ////////////////////////////////////////
 TMFont::TMFont(const TGFX &tgfx0, char *name, int size):

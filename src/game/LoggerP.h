@@ -14,7 +14,7 @@
 #define _LoggerP_H
 
 #include <math.h>
-#include "../basics/minmax.H"
+#include "../basics/minmax.h"
 
 const unsigned int LOGGER_SIZE = 10000; // prepare for 10000 events at a time
 

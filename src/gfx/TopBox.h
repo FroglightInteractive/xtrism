@@ -3,11 +3,11 @@
 #ifndef _TopBox_H
 #define _TopBox_H
 
-#include "../env/TEnv.H"
-#include "GBParent.H"
+#include "../env/TEnv.h"
+#include "GBParent.h"
 #include <list>
-#include "../basics/Infty.H"
-#include "../poll/PollServer.H"
+#include "../basics/Infty.h"
+#include "../poll/PollServer.h"
 
 class TopBox: public GBParent, private THKey, private THMML, private THRedraw,
   private THPoll, private THSync {

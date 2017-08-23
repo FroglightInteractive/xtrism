@@ -1,9 +1,9 @@
 // PlayerList.C
 
-#include "PlayerList.H"
-#include "../basics/getline.H"
-#include "../basics/Throw.H"
-#include "../basics/dbx.H"
+#include "PlayerList.h"
+#include "../basics/getline.h"
+#include "../basics/Throw.h"
+#include "../basics/dbx.h"
 
 list<Player>::iterator PlayerList::next(list<Player>::iterator i,
                                         bool loop) {

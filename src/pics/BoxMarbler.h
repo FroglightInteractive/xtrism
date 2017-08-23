@@ -3,9 +3,9 @@
 #ifndef _BoxMarbler_H
 #define _BoxMarbler_H
 
-#include "../env/TCmap.H"
+#include "../env/TCmap.h"
 #include <list>
-#include "../basics/Byte.H"
+#include "../basics/Byte.h"
 
 class BoxMarblers {
 public:

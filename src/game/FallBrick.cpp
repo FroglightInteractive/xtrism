@@ -1,11 +1,11 @@
 // FallBrick.C
 
-#include "FallBrick.H"
-#include "BrickEnv.H"
-#include "../basics/Infty.H"
-#include "../basics/dbx.H"
+#include "FallBrick.h"
+#include "BrickEnv.h"
+#include "../basics/Infty.h"
+#include "../basics/dbx.h"
 
-#include "../sound/Sounds.H"
+#include "../sound/Sounds.h"
 
 FallBrick::FallBrick(const SBrickData &sbdat, int x_0, int y_0,
                      int rot_0, int dy_0):

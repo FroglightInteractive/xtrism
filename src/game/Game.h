@@ -5,8 +5,8 @@
 #ifndef _Game_H
 #define _Game_H
 
-#include "GameTime.H"
-#include "../env/TCallBack.H"
+#include "GameTime.h"
+#include "../env/TCallBack.h"
 
 class Game: public TCallBack {
 public:

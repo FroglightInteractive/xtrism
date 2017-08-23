@@ -3,8 +3,8 @@
 #ifndef _ControlBuf_H
 #define _ControlBuf_H
 
-#include "KbdBuffer.H"
-#include "Controls.H"
+#include "KbdBuffer.h"
+#include "Controls.h"
 
 class ControlBuf: public Controls {
 public:

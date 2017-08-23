@@ -1,10 +1,10 @@
 // Kronos.C
 
-#include "Kronos.H"
-#include "GameTime.H"
-#include "../basics/Infty.H"
-#include "../basics/dbx.H"
-#include "../sound/Sounds.H"
+#include "Kronos.h"
+#include "GameTime.h"
+#include "../basics/Infty.h"
+#include "../basics/dbx.h"
+#include "../sound/Sounds.h"
 
 Kronos::Kronos(int virtlines):
   godown(GameTime::dt_godown(virtlines)),

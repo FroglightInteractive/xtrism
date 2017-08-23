@@ -3,9 +3,9 @@
 #ifndef _FallBrick_H
 #define _FallBrick_H
 
-#include "../bricks/data.H"
-#include "FBPos.H"
-#include "BrickEnv.H"
+#include "../bricks/data.h"
+#include "FBPos.h"
+#include "BrickEnv.h"
 
 class FBResult {
 public:

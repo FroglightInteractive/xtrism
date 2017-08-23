@@ -3,9 +3,9 @@
 #ifndef _Logger_H
 #define _Logger_H
 
-#include "FBPos.H"
-#include "../basics/Byte.H"
-#include "../env/TTime.H"
+#include "FBPos.h"
+#include "../basics/Byte.h"
+#include "../env/TTime.h"
 #include <stdio.h>
 
 class Logger {

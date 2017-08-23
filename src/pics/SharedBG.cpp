@@ -1,12 +1,12 @@
 // SharedBG.C
 
-#include "SharedBG.H"
-#include "../basics/Filename.H"
-#include "../basics/Throw.H"
-#include "../env/TEnv.H"
-#include "../env/TImage.H"
-#include "../env/TImageFile.H"
-#include "../bytemap/ByteMap.H"
+#include "SharedBG.h"
+#include "../basics/Filename.h"
+#include "../basics/Throw.h"
+#include "../env/TEnv.h"
+#include "../env/TImage.h"
+#include "../env/TImageFile.h"
+#include "../bytemap/ByteMap.h"
 
 SharedBG::SharedBG(): img(0), bm(0), first(0) {
 }

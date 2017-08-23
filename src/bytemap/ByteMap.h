@@ -4,9 +4,9 @@
 #define _ByteMap_H
 
 #include <string>
-#include "../basics/Byte.H"
-#include "../basics/Throw.H"
-#include "../basics/minmax.H"
+#include "../basics/Byte.h"
+#include "../basics/Throw.h"
+#include "../basics/minmax.h"
 
 class ByteMap {
 public:

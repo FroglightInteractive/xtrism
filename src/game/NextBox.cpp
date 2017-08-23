@@ -1,13 +1,13 @@
 // NextBox.C
 
-#include "NextBox.H"
-#include "../basics/Infty.H"
-#include "../gfx/GBParent.H"
-#include "../bricks/data.H"
-#include "../bricks/bsprites.H"
-#include "Logger.H"
-#include "../bytemap/BMRecolour.H"
-#include "../env/TSprite.H"
+#include "NextBox.h"
+#include "../basics/Infty.h"
+#include "../gfx/GBParent.h"
+#include "../bricks/data.h"
+#include "../bricks/bsprites.h"
+#include "Logger.h"
+#include "../bytemap/BMRecolour.h"
+#include "../env/TSprite.h"
 
 // Sleeper info: sends itself a warn whenever contents must be redrawn
 

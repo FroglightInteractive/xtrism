@@ -1,7 +1,7 @@
 // SPlayer.C
 
-#include "SPlayer.H"
-#include "Sample.H"
+#include "SPlayer.h"
+#include "Sample.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
-#include "../basics/minmax.H"
-#include "../basics/dbx.H"
+#include "../basics/minmax.h"
+#include "../basics/dbx.h"
 
 SPlayer::SPlayer(): fd(-1), dummy(false) {
   buf.chr = 0;

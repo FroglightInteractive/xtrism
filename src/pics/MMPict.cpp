@@ -1,10 +1,10 @@
 // MMPict.C
 
-#include "MMPict.H"
-#include "MidPtDisp.H"
-#include "../bytemap/RGBMap.H"
+#include "MMPict.h"
+#include "MidPtDisp.h"
+#include "../bytemap/RGBMap.h"
 #include <math.h>
-#include "../basics/minmax.H"
+#include "../basics/minmax.h"
 
 MMPict::MMPict(int w0, int h0, MidPtDisp const *tb_cloud0,
                RGBMap *rgbmap0, bool doitnow):

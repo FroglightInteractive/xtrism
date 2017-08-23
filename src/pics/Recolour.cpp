@@ -1,9 +1,9 @@
 // Recolour.C
 
-#include "Recolour.H"
-#include "../env/TEnv.H"
-#include "../env/TImage.H"
-#include "../basics/BBox.H"
+#include "Recolour.h"
+#include "../env/TEnv.h"
+#include "../env/TImage.h"
+#include "../basics/BBox.h"
 #include <math.h>
 
 inline void recolour(TImage *dst, TImage const *src,

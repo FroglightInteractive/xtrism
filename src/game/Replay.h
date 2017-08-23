@@ -3,7 +3,7 @@
 #ifndef _Replay_H
 #define _Replay_H
 
-#include "../env/TTime.H"
+#include "../env/TTime.h"
 
 class Replay {
 public:

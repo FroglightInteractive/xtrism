@@ -1,11 +1,11 @@
 // Button.C
 
-#include "Button.H"
+#include "Button.h"
 
-#include "../env/TEnv.H"
-#include "../env/TImage.H"
-#include "../bytemap/ByteMap.H"
-#include "../bytemap/ByteImage.H"
+#include "../env/TEnv.h"
+#include "../env/TImage.h"
+#include "../bytemap/ByteMap.h"
+#include "../bytemap/ByteImage.h"
 
 Button::Button(GBParent *p, Area const &area, const TRGB &bg):
   GBox(p, area) {

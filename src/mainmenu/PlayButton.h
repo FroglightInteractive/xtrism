@@ -3,10 +3,10 @@
 #ifndef _PlayButton_H
 #define _PlayButton_H
 
-#include "../gfx/Button.H"
-#include "../globals/Globals.H"
-#include "../sessions/SessionQuit.H"
-#include "../env/TEnv.H"
+#include "../gfx/Button.h"
+#include "../globals/Globals.h"
+#include "../sessions/SessionQuit.h"
+#include "../env/TEnv.h"
 
 class PlayButton: public TextButton, private SessionQuit, private TCallBack,
   private THQuit {

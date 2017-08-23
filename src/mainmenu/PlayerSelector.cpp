@@ -1,13 +1,13 @@
 // PlayerSelector.C
 
-#include "PlayerSelector.H"
+#include "PlayerSelector.h"
 
-#include "../popups/ListBox.H"
-#include "../env/TEnv.H"
-#include "../basics/minmax.H"
-#include "../pics/MarbleBG.H"
-#include "../env/TImage.H"
-#include "../options/PlayerList.H"
+#include "../popups/ListBox.h"
+#include "../env/TEnv.h"
+#include "../basics/minmax.h"
+#include "../pics/MarbleBG.h"
+#include "../env/TImage.h"
+#include "../options/PlayerList.h"
 
 class PlayerListBox: public ListBox {
 public:

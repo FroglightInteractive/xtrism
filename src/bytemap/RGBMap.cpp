@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 #include <errno.h>
-#include "RGBMap.H"
-#include "../basics/dbx.H"
+#include "RGBMap.h"
+#include "../basics/dbx.h"
 #include <string.h>
 
 RGBMap::RGBMap(unsigned int w, unsigned int h):

@@ -1,7 +1,7 @@
 // SPlayer.H (generic vsn)
 
 #ifdef TRISM_ESD
-#include "../esd/SPlayer.H"
+#include "../esd/SPlayer.h"
 #else
-#include "../dsp/SPlayer.H"
+#include "../dsp/SPlayer.h"
 #endif

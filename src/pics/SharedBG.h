@@ -3,7 +3,7 @@
 #ifndef _SharedBG_H
 #define _SharedBG_H
 
-#include "../basics/BBox.H"
+#include "../basics/BBox.h"
 
 class SharedBG {
 public:

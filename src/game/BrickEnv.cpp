@@ -1,8 +1,8 @@
 // BrickEnv.C
 
-#include "BrickEnv.H"
-#include "FallBrick.H"
-#include "LogPit.H"
+#include "BrickEnv.h"
+#include "FallBrick.h"
+#include "LogPit.h"
 
 BEClash BrickEnv::doiclash(int bno, int rot, int x, int y,
                            bool /*wallonly*/) {

@@ -1,15 +1,15 @@
 // Session.C
 
-#include "Session.H"
-#include "GameQuit.H"
-#include "Game.H"
-#include "../basics/dbx.H"
-#include "../basics/Filename.H"
-#include "../bricks/brickcell.H"
-#include "../gfx/GBParent.H"
-#include "../gfx/GBox.H"
-#include "../env/TImage.H"
-#include "../pics/MarbleBG.H"
+#include "Session.h"
+#include "GameQuit.h"
+#include "Game.h"
+#include "../basics/dbx.h"
+#include "../basics/Filename.h"
+#include "../bricks/brickcell.h"
+#include "../gfx/GBParent.h"
+#include "../gfx/GBox.h"
+#include "../env/TImage.h"
+#include "../pics/MarbleBG.h"
 
 Session::Session(TEnv &tenv0, class GBParent *gbp0,
                    GameQuit *gq, BBox const &bgbbox):

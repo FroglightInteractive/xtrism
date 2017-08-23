@@ -1,12 +1,12 @@
 // Waker.C
 
-#include "Waker.H"
-#include "Sleeper.H"
-#include "../basics/Throw.H"
+#include "Waker.h"
+#include "Sleeper.h"
+#include "../basics/Throw.h"
 
 #include <algorithm>
 
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
 Waker::~Waker() {
   dbx(-980809, "Waker::~Waker");

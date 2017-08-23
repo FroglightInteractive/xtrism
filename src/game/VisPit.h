@@ -3,9 +3,9 @@
 #ifndef _VisPit_H
 #define _VisPit_H
 
-#include "FBPos.H"
-#include "../basics/Word.H"
-#include "../poll/Waker.H"
+#include "FBPos.h"
+#include "../basics/Word.h"
+#include "../poll/Waker.h"
 
 class VisPit: public Waker {
 public:

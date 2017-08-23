@@ -1,6 +1,6 @@
 // gfx/BBox.C
 
-#include "BBox.H"
+#include "BBox.h"
 
 //////////////////////////////////// BBox ////////////////////////////////////
 BBox & BBox::operator|=(const BBox &bbox) {

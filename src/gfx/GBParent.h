@@ -3,9 +3,9 @@
 #ifndef _GBParent_H
 #define _GBParent_H
 
-#include "GBox.H"
+#include "GBox.h"
 #include <list>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 class GBPos {
 public:

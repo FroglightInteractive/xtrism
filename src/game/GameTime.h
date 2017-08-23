@@ -3,7 +3,7 @@
 #ifndef _GameTime_H
 #define _GameTime_H
 
-#include "../env/TTime.H"
+#include "../env/TTime.h"
 #include <math.h>
 
 class GameTime {

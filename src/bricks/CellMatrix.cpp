@@ -1,7 +1,7 @@
 // CellMatrix.C
 
-#include "CellMatrix.H"
-#include "../basics/dbx.H"
+#include "CellMatrix.h"
+#include "../basics/dbx.h"
 
 CellMatrix::CellMatrix(unsigned int height) {
   hei = height;

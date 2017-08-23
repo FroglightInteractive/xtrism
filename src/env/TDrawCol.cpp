@@ -2,9 +2,9 @@
 
 #define TPRIVATE
 
-#include "TDrawCol.H"
-#include "TSprite.H"
-#include "setclip.H"
+#include "TDrawCol.h"
+#include "TSprite.h"
+#include "setclip.h"
 
 TDrawCol::TDrawCol(const TGFX &tgfx0, const TRGB &fg):
   tgfx(tgfx0) {

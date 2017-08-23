@@ -8,7 +8,7 @@
 #include <iostream>
 using namespace std;
 
-#include "../basics/KeyCode.H"
+#include "../basics/KeyCode.h"
 
 istream &operator>>(istream &is, class Player &pl);
 ostream &operator<<(ostream &os, class Player const &pl);

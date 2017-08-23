@@ -2,12 +2,12 @@
 
 #define TPRIVATE
 
-#include "TImage.H"
-#include "TEnv.H"
+#include "TImage.h"
+#include "TEnv.h"
 #include <stdlib.h>
-#include "../basics/dbx.H"
+#include "../basics/dbx.h"
 
-#include "../basics/BBox.H"
+#include "../basics/BBox.h"
 
 TImage::TImage(const TEnv &tenv, unsigned int w, unsigned int h):
   env(tenv), priv(1) {

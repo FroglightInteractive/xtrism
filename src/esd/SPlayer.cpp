@@ -1,7 +1,7 @@
 // SPlayer.C
 
-#include "SPlayer.H"
-#include "Sample.H"
+#include "SPlayer.h"
+#include "Sample.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,8 +12,8 @@
 #include <unistd.h>
 
 #include <esd.h>
-#include "../basics/minmax.H"
-#include "../basics/dbx.H"
+#include "../basics/minmax.h"
+#include "../basics/dbx.h"
 
 SPlayer::SPlayer(): dummy(false) {
   int fd = esd_play_stream_fallback(

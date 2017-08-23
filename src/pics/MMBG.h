@@ -3,7 +3,7 @@
 #ifndef _MMBG_H
 #define _MMBG_H
 
-#include "../env/TImage.H"
+#include "../env/TImage.h"
 
 class MMBG: public TImage {
 public:

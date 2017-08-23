@@ -3,7 +3,7 @@
 #ifndef _GBox_H
 #define _GBox_H
 
-#include "../basics/BBox.H"
+#include "../basics/BBox.h"
 
 class GBox {
 public:

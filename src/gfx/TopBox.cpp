@@ -1,10 +1,10 @@
 // TopBox.C
 
 #include <string>
-#include "TopBox.H"
-#include "../env/TTime.H"
+#include "TopBox.h"
+#include "../env/TTime.h"
 #include <algorithm>
-#include "../basics/Throw.H"
+#include "../basics/Throw.h"
 
 void TopBox::tredraw(int lx, int ty, int w, int h) {
   BBox b(lx, ty, lx + w, ty + h);
