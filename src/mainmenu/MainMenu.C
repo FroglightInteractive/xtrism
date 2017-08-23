@@ -96,6 +96,7 @@ MainMenu::MainMenu(): TopBox(tenv()) {
 
   dbx(-20070110,"Mainmenu: post children");
 
+#if 0
   //+ larie
   //  Box3D *boxje=new Box3D(this,Area(tenv().width()/4,tenv().height()/5),
   //                         bms->find(TRGB(160,160,80)));
@@ -124,7 +125,8 @@ MainMenu::MainMenu(): TopBox(tenv()) {
   newchild(boxje,GBPos(this,1),GBPos(this,1),GBPos(this,1),GBPos(this,5));
   //newchild(inpf,GBPos(this,1),GBPos(this,4),GBPos(this,1),GBPos(this,1));
   //- larie
-
+#endif
+  
   placechildren();
   dbx(-20070110,"Mainmenu:  children placed");
 
