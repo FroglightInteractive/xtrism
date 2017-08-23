@@ -12,36 +12,37 @@
 #include <stdlib.h>
 #include "../env/TTime.H"
 
-bool Fortuna::inited=false;
+bool Fortuna::inited = false;
 
 Fortuna::Fortuna(Probability const &p):
   other(0), nextbno(0), curbno(0), prob(p) {
   if (!inited)
     srand(TTime(TTime::CURRENT).intrep());
-  inited=true;
-  }
+  inited = true;
+}
 
 Fortuna::~Fortuna() {
   if (other)
     other->deregother();
-  }
+}
 
 void Fortuna::regother(Fortuna *o) {
-  other=o;
-  other->other=this;
-  }
+  other = o;
+  other->other = this;
+}
 
 void Fortuna::deregother() {
   if (other)
-    other->other=0;
-  other=0;
-  }
+    other->other = 0;
+  other = 0;
+}
 
 int Fortuna::next() {
-  curbno=nextbno;
-  do
-    { nextbno=prob(float(rand())/RAND_MAX);
-    } while (nextbno==curbno ||
-             (other && (nextbno==other->curbno || nextbno==other->nextbno)));
+  curbno = nextbno;
+  do {
+    nextbno = prob(float(rand()) / RAND_MAX);
+  } while (nextbno == curbno
+           || (other
+               && (nextbno == other->curbno || nextbno == other->nextbno)));
   return nextbno;
-  }
+}

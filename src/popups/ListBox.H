@@ -10,20 +10,19 @@ using namespace std;
 
 #include "../gfx/Box3D.H"
 
-
 class ListBox: public Box3D {
 public:
   ListBox(class GBParent *par, class Area const &area,
-	  class TFont const &font, class TFont const &hlfont,
-	  class BoxMarbler *bg);
+              class TFont const &font, class TFont const &hlfont,
+                  class BoxMarbler *bg);
   virtual ~ListBox();
   void add(string const &str);
-  static int heightneeded(int n, class TFont const &font);
+  static int heightneeded(int n, class TFont const & font);
 public:
-  virtual void redraw(class BBox const &bbox);
-  virtual void motion(class Point const &pt);
-  virtual bool mouse(int button, bool ino, class Point const &pt);
-  virtual void enterleave(bool ino, class Point const &pt);
+  virtual void redraw(class BBox const & bbox);
+  virtual void motion(class Point const & pt);
+  virtual bool mouse(int button, bool ino, class Point const & pt);
+  virtual void enterleave(bool ino, class Point const & pt);
 protected:
   virtual void selection(int idx); // This gets called when a selection is made.
 private:
@@ -41,9 +40,9 @@ private:
   int selectedline; // This may refer to prev or next!
   bool hasprev;
   bool hasnext;
-  
-  class TFont const &font;
-  class TFont const &hlfont;
+
+  class TFont const & font;
+  class TFont const & hlfont;
 };
 
 #endif

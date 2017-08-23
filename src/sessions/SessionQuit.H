@@ -4,7 +4,7 @@
 #define _SessionQuit_H
 
 class SessionQuit {
-  public:
-    virtual void squit()=0;
-  };
+public:
+  virtual void squit() = 0;
+};
 #endif

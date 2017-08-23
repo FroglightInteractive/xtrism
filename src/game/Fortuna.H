@@ -6,18 +6,18 @@
 #include "../bricks/Probability.H"
 
 class Fortuna {
-  public:
-    Fortuna(Probability const &p);
-    ~Fortuna();
-    void regother(Fortuna *o);
-    void deregother();
-    int next();
-  private:
-    Fortuna *other;
-    int nextbno;
-    int curbno;
-    Probability const &prob;
-    static bool inited;
-  };
-    
+public:
+  Fortuna(Probability const &p);
+  ~Fortuna();
+  void regother(Fortuna *o);
+  void deregother();
+  int next();
+private:
+  Fortuna *other;
+  int nextbno;
+  int curbno;
+  Probability const &prob;
+  static bool inited;
+};
+
 #endif

@@ -4,5 +4,5 @@
 #include "../pics/BoxMarbler.H"
 
 void Box3D::redraw(BBox const &bb) {
-  bm->draw(bbox(),bb,+1,3);
-  }
+  bm->draw(bbox(), bb, +1, 3);
+}

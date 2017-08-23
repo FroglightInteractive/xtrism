@@ -10,8 +10,8 @@
 class PlayerSelector: public TextButton {
 public:
   PlayerSelector(GBParent *p, const Area &area, bool right,
-		 class TImage &bg0, bool bgok0,
-		 class BoxMarbler *marbler);
+                 class TImage &bg0, bool bgok0,
+                   class BoxMarbler *marbler);
   virtual ~PlayerSelector();
   virtual bool mouse(int b, bool io, const Point &pt);
   virtual void redraw(BBox const &bb);
@@ -29,4 +29,3 @@ private:
 };
 
 #endif
-

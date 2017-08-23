@@ -6,8 +6,8 @@
 #include "../env/TImage.H"
 
 class MMBG: public TImage {
-  public:
-    MMBG(class TEnv const &env, class TImageFile *timf=0);
-  };
+public:
+  MMBG(class TEnv const &env, class TImageFile *timf=0);
+};
 
 #endif

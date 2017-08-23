@@ -10,15 +10,15 @@
 
 void dbx(int lvl, char const *fmt, ...) {
   va_list ap;
-  if (lvl>0) {
-    if (lvl>DBXLEVEL)
+  if (lvl > 0) {
+    if (lvl > DBXLEVEL)
       return;
   } else {
-    if (lvl>DBXDATE)
+    if (lvl > DBXDATE)
       return;
   }
-  va_start(ap,fmt);
-  fprintf(stderr,"[dbx/%i: ",lvl);
+  va_start(ap, fmt);
+  fprintf(stderr, "[dbx/%i: ", lvl);
   vfprintf(stderr, fmt, ap);
-  fprintf(stderr,"]\n");
-  }
+  fprintf(stderr, "]\n");
+}

@@ -23,49 +23,55 @@
 #include "../bytemap/ByteMap.H"
 
 class BCSurround {
-  public:
-    BCSurround(bool E=0, bool NE=0, bool N=0, bool NW=0,
-               bool W=0, bool SW=0, bool S=0, bool SE=0):
-      e(E), ne(NE), n(N), nw(NW),
-      w(W), sw(SW), s(S), se(SE) {}
-    unsigned const int e:1, ne:1, n:1, nw:1, w:1, sw:1, s:1, se:1;
-  };
-  
+public:
+  BCSurround(bool E=0, bool NE=0, bool N=0, bool NW=0,
+             bool W=0, bool SW=0, bool S=0, bool SE=0):
+    e(E), ne(NE), n(N), nw(NW),
+    w(W), sw(SW), s(S), se(SE) {
+  }
+  unsigned const int e : 1, ne : 1, n : 1, nw : 1, w : 1, sw : 1, s : 1,
+    se : 1;
+};
+
 class BrickCell: public ByteMap {
-  public:
-    BrickCell(unsigned int w, unsigned int h=0, unsigned int depth=128);
-    BrickCell(const ByteMap &other, int rot=0): ByteMap(other,rot) { }
-    BrickCell(const ByteMap &other, unsigned int x, unsigned int y,
-              unsigned int w, unsigned int h=0):
-      ByteMap(other,x,y,w,h?h:w) { }
-    BrickCell(class TDecompress &src, unsigned int w, unsigned int h=0):
-      ByteMap(w,h?h:w,src) { }
-    void drawborders(unsigned int borderwidth, const BCSurround &sur,
-                     int depth=100);
-    void drawstripes(unsigned int depth=50);
-  private:
-    byte pixc(unsigned int x, unsigned int y)
-      { return (x<wid && y<hei)?cc(x,y):128; }
-    inline unsigned int random(unsigned int w,unsigned int n,unsigned int nw);
-    void drawbasis(unsigned int depth);
+public:
+  BrickCell(unsigned int w, unsigned int h=0, unsigned int depth=128);
+  BrickCell(const ByteMap &other, int rot=0): ByteMap(other, rot) {
+  }
+  BrickCell(const ByteMap &other, unsigned int x, unsigned int y,
+            unsigned int w, unsigned int h=0):
+    ByteMap(other, x, y, w, h ? h : w) {
+  }
+  BrickCell(class TDecompress &src, unsigned int w, unsigned int h=0):
+    ByteMap(w, h ? h : w, src) {
+  }
+  void drawborders(unsigned int borderwidth, const BCSurround &sur,
+                   int depth=100);
+  void drawstripes(unsigned int depth=50);
+private:
+  byte pixc(unsigned int x, unsigned int y) {
+    return (x < wid && y < hei) ? cc(x, y) : 128;
+  }
+  inline unsigned int random(unsigned int w, unsigned int n, unsigned int nw);
+  void drawbasis(unsigned int depth);
 
-    inline void a_rect(unsigned int x, unsigned int y,
-                       unsigned int w, unsigned int h, int o);
-    inline void a_tri_ne(unsigned int x, unsigned int y,
-                         unsigned int w, int o);
-    inline void a_tri_nw(unsigned int x, unsigned int y,
-                         unsigned int w, int o);
-    inline void a_tri_se(unsigned int x, unsigned int y,
-                         unsigned int w, int o);
-    inline void a_tri_sw(unsigned int x, unsigned int y,
-                         unsigned int w, int o);
-    inline void a_line_nw_se(unsigned int x, unsigned int y,
-                             unsigned int w, int o);
-    inline void a_line_ne_sw(unsigned int x, unsigned int y,
-                             unsigned int w, int o);
-    // (x,y) = nw corner (!)
+  inline void a_rect(unsigned int x, unsigned int y,
+                     unsigned int w, unsigned int h, int o);
+  inline void a_tri_ne(unsigned int x, unsigned int y,
+                       unsigned int w, int o);
+  inline void a_tri_nw(unsigned int x, unsigned int y,
+                       unsigned int w, int o);
+  inline void a_tri_se(unsigned int x, unsigned int y,
+                       unsigned int w, int o);
+  inline void a_tri_sw(unsigned int x, unsigned int y,
+                       unsigned int w, int o);
+  inline void a_line_nw_se(unsigned int x, unsigned int y,
+                           unsigned int w, int o);
+  inline void a_line_ne_sw(unsigned int x, unsigned int y,
+                           unsigned int w, int o);
+  // (x,y) = nw corner (!)
 
-    friend class BCImage;
-  };
+  friend class BCImage;
+};
 
 #endif

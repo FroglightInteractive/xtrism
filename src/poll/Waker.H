@@ -10,14 +10,15 @@
    their codes, named W_NONE=0, W_XXX=1, etc. */
 
 class Waker {
-  public:
-    Waker() {}
-    virtual ~Waker();
-    void reg(class Sleeper *sleeper);
-    void dereg(class Sleeper const *sleeper);
-  protected:
-    void sendwarn(int code=0);
+public:
+  Waker() {
+  }
+  virtual ~Waker();
+  void reg(class Sleeper *sleeper);
+  void dereg(class Sleeper const *sleeper);
+protected:
+  void sendwarn(int code=0);
   std::list<class Sleeper *> sleepers;
-  };
+};
 
 #endif

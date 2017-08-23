@@ -6,7 +6,7 @@
 #include "TSprite.H"
 
 /*
-  TGFX::TGFX(TGFX const &oth, TSprite const &ts):
-  tcmap(oth.tcmap), display(oth.display), drwb(ts.drawable()) {
-  }
-*/
+   TGFX::TGFX(TGFX const &oth, TSprite const &ts):
+   tcmap(oth.tcmap), display(oth.display), drwb(ts.drawable()) {
+   }
+ */

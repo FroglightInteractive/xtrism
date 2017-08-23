@@ -17,11 +17,16 @@ using namespace std;
 
 void athrow(const string &text) __attribute__ ((noreturn));
 
-inline void athrow(const string &text) { fprintf(stderr,"Error: %s\n",
-                                                 text.c_str());
-                                         throw text; 
-                                       }
-inline void fthrow(bool dont,const string &text) { if (!dont) athrow(text); }
-inline void tthrow(bool doit,const string &text) { if (doit) athrow(text); }
+inline void athrow(const string &text) {
+  fprintf(stderr, "Error: %s\n",
+          text.c_str());
+  throw text;
+}
+inline void fthrow(bool dont, const string &text) {
+  if (!dont) athrow(text);
+}
+inline void tthrow(bool doit, const string &text) {
+  if (doit) athrow(text);
+}
 
 #endif

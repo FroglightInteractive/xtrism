@@ -4,6 +4,6 @@
 #define _SampleExc_H
 
 class SampleExc {
-  };
+};
 
 #endif

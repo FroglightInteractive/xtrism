@@ -7,16 +7,17 @@
 #include "../env/TTime.H"
 
 class PollServer {
-  public:
-    PollServer();
-    ~PollServer();
-    int poll(class TTime const &now);
-  public: // for Sleeper
-    void request(class Sleeper *slpr, class TTime const &when);
-    void forget(class Sleeper *slpr);
-  private:
+public:
+  PollServer();
+  ~PollServer();
+  int poll(class TTime const & now);
+public:
+  // for Sleeper
+  void request(class Sleeper *slpr, class TTime const &when);
+  void forget(class Sleeper *slpr);
+private:
   std::list<std::pair<class TTime, class Sleeper *> > events;
-    TTime first;
-  };
+  TTime first;
+};
 
 #endif

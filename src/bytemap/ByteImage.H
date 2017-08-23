@@ -10,8 +10,9 @@
 
  * Note that rgb0 and rgb1 do not have to lie within [0,255]^3: the
    rgb values written into the TImage are clipped automatically.
-  */
+ */
 extern void byteimage(class TImage &dst, class ByteMap const &src,
-                      class WideRGB const &rgb0, class WideRGB const &rgb1);
+                          class WideRGB const &rgb0,
+                            class WideRGB const &rgb1);
 
 #endif
