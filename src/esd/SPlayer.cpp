@@ -11,15 +11,18 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <esd.h>
+//#include <esd.h>
 #include "../basics/minmax.h"
 #include "../basics/dbx.h"
 
 SPlayer::SPlayer(): dummy(false) {
-  int fd = esd_play_stream_fallback(
+  int fd = -1;
+  /*
+    esd_play_stream_fallback(
     ESD_BITS16 | ESD_STEREO | ESD_STREAM | ESD_PLAY,
     SP_DFLTSPD,
     0, "trism");
+  */
   dummy = fd < 0;
   if (fd >= 0)
     close(fd);
@@ -38,6 +41,7 @@ SPHandle SPlayer::play(Sample const *s, float freqratio,
                        float amplitude, float posn) throw (SampleExc) {
   if (dummy) return -1;
 
+  /*
   int pid = fork();
   if (pid < 0) {
     perror("SPlayer::play: fork");
@@ -76,6 +80,7 @@ SPHandle SPlayer::play(Sample const *s, float freqratio,
     exit(0);
   } // end of child
   return 1;
+  */
 }
 
 void SPlayer::stop(SPHandle const &sph) {

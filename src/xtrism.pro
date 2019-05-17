@@ -9,4 +9,4 @@ CONFIG(debug, debug|release) { OBJECTS_DIR=../build/debug }
 MOC_DIR = $${OBJECTS_DIR}
 RCC_DIR = $${OBJECTS_DIR}
 UI_DIR = $${OBJECTS_DIR}
-LIBS +=  -L/usr/X11R6/lib -lX11 -lesd
+LIBS +=  -L/usr/X11R6/lib -lX11
