@@ -276,7 +276,7 @@ TCmap::TCmap(Display *d):
 }
 
 string TCmap::id() const {
-  char buf[20];
+  char buf[200];
   if (rleft == gleft && rleft == bleft)
     sprintf(buf, "xgrey%i", 8 - rright);
   else {

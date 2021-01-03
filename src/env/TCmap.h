@@ -27,6 +27,8 @@ public:
   }
   TRGB(): r(0), g(0), b(0) {
   }
+  TRGB(const TRGB &x): r(x.r), g(x.g), b(x.b) {
+  }
   TRGB(const char *str) {
     fill(str);
   }

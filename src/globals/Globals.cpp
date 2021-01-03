@@ -16,8 +16,6 @@
 #include "../sound/Sounds.h"
 #include "../env/TReso.h"
 
-#include "../.datadir"
-
 #include <fstream>
 
 TEnv *gl_tenvp = 0;
@@ -68,7 +66,15 @@ void global_init(int argc, char **argv) {
   gl_tfp = new TFont(*gl_tmfp, TRGB(255), TRGB(0));
   gl_tfyp = new TFont(*gl_tmfp, TRGB(255, 255, 0), TRGB(0, 0, 0));
 
-  gl_datadirp = new Filename(DATADIR);
+  char const *leaf = strrchr(argv[0], '/');
+  std::string ddir = argv[0];
+  if (leaf)
+    ddir = ddir.substr(0, leaf - argv[0]);
+  else
+    ddir = get_current_dir_name();
+  ddir += "/../data";
+  std::cerr << "data dir " << ddir << "\n";
+  gl_datadirp = new Filename(ddir);
   gl_cachedirp = new Filename(datadir() + "cache");
   gl_soundsp = new Sounds(datadir() + "sound");
   gl_tenvp->reg_splayer(gl_soundsp->player());

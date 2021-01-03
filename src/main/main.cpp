@@ -10,7 +10,6 @@
 #include "../globals/Globals.h"
 #include "../mainmenu/MainMenu.h"
 #include <exception>
-#include "../.datadir"
 #include "../basics/Filename.h"
 #include <QApplication>
 
@@ -34,7 +33,7 @@ void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
   time_t t = time(0);
   strftime(buf + strlen(buf), 100, "%d %b %Y %H:%M", localtime(&t));
   if (sc != 0) {
-    string s = DATADIR;
+    string s = datadir().name();
     s += "/hisc";
     FILE *f = fopen(s.c_str(), "a");
     if (f) {
