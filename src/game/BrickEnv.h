@@ -13,6 +13,7 @@ class BrickEnv {
 public:
   BrickEnv(class LogPit &lp): pit(lp) {
   }
+  virtual ~BrickEnv() {}
   virtual BEClash doiclash(int bno, int rot, int x, int y,
                            bool wallonly=false);
 protected:

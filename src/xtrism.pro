@@ -3,6 +3,8 @@ TARGET = ../build/xtrism
 
 include(xtrism.pri)
 
+#DEFINES += TRISM_ESD
+QT += multimedia widgets 
 CONFIG += release
 OBJECTS_DIR=../build/release
 CONFIG(debug, debug|release) { OBJECTS_DIR=../build/debug }

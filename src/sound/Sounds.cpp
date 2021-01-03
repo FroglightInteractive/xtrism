@@ -2,38 +2,28 @@
 
 #include "Sounds.h"
 #include "Sample.h"
-#include "SPlayer.h"
 #include "../basics/Filename.h"
 #include "../basics/dbx.h"
+#include "SPlayer.h"
+#include <iostream>
 
 class Sounds *sounds = 0;
 
 const float stdampl = .3;
 
-Sounds::Sounds(Filename const &dir) throw (char const *) {
+Sounds::Sounds(Filename const &dir) {
   sounds = this;
   speedup_ = turn_ = drop_ = applause_ = shoosh_ = explode_ = warn_ = 0;
   splayer = 0;
-  try {
-    splayer = new SPlayer();
-    splayer->activate();
-    splayer->deactivate();
-  } catch (SampleExc) {
-    fprintf(stderr, "Sounds: couldn't create SPlayer... sounds disabled");
-    // sounds=0;
-    return;   // NYI
-  }
-  try {
-    speedup_ = new Sample((dir + "speedup").name());
-    turn_ = new Sample((dir + "turn").name());
-    drop_ = new Sample((dir + "drop").name());
-    applause_ = new Sample((dir + "applause").name());
-    shoosh_ = new Sample((dir + "shoosh").name());
-    explode_ = new Sample((dir + "explode").name());
-    warn_ = new Sample((dir + "warning").name());
-  } catch (SampleExc) {
-    throw "Sounds: Sample not found";
-  }
+  splayer = new SPlayer();
+
+  speedup_ = new Sample((dir + "speedup.wav").name());
+  turn_ = new Sample((dir + "turn.wav").name());
+  drop_ = new Sample((dir + "drop.wav").name());
+  applause_ = new Sample((dir + "applause.wav").name());
+  shoosh_ = new Sample((dir + "shoosh.wav").name());
+  explode_ = new Sample((dir + "explode.wav").name());
+  warn_ = new Sample((dir + "warning.wav").name());
 }
 
 Sounds::~Sounds() {
@@ -45,10 +35,6 @@ Sounds::~Sounds() {
   if (shoosh_) delete shoosh_;
   if (explode_) delete explode_;
   if (warn_) delete warn_;
-}
-
-bool Sounds::poll() {
-  return splayer->poll();
 }
 
 void Sounds::speedup(float posn) const {
@@ -79,10 +65,4 @@ void Sounds::warn(float posn) const {
   splayer->play(warn_, 1, stdampl, posn);
 }
 
-void Sounds::activate() {
-  splayer->activate();
-}
 
-void Sounds::deactivate() {
-  splayer->deactivate();
-}

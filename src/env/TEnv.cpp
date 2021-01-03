@@ -13,6 +13,7 @@ const int USLEEP_ACTUAL_COMPENSATION = 20; // time lost in usleep(1) [ms]
 
 bool tbusy;
 
+#include "../sound/SPlayer.h"
 #include <string.h>
 #include <stdio.h>
 #include "../basics/Throw.h"
@@ -20,7 +21,6 @@ bool tbusy;
 #include "TReso.h"
 #include "TTime.h"
 #include "../basics/Infty.h"
-#include "../sound/SPlayer.h"
 
 #include <X11/keysym.h>
 
@@ -129,8 +129,6 @@ void TEnv::loop(int /*nice*/) {
   dbx(3, "poll = %p", &poll);
   quitting = false;
   while (!quitting) {
-    if (spl)
-      spl->poll();
     TTime tt(TTime::CURRENT);
     int nextpoll = poll ? poll.top().tpoll(tt) : INFTY;
     cbl.callpopall();

@@ -32,7 +32,6 @@ NiceSession::NiceSession(BBox const &bb, char const *id,
   TopBox(tenv(), BBox(0, 0, tenv().width(), tenv().height()), true),
   squit(sq) {
   dbx(1, "NiceSession: Team");
-  sounds->activate();
   init(bb);
   g1 = new NiceGame(*s, 0, poll, sync,
                     s->keyboard(),
@@ -102,7 +101,6 @@ NiceSession::~NiceSession() {
   if (g1)
     delete g1;
   delete s;
-  sounds->deactivate();
 }
 
 void NiceSession::gquit(class Game *g, bool quitable) {

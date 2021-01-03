@@ -1,7 +1,16 @@
-// SPlayer.H (generic vsn)
+// SPlayer.h
 
-#ifdef TRISM_ESD
-#include "../esd/SPlayer.h"
-#else
-#include "../dsp/SPlayer.h"
+#ifndef SPLAYER_H
+
+#define SPLAYER_H
+
+#include "Sample.h"
+
+class SPlayer {
+public:
+  SPlayer();
+  ~SPlayer();
+  void play(Sample *s, float frqrat, float amp, float posn);
+};
+
 #endif

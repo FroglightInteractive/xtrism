@@ -1,5 +1,8 @@
-ALL: src/Makefile
-	+make src
+ALL: PREP
+	+make -C build
 
-src/Makefile: src/xtrism.pro src/xtrism.pri
-	( cd src; qmake )
+PREP:
+	mkdir -p build
+	( cd build; qmake ../src/xtrism.pro )
+
+clean:; rm -rf build

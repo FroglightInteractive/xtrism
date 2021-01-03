@@ -157,7 +157,7 @@ void NiceGame::quit(bool natural) {
   Game::quit(natural);
 }
 
-void NiceGame::addscore(double sc, PlPlayer *plp) {
+void NiceGame::addscore(double sc, PlPlayer *) {
   tbusy = true;
   // tthrow(plp!=plplayers[0], "NiceGame::addscore: Unexpected PlPlayer");
   (*score) += sc;
@@ -251,7 +251,7 @@ bool NiceGame::req_to_unpause(PlPlayer *plp) {
   return true;
 }
 
-bool NiceGame::req_to_quit(bool dead, PlPlayer *plp) {
+bool NiceGame::req_to_quit(bool dead, PlPlayer *) {
   selfquit(dead);
   return true;
 }

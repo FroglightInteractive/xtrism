@@ -12,6 +12,7 @@
 #include <exception>
 #include "../.datadir"
 #include "../basics/Filename.h"
+#include <QApplication>
 
 void my_exc() {
   fprintf(stderr, "XTrism: my_exc (Unexpected exception)\n");
@@ -45,6 +46,7 @@ void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
 }
 
 int main(int argc, char **argv) {
+  QApplication app(argc, argv);
   int r = 0;
   set_terminate(&my_term);
   set_unexpected(&my_exc);

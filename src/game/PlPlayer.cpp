@@ -327,7 +327,7 @@ void PlPlayer::pause(bool own) {
   if (own) {
     if (state == OTHPAUSED) { // steal pause
       dbx(1, "PlPlayer(%p) steals pause", this);
-    } else if (!state == PAUSED) { // visual pause
+    } else if (state != PAUSED) { // visual pause
       dbx(1, "PlPlayer(%p) takes new pause", this);
     }
     // else athrow("PlPlayer: Unexpected pause");

@@ -3,9 +3,11 @@
 #ifndef _Sounds_H
 #define _Sounds_H
 
+#include "Sample.h"
+
 class Sounds {
 public:
-  Sounds(class Filename const &dir) throw (char const *);
+  Sounds(class Filename const &dir);
   ~Sounds();
   void speedup(float posn=0) const;
   void turn(float posn=0) const;
@@ -14,16 +16,13 @@ public:
   void shoosh(float posn=0) const;
   void explode(float posn=0, float ampl=1) const;
   void warn(float posn=0) const;
-  bool poll();
-  void activate();
-  void deactivate();
   class SPlayer *player() {
     return splayer;
   }                                             // only used by Globals.C!
 private:
+  Sample *speedup_, *turn_, *drop_, *applause_;
+  Sample *shoosh_, *explode_, *warn_;
   class SPlayer *splayer;
-  class Sample *speedup_, *turn_, *drop_, *applause_;
-  class Sample *shoosh_, *explode_, *warn_;
 };
 
 extern class Sounds *sounds;
