@@ -140,6 +140,11 @@ void TEnv::loop(int /*nice*/) {
       if (xev.xany.window == window) {
         switch (xev.type) {
         case KeyPress:
+          if (xev.xkey.keycode==24) {
+            if (spl)
+              spl->toggleSounds();
+            break;
+          }            
         case KeyRelease:
           lastkey = &xev.xkey;
           if (keyboard)

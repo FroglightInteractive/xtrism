@@ -4,6 +4,11 @@
 #include <iostream>
 
 SPlayer::SPlayer() {
+  enabled = true;
+}
+
+void SPlayer::toggleSounds() {
+  enabled = !enabled;
 }
 
 SPlayer::~SPlayer() {
@@ -12,7 +17,7 @@ SPlayer::~SPlayer() {
 
 void SPlayer::play(Sample *s, float frqrat, float amp, float posn) {
   std::cerr << "play " << s << "\n";
-  
-  s->play();
+  if (enabled)
+    s->play();
 }
 
