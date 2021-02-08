@@ -51,7 +51,9 @@ void global_init(int argc, char **argv) {
   if (gl_inited)
     athrow(string("global_init(): double initialization"));
   gl_inited = true;
-  gl_tenvp = new TEnv(TReso(16, 12, minf, maxf, true), argc, argv, ":0.0");
+  char *display = getenv("DISPLAY");
+  gl_tenvp = new TEnv(TReso(16, 12, minf, maxf, true), argc, argv,
+                      display ? display : ":0.0");
   dbx(1, "Actual factor: %i\n", gl_tenvp->actualfactor());
 
   char fontpattern[] = "-*-bitstream charter-bold-r-*-*-%i-*-*-*-*-*-*-*";
