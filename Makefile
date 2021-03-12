@@ -3,6 +3,7 @@ ALL: PREP
 
 PREP:
 	mkdir -p build
+	tools/updatesources.sh
 	( cd build; qmake ../src/xtrism.pro )
 
 clean:; rm -rf build

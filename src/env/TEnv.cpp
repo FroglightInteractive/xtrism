@@ -21,7 +21,7 @@ bool tbusy;
 #include "TReso.h"
 #include "TTime.h"
 #include "../basics/Infty.h"
-
+#include <set>
 #include <X11/keysym.h>
 
 TEnv::TEnv(const TReso &reso, int argc, char **argv, char const *addit):
@@ -128,6 +128,7 @@ void TEnv::loop(int /*nice*/) {
   dbx(3, "sync = %p", &sync);
   dbx(3, "poll = %p", &poll);
   quitting = false;
+  std::set<int> pressed;
   while (!quitting) {
     TTime tt(TTime::CURRENT);
     int nextpoll = poll ? poll.top().tpoll(tt) : INFTY;
@@ -140,12 +141,16 @@ void TEnv::loop(int /*nice*/) {
       if (xev.xany.window == window) {
         switch (xev.type) {
         case KeyPress:
+          if (pressed.find(xev.xkey.keycode) != pressed.end())
+            break;
+          pressed.insert(xev.xkey.keycode);
           if (xev.xkey.keycode==24) {
             if (spl)
               spl->toggleSounds();
             break;
           }            
         case KeyRelease:
+          pressed.erase(xev.xkey.keycode);
           lastkey = &xev.xkey;
           if (keyboard)
             keyboard.top().tkey(xev.xkey.keycode, xev.type == KeyPress);
@@ -303,6 +308,7 @@ bool TEnv::getautorep() {
 
 /* ---------------------------- do_setautorep ----------------------------- */
 void TEnv::do_setautorep(bool a) {
+  return;
   if (a)
     XAutoRepeatOn(display);
   else
