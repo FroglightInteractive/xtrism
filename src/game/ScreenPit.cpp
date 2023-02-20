@@ -29,7 +29,7 @@ bool ScreenPit::draw(Point const &origin, class ByteMap *bm) {
   int dx = vispit.cellsize();
   bb.resize(1, BB_NoChange);
   for (int x = 0; x < W * dx; x++) {
-    double phase = x * 3.141592 / dx;
+    double phase = (x + dx/2) * 3.141592 / dx;
     recolour_rectangle(bm, bb, .5 + .15 * cos(phase), 0);
     bb.shift(1, 0);
   }

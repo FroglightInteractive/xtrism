@@ -186,7 +186,7 @@ void BrickCell::drawbasis(unsigned int depth) {
   unsigned int x, y;
   for (y = 0; y < hei; y++)
     for (x = 0; x < wid; x++)
-      c(x, y) = random(pixc(x - 1, y), pixc(x, y - 1), pixc(x - 1, y - 1));
+      c(x, y) = random(pixc(x - 1, y), pixc(x, y - 1), pixc(x + 1, y - 1));
 
   unsigned int a0 = (256 - depth) / 2;
   for (y = 0; y < hei; y++)

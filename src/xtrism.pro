@@ -3,6 +3,7 @@ TARGET = ../build/xtrism
 
 include(xtrism.pri)
 
+QMAKE_CXXFLAGS += -std=c++11
 #DEFINES += TRISM_ESD
 QT += multimedia widgets 
 CONFIG += release
