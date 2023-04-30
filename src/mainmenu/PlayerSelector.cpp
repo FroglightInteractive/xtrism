@@ -11,7 +11,7 @@
 
 class PlayerListBox: public ListBox {
 public:
-  PlayerListBox(class GBParent *par, class Area const &area,
+  PlayerListBox(class GBParent *par, class QSize const &area,
                     class TFont const &font, class TFont const &hlfont,
                         class BoxMarbler *bg, PlayerSelector *selector0):
     ListBox(par, area, font, hlfont, bg), selector(selector0) {
@@ -26,7 +26,7 @@ private:
   PlayerSelector *selector;
 };
 
-PlayerSelector::PlayerSelector(GBParent *p, const Area &area, bool right0,
+PlayerSelector::PlayerSelector(GBParent *p, const QSize &area, bool right0,
                                class TImage &bg0, bool bgok0,
                                  class BoxMarbler *marbler):
   TextButton(p, area, "", tf()),
@@ -55,7 +55,7 @@ void PlayerSelector::redraw(BBox const &bbox) {
   TextButton::redraw(bbox);
 }
 
-bool PlayerSelector::mouse(int b, bool io, const Point &pt) {
+bool PlayerSelector::mouse(int b, bool io, const QPoint &pt) {
   if (b == 1 && io) {
     openbox();
     return true;
@@ -71,7 +71,7 @@ void PlayerSelector::openbox() {
   int yneed = ListBox::heightneeded(nplrs, tf());
   makeatmost(yneed, int(3 * tenv().height() / 4));
   dbx(-20070110, "PlayerSelector: openbox. yneed=%i. nplrs=%i", yneed, nplrs);
-  listbox = new PlayerListBox(parent, Area(width(), yneed),
+  listbox = new PlayerListBox(parent, QSize(width(), yneed),
                               tf(), tfyellow(), marbler, this);
   for (PlayerList::PlayerIt i = players().begin();
        i != players().end(); ++i) {

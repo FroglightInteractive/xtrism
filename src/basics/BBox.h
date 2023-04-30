@@ -3,120 +3,63 @@
 #ifndef _BBox_H
 #define _BBox_H
 
+#include <QRect>
 #include "../basics/minmax.h"
 
 const int BB_NoChange = -100000000; // -1e8 == -INFTY
 
-class Point {
+class BBox: public QRect {
 public:
-  Point(int x, int y): xx(x), yy(y) {
+  BBox(int lx, int ty, int rx, int by):
+    QRect(lx, ty, rx-lx, by-ty) {
   }
-  int x() const {
-    return xx;
+  BBox(QRect rct): QRect(rct) { }
+  BBox(QPoint const &topleft, QSize const &area):
+    QRect(topleft, area) {
   }
-  int y() const {
-    return yy;
+  BBox(): QRect(0,0,0,0) {
   }
-private:
-  int xx, yy;
-};
-
-class Area {
-public:
-  Area(int w, int h): ww(w), hh(h) {
-  }
-  Area(int wh): ww(wh), hh(wh) {
-  }
-  int w() const {
-    return ww;
-  }
-  int h() const {
-    return hh;
-  }
-private:
-  int ww, hh;
-};
-
-class BBox {
-public:
-  BBox(int lx1, int ty1, int rx1, int by1):
-    lx(lx1), ty(ty1), rx(rx1), by(by1) {
-  }
-  BBox(Point const &topleft, Area const &area):
-    lx(topleft.x()), ty(topleft.y()),
-    rx(topleft.x() + area.w()), by(topleft.y() + area.h()) {
-  }
-  BBox(): lx(0), ty(0), rx(0), by(0) {
-  }
-
-  BBox &operator|=(const BBox &bbox);   // merge with other
-  BBox &operator&=(const BBox &bbox);   // intersect with other
-  BBox operator&(const BBox &other) const {
-    BBox b(*this);
-    return b &= other;
-  }                                       // returns intersection
+  BBox &operator=(QRect const &r) { QRect::operator=(r); return *this; }
   bool empty() const {
-    return lx >= rx || ty >= by;
+    return isEmpty();
   }
-  operator bool() const {
+  operator bool() const { // non-empty
     return !empty();
-  }                                            // non-empty
-  bool intersect(const BBox &bbox) const;   // intersection isn't empty
-  bool contains(int x, int y) const;   // lx<=x<rx && ty<=y<by
-  bool contains(const Point &p) const {
-    return contains(p.x(), p.y());
+  }                                           
+  bool intersect(const BBox &bbox) const {
+    return intersects(bbox);
   }
-
-  BBox &addmargin(int left, int top=-1, int right=-1, int bottom=-1);
+  BBox &addmargin(int left, int top=-1, int right=-1, int bottom=-1) {
+    if (top<0)
+      top = left;
+    if (right<0)
+      right = left;
+    if (bottom<0)
+      bottom = top;
+    *this = marginsAdded(QMargins(left, top, right, bottom));
+    return *this;
+  }
   BBox &shift(int dx, int dy) {
-    lx += dx;
-    rx += dx;
-    ty += dy;
-    by += dy;
+    translate(dx, dy);
     return *this;
   }
   BBox &moveto(int x, int y) {
-    return shift((x == BB_NoChange) ? 0 : (x - lx),
-                 (y == BB_NoChange) ? 0 : (y - ty));
+    return shift((x == BB_NoChange) ? 0 : (x - left()),
+                 (y == BB_NoChange) ? 0 : (y - top()));
   }
-  BBox &moveto(Point const &p) {
+  BBox &moveto(QPoint const &p) {
     return moveto(p.x(), p.y());
   }
   BBox &resize(int w, int h) {
-    rx = (w == BB_NoChange) ? rx : (lx + w);
-    by = (h == BB_NoChange) ? by : (ty + h);
+    if (w!=BB_NoChange)
+      setWidth(w);
+    if (h!=BB_NoChange)
+      setHeight(h);
     return *this;
   }
-  BBox &resize(Area const &a) {
-    return resize(a.w(), a.h());
+  BBox &resize(QSize const &a) {
+    return resize(a.width(), a.height());
   }
-
-  int left() const {
-    return lx;
-  }
-  int top() const {
-    return ty;
-  }
-  int right() const {
-    return rx;
-  }
-  int bottom() const {
-    return by;
-  }
-  int width() const {
-    return max(rx - lx, 0);
-  }
-  int height() const {
-    return max(by - ty, 0);
-  }
-  Point topleft() const {
-    return Point(left(), top());
-  }
-  Area area() const {
-    return Area(width(), height());
-  }
-private:
-  int lx, ty, rx, by;
 };
 
 #endif

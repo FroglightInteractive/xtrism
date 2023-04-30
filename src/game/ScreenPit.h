@@ -3,30 +3,27 @@
 #ifndef _ScreenPit_H
 #define _ScreenPit_H
 
-#include "../gfx/GBox.h"
+#include <QWidget>
 #include "VisPit.h"
-#include "../pics/SharedBG.h"
-#include "../poll/Sleeper.h"
+#include "../bytemap/RGBMap.h"
 
-class ScreenPit: public GBox, public BGSharer, public Sleeper {
+class ScreenPit: public QWidget {
 public:
-  ScreenPit(GBParent *p, VisPit &vp, SharedBG &sbg,
-            class PollServer &syncserv);
+  ScreenPit(VisPit &vp, RGBMap const &sbg, QWidget *parent=0);
   /* In the GBArgs argument, the width and height members need not
      be specified; they are re-calculated from the VisPit's data. */
   ~ScreenPit();
-  bool draw(Point const & origin, class ByteMap *bm);
-  void redraw(BBox const &bbox);
-  void poll();   // for synchronized drawing
-  void redrawcell(int x, int y, TSprite const *tsp) const;
+  void paintEvent(QPaintEvent *) override;
+  void poll();
 private:
-  int cellsize() const {
-    return vispit.cellsize();
-  }
+  void redrawcell(QPainter *p, int x, int y, QPixmap const *tsp) const;
+  void generate();
+private:
+  RGBMap const &sharedbg;
   VisPit &vispit;
-  class TImage *backg;
-  class GBox const *backg_origin;
-  bool bgok;
+  QPixmap mybg;
+  QPoint topleft;
+  int wid, hei, bw;
 };
 
 #endif

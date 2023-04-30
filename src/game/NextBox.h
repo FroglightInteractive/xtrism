@@ -3,30 +3,31 @@
 #ifndef _NextBox_H
 #define _NextBox_H
 
-#include "../gfx/GBox.h"
-#include "../pics/SharedBG.h"
-#include "../poll/Sleeper.h"
+#include <QWidget>
+#include "RGBMap.h"
+#include <QPixmap>
 
-class NextBox: public GBox, public BGSharer, public Sleeper {
+class NextBox: public QWidget {
 public:
-  NextBox(class GBParent *p, class SBrickData const &sbd0,
-              class BrickSprites const &bs0,
-                SharedBG &sbg, class PollServer &syncserv,
-                  bool myid=0, class Logger *logger=0);
+  NextBox(class SBrickData const &sbd0,
+          class BrickSprites const &bs0,
+          RGBMap const &sharedbg, QWidget *parent);
   ~NextBox();
-  bool draw(Point const & origin, class ByteMap *bm);
-  void redraw(BBox const &bbox);
-  void update(int bno0, int rot0);
+  void setbrick(int bno0, int rot0);
   void poll();
   void clear() {
-    update(-1, 0);
+    setbrick(-1, 0);
   }
+  void paintEvent(QPaintEvent *) override;
 private:
-  class SBrickData const & sbd;
-  class BrickSprites const & bs;
+  void generate();
+private:
+  class SBrickData const &sbd;
+  class BrickSprites const &bs;
+  RGBMap const &sharedbg;
   int bno, rot;
-  bool myid;
-  class Logger *logger;
+  QPixmap mybg;
+  QPoint topleft;
 };
 
 #endif

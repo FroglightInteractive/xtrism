@@ -3,8 +3,6 @@
 #ifndef _CellMatrix_H
 #define _CellMatrix_H
 
-#include "../basics/Word.h"
-#include "../basics/Throw.h"
 
 class CellMatrix {
 public:
@@ -14,6 +12,7 @@ public:
   void or_(CellMatrix const &from, int dx, int dy);
   void bic(CellMatrix const &from, int dx, int dy);
   bool tst(CellMatrix const &other, int dx, int dy) const;
+  void clear();
   unsigned int height() const {
     return hei;
   }
@@ -22,17 +21,18 @@ public:
   }
 protected:
   void set(unsigned int x, unsigned int y, bool set=1);
-  word &line(unsigned int y) {
-    tthrow(y >= hei, "CellMatrix: bad access");
+  unsigned int &line(unsigned int y) {
+    if (y >= hei)
+      throw "CellMatrix: bad access";
     return data[y];
   }
-  word const &line(unsigned int y) const {
-    tthrow(y >= hei,
-           "CellMatrix: bad access");
+  unsigned int const &line(unsigned int y) const {
+    if (y >= hei)
+      throw "CellMatrix: bad access";
     return data[y];
   }
 private:
-  word *data;
+  unsigned int *data;
   unsigned int hei;
 };
 

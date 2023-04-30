@@ -11,13 +11,13 @@
 class PlayButton: public TextButton, private SessionQuit, private TCallBack,
   private THQuit {
 public:
-  PlayButton(GBParent *p, const Area &area, char const *txt,
+  PlayButton(GBParent *p, const QSize &area, char const *txt,
              class TImage &bg0, bool bgok0):
     TextButton(p, area, txt, tf()), s(0),
     bg(bg0), bgok(bgok0) {
   }
   virtual ~PlayButton();
-  virtual bool mouse(int b, bool io, const Point &p);
+  virtual bool mouse(int b, bool io, const QPoint &p);
   virtual bool key(int kc, bool io);
   virtual void redraw(BBox const &bbox);
   virtual void play(int bset=-1) = 0;
@@ -41,7 +41,7 @@ private:
 
 class SoloButton: public PlayButton {
 public:
-  SoloButton(GBParent *p, const Area &area,
+  SoloButton(GBParent *p, const QSize &area,
              bool right0, char const *txt,
              class TImage &bg, bool bgok):
     PlayButton(p, area, txt, bg, bgok), right(right0) {
@@ -53,7 +53,7 @@ private:
 
 class TeamButton: public PlayButton {
 public:
-  TeamButton(GBParent *p, const Area &area, char const *txt,
+  TeamButton(GBParent *p, const QSize &area, char const *txt,
              class TImage &bg, bool bgok):
     PlayButton(p, area, txt, bg, bgok) {
   }
@@ -62,7 +62,7 @@ public:
 
 class ApartButton: public PlayButton {
 public:
-  ApartButton(GBParent *p, const Area &area, char const *txt,
+  ApartButton(GBParent *p, const QSize &area, char const *txt,
               class TImage &bg, bool bgok):
     PlayButton(p, area, txt, bg, bgok) {
   }

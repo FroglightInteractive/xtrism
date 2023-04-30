@@ -5,16 +5,14 @@
 
 #include "KbdBuffer.h"
 #include "Kronos.h"
-#include "../poll/Sleeper.h"
 
-class PlPlayer: public Sleeper {
+class PlPlayer {
 public:
-  PlPlayer(class Game *g, int pos,
-             class Player const &p,
-               class SBrickData const &sbd, class GlobalOpts const &glopts,
-                   class Keyboard *kbd, class PollServer &pollserv,
-                       int lvl, class Probability const &prob,
-                         int x0, int y0=0, int rot0=0, int dy=1);
+  PlPlayer(class NiceGame *g, int pos,
+           class Player const &p,
+           class SBrickData const &sbd, class GlobalOpts const &glopts,
+           int lvl, class Probability const &prob,
+           int x0, int y0=0, int rot0=0, int dy=1);
   virtual ~PlPlayer();
 private:
   enum State {
@@ -46,21 +44,21 @@ public:
   }
   void pause(bool own);
   void unpause(bool payforit);
-  void connect(class NextBox *nb, class LogPit &lp, PlPlayer *oth = 0);
+  void connect(class NextBox *nb, class LogPit *lp, PlPlayer *other);
   void disconnect(class NextBox *nb);
   void disconnect(PlPlayer *oth);
   void poll();
+  void key(int code, bool in_not_out);
 private:
-  class Game *game;
+  class NiceGame *game; // not ours
   class PlPlayer *other;   // may be 0
-
-  class Player const & player;
+  class Player const &player;
+private:
   class Kronos *kronos;   // my resp
   class FallBrick *fallbrick;   // my resp
   class BrickEnv *brickenv;   // my resp
   class Referee *referee;   // my resp
   class KbdBuffer *kbdbuffer;   // my resp
-  class ControlBuf *ctrlbuf;   // my resp
   class WishList *wishlist;   // my resp
   class Fortuna *fortuna;   // my resp
   class NextBox *nextbox;   // may be 0

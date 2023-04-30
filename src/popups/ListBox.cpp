@@ -56,7 +56,7 @@ bool ListBox::needsnext(int idx) {
   return idx + numlines - (needsprev(idx) ? 1 : 0) < int(contents.size());
 }
 
-ListBox::ListBox(class GBParent *par, class Area const &area,
+ListBox::ListBox(class GBParent *par, class QSize const &area,
                      class TFont const &font0, class TFont const &hlfont0,
                          class BoxMarbler *bg):
   Box3D(par, area, bg), font(font0), hlfont(hlfont0) {
@@ -120,7 +120,7 @@ void ListBox::redraw(BBox const &bb) {
   }
 }
 
-void ListBox::motion(Point const &pt) {
+void ListBox::motion(QPoint const &pt) {
   // dbx(-20070110,"listbox(%p)::motion((%i,%i))",
   // this,pt.x(),pt.y());
   int n = lineno(pt.y());
@@ -130,7 +130,7 @@ void ListBox::motion(Point const &pt) {
   }
 }
 
-bool ListBox::mouse(int button, bool ino, Point const &pt) {
+bool ListBox::mouse(int button, bool ino, QPoint const &pt) {
   // dbx(-20070110,"listbox(%p)::mouse(%i,%i,(%i,%i))",
   // this,button,ino?1:0,pt.x(),pt.y());
   if (button == 1 && ino) {
@@ -175,5 +175,5 @@ void ListBox::selection(int idx) {
   dbx(-20070110, "Listbox selection: %i", idx);
 }
 
-void ListBox::enterleave(bool ino, Point const &pt) {
+void ListBox::enterleave(bool ino, QPoint const &pt) {
 }

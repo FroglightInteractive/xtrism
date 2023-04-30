@@ -6,7 +6,6 @@
 #include "FallBrick.h"
 #include "KbdBuffer.h"
 #include "Kronos.h"
-#include "../basics/Byte.h"
 
 class WLResult {
 public:
@@ -14,7 +13,7 @@ public:
   }
   WLResult &operator|=(const FBHResult &fbh);
   WLResult &operator|=(const FBVResult &fbv);
-  byte moved : 1, othermoved : 1, landed : 1, dropped : 1, gonedown : 1;
+  bool moved, othermoved, landed, dropped, gonedown;
 };
 
 class WishList {
@@ -24,15 +23,14 @@ public:
   WLResult poll();
 private:
   struct {
-    byte left : 1, right : 1,
-      zleft : 2, zright : 2,
-      rotcw : 1, rotccw : 1,
-      drop : 1;
+    bool left, right;
+    unsigned char zleft, zright;
+    bool rotcw, rotccw, drop;
   } movemark;
   FallBrick &fb;
   Kronos &kronos;
   struct {
-    byte invol_land : 1, unexp_x : 1;
+    bool invol_land, unexp_x;
   } prot;
   void clearflags();
   void warn();

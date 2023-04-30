@@ -1,19 +1,17 @@
 // MainMenu.H
 
-#include "../gfx/TopBox.h"
+#include <QWidget>
 
-class MainMenu: public TopBox {
+class MainMenu: public QWidget {
 public:
-  MainMenu();
+  MainMenu(class MainWindow *mw);
   ~MainMenu();
-  void redraw(const BBox &bb);
+  void paintEvent(QPaintEvent *) override;
 public:
-  // for the time being...
   class TextButton *playbuttons[4], *textbut;
 private:
   class MMBG *backg;
   class BoxMarblers *bms;
-  // class Box3D *boxje;
   class InputField *inpf;
   class PlayerSelector *selectors[2];
 };

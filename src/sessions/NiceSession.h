@@ -3,31 +3,35 @@
 #ifndef _NiceSession_H
 #define _NiceSession_H
 
-#include "../game/GameQuit.h"
-#include "../gfx/TopBox.h"
-
-class NiceSession: public TopBox, private GameQuit {
+class NiceSession: public QWidget {
 public:
-  NiceSession(class BBox const &bb, char const *id,
-                class Player const &p1, int bset,
-                  class SessionQuit *sq=0); // Solo
-  NiceSession(class BBox const &bb, char const *id,
-                class Player const &p1, class Player const &p2,
-                    int bset, class SessionQuit *sq=0); // Team
-  NiceSession(class BBox const &bb, char const *id,
-                class Player const &p1, class Player const &p2,
-                    int bset1, int bset2, class SessionQuit *sq=0); // Apart
+  NiceSession(QString id,
+              class Player const &p1,
+              int bset,
+              class MainWindow *mw, QWidget *playbutton); // solo
+  NiceSession(QString id,
+              class Player const &p1, class Player const &p2,
+              int bset,
+              class MainWindow *mw, QWidget *playbutton); // Team
+  NiceSession(QString id,
+              class Player const &p1, class Player const &p2,
+              int bset1, int bset2,
+              class MainWindow *mw, QWidget *playbutton); // Apart
   virtual ~NiceSession();
-  bool key(int code, bool in_not_out);
-  void redraw(BBox const &bb);
+  void paintEvent(QPaintEvent *) override;
+  void exec();
+  RGBMap const &background() const;
+  void keyPressEvent(QKeyEvent*) override;
+  void keyReleaseEvent(QKeyEvent*) override;
 private:
-  void init(class BBox const & bb);
-  void start(char const *id);
-  void gquit(class Game *g, bool quitable);
+  NiceSession(QString id, MainWindow *mw, QWidget *playbutton);
+  //  void init(QString id);
+  //  void start();
+  //  void gquit(class Game *g, bool quitable);
 private:
-  class Session *s;
+  RGBMap bg_;
+  QPixmap bg;
   class NiceGame *g1, *g2;
-  class SessionQuit *squit;
 };
 
 #endif

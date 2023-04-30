@@ -5,7 +5,6 @@
 
 #include <vector>
 #include "../basics/KeyCode.h"
-#include "../poll/Waker.h"
 using namespace std;
 
 enum KeyNumber {
@@ -104,7 +103,7 @@ private:
 
 #include <list>
 
-class KbdBuffer: public Waker {
+class KbdBuffer {
 public:
   KbdBuffer(TKeyCode const *usr, TKeyCode const *glb):
     kcs(usr, glb),  // rp(KB_BUFSIZE), wp(KB_BUFSIZE),

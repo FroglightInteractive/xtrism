@@ -4,20 +4,21 @@
 #include "BMRecolour.h"
 #include "ByteMap.h"
 #include "../basics/BBox.h"
+#include "../basics/minmax.h"
 #include <math.h>
 
 inline void recolour(ByteMap *img,
                      int x, int y,
                      float mul, int add) {
-  byte &c = img->c(x, y);
-  c = byte(min(max(int(c * mul + add), 0), 255));
+  unsigned char &c(img->c(x, y));
+  c = clip255(c * mul + add);
 }
 
 inline void recolour(ByteMap *img,
                      int x, int y,
                      int add) {
-  byte &c = img->c(x, y);
-  c = byte(min(max(int(c + add), 0), 255));
+  unsigned char &c = img->c(x, y);
+  c = clip255(c + add);
 }
 
 void recolour_rectangle(ByteMap *img, BBox const &bbox,
@@ -47,7 +48,7 @@ void recolour_rect_edges(ByteMap *img, BBox const &bbox,
 }
 
 void recolour_circle(ByteMap *img,
-                     Point const &centre,
+                     QPoint const &centre,
                      int radius, float mul, int add,
                      int r1, int depth) {
   int rad2 = radius * radius;

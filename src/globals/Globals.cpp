@@ -3,8 +3,7 @@
 #include <string>
 
 #include "Globals.h"
-#include "../env/TEnv.h"
-#include "../env/TFont.h"
+#include "../env/MainWindow.h"
 #include "../bricks/bsprites.h"
 #include "../basics/dbx.h"
 #include "../options/GlobalOpts.h"
@@ -12,27 +11,22 @@
 #include "../bricks/Probability.h"
 #include "../bricks/data.h"
 #include "../basics/Infty.h"
-#include "../basics/Filename.h"
 #include "../sound/Sounds.h"
 #include "../env/TReso.h"
 
 #include <fstream>
 
-TEnv *gl_tenvp = 0;
+MainWindow *gl_mainwindowp = 0;
 SBrickData *gl_sbdp = 0;
 BrickSprites *gl_bsp = 0;
 BrickSprites *gl_bsp2 = 0;
-TMFont *gl_tmfp = 0;
-TFont *gl_tfp = 0;
-TFont *gl_tfyp = 0;
 Sounds *gl_soundsp = 0;
 
-Filename *gl_datadirp = 0;
-Filename *gl_cachedirp = 0;
+QDir *gl_datadirp = 0;
+QDir *gl_cachedirp = 0;
 
 GlobalOpts *gl_glopts = 0;
 PlayerList *gl_pll = 0;
-ProbBSet *gl_probbs = 0;
 
 int gl_bset = 0;
 PlayerList::PlayerIt gl_player[2];
@@ -42,64 +36,34 @@ static int gl_inited = false;
 #include <string.h>
 #include <stdio.h>
 
-void global_init(int argc, char **argv) {
+void global_init(int argc, char **argv, class QApplication *app) {
   int minf = 20;
   int maxf = 300;
-  if (argc > 2 && strcmp(argv[1], "-size") == 0)
-    minf = maxf = atoi(argv[2]);
+  //if (argc > 2 && strcmp(argv[1], "-size") == 0)
+  //  minf = maxf = atoi(argv[2]);
   dbx(1, "global_init()");
   if (gl_inited)
-    athrow(string("global_init(): double initialization"));
+    throw "global_init(): double initialization";
   gl_inited = true;
-  char *display = getenv("DISPLAY");
-  gl_tenvp = new TEnv(TReso(16, 12, minf, maxf, true), argc, argv,
-                      display ? display : ":0.0");
-  dbx(1, "Actual factor: %i\n", gl_tenvp->actualfactor());
 
-  char fontpattern[] = "-*-bitstream charter-bold-r-*-*-%i-*-*-*-*-*-*-*";
-  int fontsizes[] = { 8, 10, 12, 14, 18, 24, 36, 48, 72, 96, INFTY };
-  int maxsize = int(gl_tenvp->actualfactor() * .32);
-  int idx = 0;
-  while (fontsizes[idx + 1] <= maxsize)
-    idx++;
-  char buf[80];
-  sprintf(buf, fontpattern, fontsizes[idx]);
-  gl_tmfp = new TMFont(*gl_tenvp, buf);
-  gl_tfp = new TFont(*gl_tmfp, TRGB(255), TRGB(0));
-  gl_tfyp = new TFont(*gl_tmfp, TRGB(255, 255, 0), TRGB(0, 0, 0));
+  QFileInfo me(argv[0]);
+  gl_datadirp = new QDir(me.path() + "/../data");
+  gl_cachedirp = new QDir(me.path() + "/../cache");
 
-  char const *leaf = strrchr(argv[0], '/');
-  std::string ddir = argv[0];
-  if (leaf)
-    ddir = ddir.substr(0, leaf - argv[0]);
-  else
-    ddir = get_current_dir_name();
-  ddir += "/../data";
-  std::cerr << "data dir " << ddir << "\n";
-  gl_datadirp = new Filename(ddir);
-  gl_cachedirp = new Filename(datadir() + "cache");
+  gl_mainwindowp = new MainWindow(TReso(16, 12, minf, maxf, true),
+                                  cachedir());
+  dbx(1, "Actual factor: %i\n", mainwindow()->actualfactor());
+
   gl_soundsp = new Sounds(datadir() + "sound");
-  gl_tenvp->reg_splayer(gl_soundsp->player());
 
   dbx(2, "Reading bricks: data");
   gl_sbdp = new SBrickData(datadir() + "bricks");
   dbx(2, "Creating bricks: sprites");
-  gl_bsp = new BrickSprites(*gl_sbdp, cachedir() + "bs",
-                            int(gl_tenvp->actualfactor() / 2.5),
-                            *gl_tenvp);
-  gl_bsp2 = new BrickSprites(*gl_sbdp, cachedir() + "bs2",
-                             int(gl_tenvp->actualfactor() / 2.5),
-                             *gl_tenvp, 1);
+  gl_bsp = new BrickSprites(*gl_sbdp, cachedir(),
+                            int(mainwindow()->actualfactor() / 2.5), 0);
+  gl_bsp2 = new BrickSprites(*gl_sbdp, cachedir(),
+                             int(mainwindow()->actualfactor() / 2.5), 1);
 
-  {
-    dbx(2, "Creating probabilities");
-    gl_probbs = new ProbBSet();
-    ifstream ff((datadir() + "probs").name(),
-                istream::in /* | ios::nocreate */);
-    if (!ff)
-      athrow("Couldn't open Probability file");
-    ff >> *gl_probbs;
-  }
   {
     dbx(2, "Reading global options");
     gl_glopts = new GlobalOpts();
@@ -176,35 +140,16 @@ BrickSprites const &bs2() {
   return *gl_bsp2;
 }
 
-TFont &tf() {
-  dbx(3, "tf()");
-  if (!gl_tfp)
-    athrow(string("No TFont available"));
-  return *gl_tfp;
-}
-
-TFont &tfyellow() {
-  if (!gl_tfyp)
-    athrow(string("No TFont available"));
-  return *gl_tfyp;
-}
-
-Filename &datadir() {
+QString datadir() {
   if (!gl_datadirp)
-    athrow("No datadir available");
-  return *gl_datadirp;
+    throw("No datadir available");
+  return gl_datadirp->absolutePath();
 }
 
-Filename &cachedir() {
+QString cachedir() {
   if (!gl_cachedirp)
     athrow("No cachedir available");
-  return *gl_cachedirp;
-}
-
-ProbBSet &probbset() {
-  if (!gl_probbs)
-    athrow("No ProbBSet available");
-  return *gl_probbs;
+  return gl_cachedirp->absolutePath();
 }
 
 GlobalOpts &globalopts() {

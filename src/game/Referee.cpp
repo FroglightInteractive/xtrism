@@ -2,9 +2,7 @@
 
 #include "Referee.h"
 #include "Kronos.h"
-#include "../env/TTime.h"
 #include <math.h>
-#include "../basics/Throw.h"
 
 /* ------------------------------ brickprepare ---------------------------- */
 void Referee::brickprepare(int y_drp, bool selfdrp) {
@@ -20,7 +18,8 @@ void Referee::brickprepare(int y_drp, bool selfdrp) {
    using dt_godown and dt_used from Kronos only.
  */
 double Referee::brickscore(int y_land) {
-  fthrow(prepd, "Referee: Not prepared");
+  if (!prepd)
+    throw "Referee: Not prepared";
   prepd = false;
   return 15000000 / ((dt_godown + 350) * (dt_used + 200));
 }

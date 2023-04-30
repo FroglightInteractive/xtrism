@@ -1,22 +1,18 @@
 // VisPit.C
 
 #include "VisPit.h"
-#include "../env/TSprite.h"
 #include "../bricks/data.h"
 #include "../bricks/bsprites.h"
-#include "Logger.h"
 #include "../basics/dbx.h"
-#include "../basics/Throw.h"
 
 // Waker info: sends warn() whenever contents change
 
 VisPit::VisPit(int w, int h,
                SBrickData const &sbd0,
-               BrickSprites const &bsp0, BrickSprites const &bsp1,
-               Logger *logger0):
-  wid(w), hei(h), sbd(sbd0), bsp(bsp0), bsp2(bsp1), logger(logger0) {
-  map = new TSprite const *[wid * hei];
-  chmap = new word[hei];
+               BrickSprites const &bsp0, BrickSprites const &bsp1):
+  wid(w), hei(h), sbd(sbd0), bsp(bsp0), bsp2(bsp1) {
+  map = new QPixmap const *[wid * hei];
+  chmap = new unsigned int[hei];
   int bno, rot, cel;
   for (int y = 0; y < hei; y++) {
     chmap[y] = 0;
@@ -83,8 +79,6 @@ void VisPit::zeroline(int dst) {
 }
 
 void VisPit::pudding(int y, int dir) {
-  if (logger)
-    logger->pudding(y, dir);
   if (dir > 0) {
     for (int l = y; l > 0; l--)
       copyline(l, l - 1);
@@ -94,14 +88,14 @@ void VisPit::pudding(int y, int dir) {
       copyline(l, l + 1);
     zeroline(hei - 1);
   }
-  for (int i = 0; i < 2; i++)
+  for (int i = 0; i < 2; i++) {
     if (op_inuse[i]) {
       FBPos &p = oldpos[i];
       if ((p.y + 1 < y && dir > 0) || (p.y + 2 > y && dir < 0)) {
         p.y += dir;   /* addbrick(p,i,0); */
       }                                        // EXPERIMENTAL !!!
     }
-  sendwarn();
+  }
 }
 
 void VisPit::clear() {
@@ -110,18 +104,15 @@ void VisPit::clear() {
       refcell(j, i) = 0;
       setchanged(j, i);
     }
-  sendwarn();
 }
 
 void VisPit::addbrick(FBPos const &pos, int id, bool definitive) {
-  if (logger)
-    logger->addbrick(pos, id, definitive);
   if (id < 0) {
     addrem(pos, true);
-    sendwarn();
     return;
   }
-  tthrow(id > 1, "VisPit: Illegal ID");
+  if (id > 1)
+    throw "VisPit: Illegal ID";
   if (op_inuse[id])
     addrem(oldpos[id], false, id > 0);
   op_inuse[id] = false;
@@ -130,22 +121,18 @@ void VisPit::addbrick(FBPos const &pos, int id, bool definitive) {
     op_inuse[id] = true;
     oldpos[id] = pos;
   }
-  sendwarn();
 }
 
 void VisPit::rembrick(int id) {
-  if (logger)
-    logger->rembrick(id);
-  tthrow(id < 0 || id > 1, "VisPit: Illegal ID");
-  fthrow(op_inuse[id], "VisPit: ID not in use");
+  if (id < 0 || id > 1)
+    throw "VisPit: Illegal ID";
+  if (!op_inuse[id])
+    throw "VisPit: ID not in use";
   addrem(oldpos[id], false);
   op_inuse[id] = false;
-  sendwarn();
 }
 
 void VisPit::rembrick(FBPos const &pos) {
-  if (logger)
-    logger->rembrick(pos);
   addrem(pos, false);
 }
 

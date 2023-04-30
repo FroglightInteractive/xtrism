@@ -2,119 +2,131 @@
 
 #include "NiceSession.h"
 #include "../globals/Globals.h"
-#include "SessionQuit.h"
 #include "../game/NiceGame.h"
-#include "../game/Session.h"
-#include "../basics/Filename.h"
-#include "../env/TImageFile.h"
-#include "../sound/Sounds.h"
 
-NiceSession::NiceSession(BBox const &bb, char const *id,
-                         Player const &p1, int bset, class SessionQuit *sq):
-  TopBox(tenv(), BBox(0, 0, tenv().width(), tenv().height()), true),
-  squit(sq) {
-  dbx(1, "NiceSession: Solo");
-  init(bb);
-  g1 = new NiceGame(*s, 0,
-                    poll, sync,
-                    s->keyboard(),
-                    &p1, 0, globalopts(),
-                    sbd(), bs(), bs(),
-                    bset, probbset(),
-                    tf(), tfyellow());
-  g2 = 0;
-  start(id);
+#include "../sound/Sounds.h"
+#include "MainWindow.h"
+#include <QFileInfo>
+
+NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
+  QWidget(mw), bg_(mw->width(), mw->height()) {
+  resize(mw->size());
+  move(0, 0);
+  QString fn = QString("%1/gamebg-%2-%3x%4.jpg").arg(mw->cachedir).arg(id)
+    .arg(width()).arg(height());
+  if (QFileInfo(fn).exists()) {
+    bg_.load(fn);
+  } else {
+    BrickCell bc(width(), height());
+    QRect pbr = playbutton->geometry();
+    float l = pbr.left() * 1.0 / width();
+    float t = pbr.top() * 1.0 / height();
+    float r = pbr.right() * 1.0 / width();
+    float b = pbr.bottom() *1.0 / height();
+    marblebg(width(), height(), 0,
+             l,t,r,b,
+             bg_, 0, 0,
+             bc);
+    rgb.save(fn);
+  }
+  bg = QPixmap::fromImage(bg_);
 }
 
-NiceSession::NiceSession(BBox const &bb, char const *id,
+NiceSession::NiceSession(QString id,
+                         Player const &p1, int bset,
+                         MainWindow *mw, QWidget *playbutton):
+  NiceSession(id, mw, playbutton) {
+  dbx(1, "NiceSession: Solo");
+  g1 = new NiceGame(this, 0,
+                    &p1, 0, globalopts(),
+                    sbd(), bs(), bs(),
+                    bset, probabilities(bset));
+  g2 = 0;
+}
+
+NiceSession::NiceSession(QString id,
                          Player const &p1, Player const &p2,
-                         int bset, class SessionQuit *sq):
-  TopBox(tenv(), BBox(0, 0, tenv().width(), tenv().height()), true),
-  squit(sq) {
+                         int bset,
+                         MainWindow *mw, QWidget *playbutton):
+  NiceSession(id, mw, playbutton) {
   dbx(1, "NiceSession: Team");
-  init(bb);
-  g1 = new NiceGame(*s, 0, poll, sync,
-                    s->keyboard(),
+  g1 = new NiceGame(this, 0,
                     &p1, &p2, globalopts(),
                     sbd(), bs(), bs2(),
-                    bset, probbset(),
-                    tf(), tfyellow());
+                    bset);
   g2 = 0;
-  start(id);
 }
 
-NiceSession::NiceSession(BBox const &bb, char const *id,
+NiceSession::NiceSession(QString id,
                          Player const &p1, Player const &p2,
-                         int bset1, int bset2, class SessionQuit *sq):
-  TopBox(tenv(), BBox(0, 0, tenv().width(), tenv().height()), true),
-  squit(sq) {
+                         int bset1, int bset2,
+                         MainWindow *mw, QWidget *playbutton):
+  NiceSession(id, mw, playbutton) {
   dbx(1, "NiceSession: Apart");
-  init(bb);
-  g1 = new NiceGame(*s, -1, poll, sync,
-                    s->keyboard(),
+  g1 = new NiceGame(this, -1,
                     &p1, 0, globalopts(),
                     sbd(), bs(), bs(),
-                    bset1, probbset(),
-                    tf(), tfyellow());
-  g2 = new NiceGame(*s, 1, poll, sync,
-                    s->keyboard(),
+                    bset1);
+  g2 = new NiceGame(this, 1,
                     &p2, 0, globalopts(),
                     sbd(), bs(), bs(),
-                    bset2, probbset(),
-                    tf(), tfyellow());
-
-  // This placement stuff is untested...
-  newchild(g1, GBPos(this, 0), 0, 0, GBPos(this, 0));
-  newchild(g2, 0, 0, GBPos(this, 0), GBPos(this, 0));
-  placechildren();
-
-  start(id);
-}
-
-void NiceSession::init(BBox const &bb) {
-  s = new Session(tenv(), this, this, bb);
-}
-
-void NiceSession::start(char const *id) {
-  newchild(g1, GBPos(this, 1), GBPos(this, 1),
-           GBPos(g2 ? (GBParent *)g2 : (GBParent *)this, 1), GBPos(this, 1));
-  if (g2)
-    newchild(g2, GBPos(g1, 1), GBPos(this, 1), GBPos(this, 1),
-             GBPos(this, 1));
-  s->draw(tenv(), cachedir().name(), id);
-  dbx(2, "NS: starting game");
-  s->start_game(g1);
-  if (g2)
-    s->start_game(g2);
-  dbx(3, "NS: game(s) should be running");
-}
-
-void NiceSession::redraw(BBox const &bb) {
-  s->redraw(bb);
-  TopBox::redraw(bb);
+                    bset2);
 }
 
 NiceSession::~NiceSession() {
-  dbx(1, "~NiceSession");
+  delete g1;
+  delete g2;
+}
+
+void NiceSession::exec() {
+  takeFocus();
+  QEventLoop *el = new QEventLoop(this);
+  connect(g1, &NiceGame::quit,
+          el, [this, el]() {
+            if (!g2 || !g2->isplaying())
+              el->quit();
+          });
   if (g2)
-    delete g2;
-  if (g1)
-    delete g1;
-  delete s;
+    connect(g2, &NiceGame::quit,
+            el, [this, el]() {
+              if (!g1->isplaying())
+                el->quit();
+            });
+  g1->start();
+  if (g2)
+    g2->start();
+  el->exec();
+  delete el;
+  return;
 }
 
-void NiceSession::gquit(class Game *g, bool quitable) {
-  dbx(1, "NS: gquit");
-  // should we do after game statistics here?
-  fthrow(g == g1 || g == g2, "NiceSession::gquit: Unknown game");
-  if (quitable) {
-    if (squit)
-      squit->squit();
-  } else { // one game running, one game ended...
-           // perhaps do g->prepare_to_play_again() ?
-  }
+void NiceSession::paintEvent(QPaintEvent *) {
+  QPainter p(this);
+  p.drawPixmap(bg);
 }
 
-bool NiceSession::key(int code, bool in_not_out) {
-  return s->keyboard().key(code, in_not_out);
+void NiceSession::keyPressEvent(QKeyEvent *e) {
+}
+
+void NiceSession::keyReleaseEvent(QKeyEvent *e) {
+}
+
+RGBMap const &NiceSession::background() {
+  return bg_;
+}
+
+void NiceSession::keyPressEvent(QKeyEvent *e) {
+  // if (e->isAutoRepeat())
+  //  return;
+  g1->key(e->key(), true);
+  if (g2)
+    g2->key(e->key(), true);
+}
+
+void NiceSession::keyReleaseEvent(QKeyEvent *e) {
+  // if (e->isAutoRepeat())
+  //  return;
+  g1->key(e->key(), false);
+  if (g2)
+    g2->key(e->key(), false);
 }

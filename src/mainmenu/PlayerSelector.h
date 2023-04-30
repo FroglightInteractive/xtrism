@@ -9,11 +9,11 @@
 
 class PlayerSelector: public TextButton {
 public:
-  PlayerSelector(GBParent *p, const Area &area, bool right,
+  PlayerSelector(GBParent *p, const QSize &area, bool right,
                  class TImage &bg0, bool bgok0,
                    class BoxMarbler *marbler);
   virtual ~PlayerSelector();
-  virtual bool mouse(int b, bool io, const Point &pt);
+  virtual bool mouse(int b, bool io, const QPoint &pt);
   virtual void redraw(BBox const &bb);
   void selection(int idx); // only to be called by PlayerListBox!
 private:

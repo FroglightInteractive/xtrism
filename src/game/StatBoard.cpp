@@ -1,133 +1,83 @@
 // StatBoard.C
 
 #include "StatBoard.h"
-#include "../env/TImage.h"
-#include "../env/TFont.h"
-#include "../bytemap/BMRecolour.h"
+#include "Recolour.h"
+#include <QFontMetrics>
+#include "BBox.h"
+#include <QPainter>
 
-#include "../env/TBusy.h"
+constexpr int INTERL = 2;
+constexpr int EDGEMARG = 10;
+constexpr int CENTREMARG = 10;
+constexpr int TBMARG = 10;
 
-const int INTERL = 2;
-const int EDGEMARG = 4;
-const int CENTREMARG = 4;
-const int TBMARG = 4;
-
-StatBoard::StatBoard(GBParent *p, int nlines, int labelw, int dataw,
-                     TFont const &labelf, TFont const &dataf,
-                     SharedBG &sbg, class PollServer &syncserv):
-  GBox(p, Area(labelw + dataw + 2 * EDGEMARG + CENTREMARG,
-               nlines * (max(labelf.height(), dataf.height()) + INTERL)
-               + 2 * TBMARG - INTERL)),
-  BGSharer(sbg), Sleeper(syncserv),
-  numlines(nlines), labelwidth(labelw), datawidth(dataw),
-  labelfont(labelf), datafont(dataf),
-  updlabels(0), upddata(0) {
-  dy = max(labelf.height(), dataf.height()) + INTERL;
-  dy0 = TBMARG + dataf.ascent();
-  dxl = dxd = EDGEMARG;
+StatBoard::StatBoard(int nlines, int labelw, int dataw,
+                     RGBMap const &sbg, QWidget *parent):
+  QWidget(parent), sharedbg(sbg) {
+  QFontMetrics fm(font());
+  dy = fm.height() + INTERL;
+  y0 = TBMARG + fm.ascent();
+  dxl = EDGEMARG;
+  dxd = EDGEMARG;
+  int wid = labelw + dataw + 2*EDGEMARG + CENTREMARG;
+  int hei = nlines*dy - INTERL + 2*TBMARG;
+  resize(wid, hei);
 }
 
-void StatBoard::setlabel(int i, string const &txt, bool update) {
+void StatBoard::setlabel(int i, QString const &txt, bool upd) {
   ensure(i);
   labels[i] = txt;
-  // int ty=top()+dy0+i*dy;
-  // int lx=left()+dxl;
-  updlabels |= (1 << i);
-  if (update)
-    warn();
+  if (upd)
+    update();
 }
 
-void StatBoard::setdata(int i, string const &txt, bool update) {
+void StatBoard::setdata(int i, QString const &txt, bool upd) {
   ensure(i);
   data[i] = txt;
-  // int ty=top()+dy0+i*dy;
-  // int rx=right()-dxd;
-  upddata |= (1 << i);
-  if (update) {
-    warn();
-  }
+  if (upd)
+    update();
 }
 
-#include <stdio.h>
-
 void StatBoard::setdata(int i, int val, bool update) {
-  char buf[10];
-  sprintf(buf, "%i", val);
-  setdata(i, buf, update);
+  setdata(i, QString::number(val));
 }
 
 void StatBoard::setdata(int i, double val, bool update) {
-  char buf[10];
-  sprintf(buf, "%.1f", val);
-  setdata(i, buf, update);
+  setdata(i, QString::number(val, 'f', 1));
 }
 
-bool StatBoard::draw(Point const &origin, class ByteMap *bm) {
-  int bw = width() / 75 + 1;
-  BBox bb = bbox();
-  bb.shift(-origin.x(), -origin.y());
-  recolour_rectangle(bm, bb, .75, 0);
-  recolour_rect_edges(bm, bb, bw, -64);
-  return true;
+void StatBoard::generate() {
+  RGBMap clipped(sharedbg, x(), y(), width(), height());
+  int bw = 1 + width() / 75 + 1;
+  BBox bb(bw, bw, width() - 2*bw, height() - 2*bw);
+  recolour_rectangle(&clipped, bb, .75, 0);
+  recolour_rect_edges(&clipped, bb, bw, -64);
+  mybg = QPixmap::fromImage(clipped);
 }
 
-void StatBoard::redraw(const BBox &bbox) {
-  BGSharer::redraw(bbox);
-  for (unsigned int i = 0; i < labels.size(); i++)
-    redrawlabel(i, false);
-  for (unsigned int i = 0; i < data.size(); i++)
-    redrawdata(i, false);
-}
+void StatBoard::paintEvent(QPaintEvent *) {
+  QPainter p(this);
+  if (pos()!=topleft || mybg.size()!=size())
+    generate();
+  p.drawPixmap(QPoint(0,0), mybg);
 
-void StatBoard::poll() {
-  int i = 0;
-  word w = 1;
-  while (updlabels) {
-    if (updlabels & w) {
-      redrawlabel(i, true);
-      updlabels &= ~w;
-    }
-    i++;
-    w <<= 1;
-  }
-  i = 0;
-  w = 1;
-  while (upddata) {
-    if (upddata & w) {
-      redrawdata(i, true);
-      upddata &= ~w;
-    }
-    i++;
-    w <<= 1;
-  }
-}
-
-void StatBoard::redrawlabel(int i, bool bg) {
-  if (bg)
-    BGSharer::redraw(BBox(Point(left() + dxl,
-                                top() + dy0 + dy * i - labelfont.ascent()),
-                          Area(labelwidth, labelfont.height())));
-  labelfont.write(labels[i].c_str(),
-                  left() + dxl, top() + dy0 + dy * i,
-                  TFont::LEFT, 0, labelwidth);
-}
-
-void StatBoard::redrawdata(int i, bool bg) {
-  if (bg)
-    BGSharer::redraw(BBox(Point(right() - dxd - datawidth,
-                                top() + dy0 + dy * i - datafont.ascent()),
-                          Area(labelwidth, datafont.height())));
-  datafont.write(data[i].c_str(),
-                 right() - dxd, top() + dy0 + dy * i,
-                 TFont::RIGHT, 0, datawidth);
+  p.setPen(QPen(QColor(255,255,255)));
+  int w = width();
+  for (int i=0; i<labels.size(); i++)
+    p.drawText(QRectF(QPoint(dxl, y0 + dy*i), QSize(w - dxl,dy)),
+               Qt::AlignLeft | Qt::AlignVCenter, labels[i]);
+  p.setPen(QPen(QColor(255,255,0)));
+  for (int i=0; i<labels.size(); i++)
+    p.drawText(QRectF(QPoint(0, y0 + dy*i), QSize(w - dxd,dy)),
+               Qt::AlignRight | Qt::AlignVCenter, data[i]);
 }
 
 void StatBoard::cleardata() {
-  for (int i = 0; i < numlines; i++)
+  for (int i = 0; i < data.size(); i++)
     setdata(i, "");
 }
 
-void StatBoard::ensure(unsigned int i) {
+void StatBoard::ensure(int i) {
   while (labels.size() <= i)
     labels.push_back("");
   while (data.size() <= i)

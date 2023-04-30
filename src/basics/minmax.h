@@ -5,7 +5,6 @@
 #define MINMAX_H
 
 #include <algorithm>
-using namespace std;
 
 template <class X> void makeatleast(X &a, X const &b) {
   if (a < b)
@@ -17,9 +16,8 @@ template <class X> void makeatmost(X &a, X const &b) {
     a = b;
 }
 
-inline int min(int a, unsigned int b) {
-  int b1 = b;
-  return a < b1 ? a : b1;
+template <class X> unsigned char clip255(X const &x) {
+  return x<0 ? 0 : x>255 ? 255 : (unsigned char)x;
 }
 
 #endif

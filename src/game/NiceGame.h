@@ -4,39 +4,44 @@
 #ifndef _NiceGame_H
 #define _NiceGame_H
 
-#include "Game.h"
+#include <QObject>
+#include "GameTime.h"
 
-#include "../gfx/GBParent.h"
-#include "../poll/Sleeper.h"
-
-class NiceGame: public GBParent, public Game, public Sleeper {
+class NiceGame: public QObject {
 public:
-  NiceGame(class Session &s, int pos0,
-             class PollServer &pollserv, class PollServer &syncserv,
-                 class Keyboard &kbd, // in future vsn perhaps 2 kbds?
-                   class Player const *p1, class Player const *p2,
-                       class GlobalOpts const &g,
-                         class SBrickData const &sbd0,
-                           class BrickSprites const &bs0,
-                             class BrickSprites const &bs1,
-                               int bset, class ProbBSet const &pbs0,
-                                 class TFont const &labelf,
-                                   class TFont const &dataf,
-                                     class Logger *logger=0);
+  NiceGame(class NiceSession *s, int pos0,
+           class Player const *p1, class Player const *p2,
+           class GlobalOpts const &g,
+           class SBrickData const &sbd0,
+           class BrickSprites const &bs0,
+           class BrickSprites const &bs1,
+           int bset);
   virtual ~NiceGame();
   void start();
-  void quit(bool natural);
-  void poll();
-  virtual void redraw(BBox const &bb);
-private:
-  // from GameForPlPl
+  void terminate(bool natural);
+  bool isplaying() {
+    return playing;
+  }
+public:
+  void timerEvent(QTimerEvent *) override;
+signals:
+  void quit();
+public:
   void addscore(double sc, class PlPlayer *plp);
   void req_to_land(class PlPlayer *plp);
   void bricklanded(class FBPos const & pos, class PlPlayer *plp);
   void req_to_changelev(int change, class PlPlayer *plp);
   bool req_to_pause(class PlPlayer *plp);
   bool req_to_unpause(class PlPlayer *plp);
-  bool req_to_quit(bool dead, class PlPlayer *plp);
+public:
+  // from Game
+  void showbrick(class FBPos const & pos, class PlPlayer *plp,
+                     bool definitive = false);
+  void hidebrick(class FBPos const & pos, class PlPlayer *plp);
+  void selfquit(bool natural=true);
+  void setpause(bool onoff);
+public:
+  void key(int code, bool in_not_out);
 private:
   enum StatLines {
     SCORE=0, LINES, LEVEL, RANK, PTSBLK, NLINES,
@@ -48,7 +53,32 @@ private:
   bool team;
   bool lastpoll;
   class PlPlayer *pauseowner;
-  class PollServer &pollserver;
+private:
+  // from Game
+  class NiceSession *session;
+
+  class GlobalOpts const &global;
+  class SBrickData const &sbd;
+  class BrickSprites const &bs;
+  class BrickSprites const &bs2;
+  int bset;
+  bool playing;
+  bool pause;
+
+  class Score *score;   // my resp
+  class Ranker *ranker;
+  class StatBoard *statboard;   // my resp
+  class LogPit *logpit;   // my resp
+  class VisPit *vispit;   // my resp
+  class ScreenPit *screenpit;   // myresp
+
+  GTimer pudtime;
+  int pudding;
+  int pudlns;
+  class PlPlayer *puddreq, *landreq;   // may be 0, not my resp
+  class PlPlayer *plplayers[2];
+  int nplrs;
+  int timerid;
 };
 
 #endif

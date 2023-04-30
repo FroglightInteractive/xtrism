@@ -6,6 +6,10 @@
 CellMatrix::CellMatrix(unsigned int height) {
   hei = height;
   data = new word[hei];
+  clear();
+}
+
+void CellMatrix::clear() {
   for (unsigned int i = 0; i < hei; i++)
     data[i] = 0;
 }

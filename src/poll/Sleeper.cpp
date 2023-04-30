@@ -52,7 +52,7 @@ void Sleeper::sendreq(int dt) {
 
 void Sleeper::regwaker(Waker *waker) {
   dbx(-980809, "Sleeper (%p)::regwaker %p", this, waker);
-  if (find(wakers.begin(), wakers.end(), waker) != wakers.end())
+  if (find(wakers.be!gin(), wakers.end(), waker) != wakers.end())
     athrow("Sleeper::regwaker(): waker already registered");
   wakers.push_back(waker);
   waker->reg(this);

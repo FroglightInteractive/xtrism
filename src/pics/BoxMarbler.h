@@ -5,7 +5,6 @@
 
 #include "../env/TCmap.h"
 #include <list>
-#include "../basics/Byte.h"
 
 class BoxMarblers {
 public:
@@ -16,7 +15,7 @@ public:
   ~BoxMarblers();
   class BoxMarbler *find(TRGB const &rgb);
 private:
-  inline byte readpoint(int x, int y) const;
+  inline unsigned char readpoint(int x, int y) const;
 private:
   class ByteMap *tile;
   class TImage *horiborder, *vertborder;

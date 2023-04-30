@@ -18,7 +18,6 @@
 #ifndef _brickcell_h
 #define _brickcell_h
 
-#include "../basics/Byte.h"
 #include <stdio.h>
 #include "../bytemap/ByteMap.h"
 
@@ -49,7 +48,7 @@ public:
                    int depth=100);
   void drawstripes(unsigned int depth=50);
 private:
-  byte pixc(unsigned int x, unsigned int y) {
+  unsigned char pixc(unsigned int x, unsigned int y) {
     return (x < wid && y < hei) ? cc(x, y) : 128;
   }
   inline unsigned int random(unsigned int w, unsigned int n, unsigned int nw);

@@ -1,70 +1,124 @@
-// Probability.C
+// Probability.cpp
 
-/* Probability is a class for normalizing probabilities.
-   Currently it can manage only integers, but a more proper impl'n would
-   use templates so that any data type can be managed.
- * Operation: use add() to add a result to the list of possible results.
-   The first arg is the unrenormalized probability for this result.
- * Calling operator() with a number between 0 and 1 will return one of the
-   results previously added, with probabilities proportional to the original
-   quoted probabilities.
- */
-
-#include <string>
-#include "../basics/Throw.h"
-#include "../basics/dbx.h"
 #include "Probability.h"
-#include "../basics/getline.h"
-#include <stdio.h>
-void Probability::add(float prob, int res) {
-  data.push_back(ProbLevel(max += prob, res));
-}
 
-istream &operator>>(istream &is, Probability &pr) {
-  string s;
-  dbx(2, "istream >> Probability");
-  bool ok = false;
-  while (s = getline_nocmt(is), s != "" && s[0] != '-') {
-    double p;
-    int r;
-    sscanf(s.c_str(), "%i %lf", &r, &p);
-    dbx(3, "P: addmany `%s' -> %i %g", s.c_str(), r, p);
-    pr.add(p, r);
-    ok = true;
+Probability::Probability(QMap<int, float> probs) {
+  float norm = 0;
+  for (auto const &el: probs.items()) {
+    norm += el.second();
+    thrs << norm;
+    res << el.first();
   }
-  skipcmt(is);
-  if (!ok)
-    athrow("istream >> Probability: nothing read");
-  dbx(3, "istr >> Prob done");
-  return is;
+  for (int k=0; k<thrs.size(); k++)
+    thrs[k] /= norm;
 }
 
-int Probability::operator()(float idx) const {
-  idx *= max;
-  for (vector<ProbLevel>::const_iterator i = data.begin();
-       i != data.end();
-       ++i)
-    if (idx < (*i).thresh)
-      return (*i).res;
-
-  athrow("Probability::operator(): bad index");
-  return -1; // never executed
+int Probability::select(float x) const {
+  int N = thrs.size();
+  for (int k=0; k<N; k++)
+    if (x<=thrs[k])
+      return res[k];
+  return -1;
 }
 
-istream &operator>>(istream &is, ProbBSet &pbs) {
-  dbx(1, "istream >> ProbBSet");
-  while (is.good()) {
-    pbs.add(Probability());
-    is >> pbs.v[pbs.number() - 1];
-  }
-  dbx(2, "istr >> ProbBS done");
-  return is;
-}
+Probability const &probabilities(int bset) {
+  static QList<Probability> probs{
+  // brickset 0
+   {{0, .174},
+    {1, .092},
+    {2, .154},
+    {3, .133},
+    {4, .154},
+    {5, .184},
+    {6, .133}},
 
-// static void __never_call_this() {
-///* This fn exists solely to force the compiler to create
-// vector<ProbLevel>::operator=(vector<ProbLevel> const &)
-// */
-// vector <ProbLevel> a, b;
-// a=b;
-// }
+  // brickset 1
+   {{ 0, .261    },
+    { 1, .138    },
+    { 2, .231    },
+    { 3, .1995   },
+    { 4, .231    },
+    { 5, .276    },
+    { 6, .133    },
+    { 7, .040    },
+    { 8, .040    },
+    { 9, .020    },
+    {10, .023   },
+    {11, .023   },
+    {12, .0215  },
+    {13, .0215  },
+    {14, .016   },
+    {15, .016   },
+    {16, .015   }},
+
+  // brickset 2
+   {{ 0, .261  },
+    { 1, .138  },
+    { 2, .231  },
+    { 3, .1995 },
+    { 4, .231  },
+    { 5, .276  },
+    { 6, .133  },
+    { 7, .040  },
+    { 8, .040  },
+    { 9, .020  },
+    {10, .023  },
+    {11, .023  },
+    {12, .0215 },
+    {13, .0215 },
+    {14, .016  },
+    {15, .016  },
+    {16, .015  },
+    {24, .016  },
+    {25, .016  },
+    {26, .017  },
+    {27, .012  },
+    {28, .012  },
+    {29, .014  },
+    {30, .014  },
+    {31, .015  },
+    {32, .015  },
+    {33, .008  }},
+
+  // brickset 3
+   {{  0, .261   },
+    {  1, .138   },
+    {  2, .231   },
+    {  3, .1995  },
+    {  4, .231   },
+    {  5, .276   },
+    {  6, .133   },
+    {  7, .040   },
+    {  8, .040   },
+    {  9, .020   },
+    { 10, .023   },
+    { 11, .023   },
+    { 12, .0215  },
+    { 13, .0215  },
+    { 14, .016   },
+    { 15, .016   },
+    { 16, .015   },
+    { 17, .007   },
+    { 18, .001   },
+    { 19, .007   },
+    { 20, .007   },
+    { 21, .007   },
+    { 22, .007   },
+    { 23, .003   },
+    { 24, .016   },
+    { 25, .016   },
+    { 26, .017   },
+    { 27, .012   },
+    { 28, .012   },
+    { 29, .014   },
+    { 30, .014   },
+    { 31, .015   },
+    { 32, .015   },
+    { 33, .008   }};
+  };
+    
+  if (bset<0 || bset>=probs.size())
+    throw "Illegal probability set";
+
+  return probs[bset];
+}  

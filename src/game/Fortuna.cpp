@@ -10,14 +10,14 @@
 
 #include "Fortuna.h"
 #include <stdlib.h>
-#include "../env/TTime.h"
+#include <QDateTime>
 
 bool Fortuna::inited = false;
 
 Fortuna::Fortuna(Probability const &p):
   other(0), nextbno(0), curbno(0), prob(p) {
   if (!inited)
-    srand(TTime(TTime::CURRENT).intrep());
+    srand(QDateTime::currentDateTime().toMSecsSinceEpoch());
   inited = true;
 }
 
@@ -40,7 +40,7 @@ void Fortuna::deregother() {
 int Fortuna::next() {
   curbno = nextbno;
   do {
-    nextbno = prob(float(rand()) / RAND_MAX);
+    nextbno = prob.select(float(rand()) / RAND_MAX);
   } while (nextbno == curbno
            || (other
                && (nextbno == other->curbno || nextbno == other->nextbno)));

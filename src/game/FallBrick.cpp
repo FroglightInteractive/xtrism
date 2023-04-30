@@ -77,14 +77,14 @@ FBHResult FallBrick::movex(int dir, bool zap) {
   return res;
 }
 
-FallBrick::FBPoint const FallBrick::moveforrotl[] = {
+FallBrick::FBQPoint const FallBrick::moveforrotl[] = {
   { 0, 0 },
   { -1, 0 }, { 1, 0 }, { 0, 1 },
   { -1, 1 }, { 1, 1 },
   { -2, 0 }, { 2, 0 }, { 0, 2 },
 };
 
-FallBrick::FBPoint const FallBrick::moveforrotr[] = {
+FallBrick::FBQPoint const FallBrick::moveforrotr[] = {
   { 0, 0 },
   { 1, 0 }, { -1, 0 }, { 0, 1 },
   { 1, 1 }, { -1, 1 },
@@ -95,7 +95,7 @@ FBHResult FallBrick::rotate(int dir) {
   FBHResult res;
   int nrot = (pos.rot + dir) & 3;
   BEClash bec;
-  FBPoint const *mv = lastisright ? moveforrotr : moveforrotl;
+  FBQPoint const *mv = lastisright ? moveforrotr : moveforrotl;
   for (unsigned int i = 0;
        i < sizeof(moveforrotl) / sizeof(*moveforrotl);
        i++) {

@@ -4,11 +4,9 @@
 #define _LogPit_H
 
 #include "../bricks/CellMatrix.h"
-#include "../basics/Word.h"
-#include "../basics/Throw.h"
-#include "../poll/Waker.h"
 
-class LogPit: public CellMatrix, public Waker {
+
+class LogPit: public CellMatrix {
 public:
   LogPit(unsigned int w, unsigned int h, class SBrickData const &sbdat);
   LogPit(const LogPit &lp);
@@ -24,9 +22,9 @@ public:
   int countfulllines() const;
 private:
   unsigned int wid, hei;
-  word emptyline;
-  class SBrickData const & sbd;
-  static word fullline;
+  unsigned int emptyline;
+  class SBrickData const &sbd;
+  static unsigned int fullline;
 };
 
 #endif

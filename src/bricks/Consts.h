@@ -4,7 +4,7 @@
 #define _dataConsts_H
 
 const unsigned int BD_MAXSIZE = 4;
-const unsigned int BD_MAXCELL = 4;
-const unsigned int BD_MAXROT = 4;
+const unsigned int BD_MAXCELLS = 4;
+const unsigned int BD_MAXROTS = 4;
 
 #endif

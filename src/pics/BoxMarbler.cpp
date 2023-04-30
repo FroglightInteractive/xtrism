@@ -30,11 +30,11 @@ BoxMarblers::BoxMarblers(class TEnv const &tenv0,
     float Y = float(y) / tileh;
     for (unsigned int x = 0; x < tilew; x++) {
       float X = float(x) / tilew;
-      tile->c(x,
-              y) = byte(Y * (X * bc.cc(x, y) + (1 - X) * bc.cc(x + tilew, y))
-                        + (1 - Y) * (X * bc.cc(x, y + tileh)
-                                     + (1 - X)
-                                     * bc.cc(x + tilew, y + tileh)));
+      tile->c(x, y)
+        = (unsigned char)(Y * (X * bc.cc(x, y)
+                               + (1-X) * bc.cc(x + tilew, y))
+                          + (1-Y) * (X * bc.cc(x, y + tileh)
+                                       + (1-X) * bc.cc(x + tilew, y + tileh)));
     }
   }
 }
@@ -59,7 +59,7 @@ BoxMarbler *BoxMarblers::find(TRGB const &rgb) {
   return nw;
 }
 
-inline byte BoxMarblers::readpoint(int x, int y) const {
+inline unsigned char BoxMarblers::readpoint(int x, int y) const {
   return tile->cc(x % tile->width(), y % tile->height());
 }
 
@@ -118,7 +118,7 @@ void BoxMarbler::draw(BBox const &mybbox, BBox const &redrawbbox,
     BBox bb(left + y, top + y, right - 1 - y, top + y + 1);
     bb &= redrawbbox;
     if (bb) {
-      Point pp(bb.topleft());
+      QPoint pp(bb.topleft());
       bb.shift(0, -top - y);
       parent->horiborder->partput(bb, pp);
     }
@@ -137,7 +137,7 @@ void BoxMarbler::draw(BBox const &mybbox, BBox const &redrawbbox,
     BBox bb(left + y + 1, bottom - 1 - y, right - y, bottom - y);
     bb &= redrawbbox;
     if (bb) {
-      Point pp(bb.topleft());
+      QPoint pp(bb.topleft());
       bb.shift(0, -bottom + 1 + y);
       parent->horiborder->partput(bb, pp);
     }
@@ -154,7 +154,7 @@ void BoxMarbler::draw(BBox const &mybbox, BBox const &redrawbbox,
     BBox bb(left + x, top + x + 1, left + x + 1, bottom - x);
     bb &= redrawbbox;
     if (bb) {
-      Point pp(bb.topleft());
+      QPoint pp(bb.topleft());
       bb.shift(-left - x, 0);
       parent->vertborder->partput(bb, pp);
     }
@@ -173,7 +173,7 @@ void BoxMarbler::draw(BBox const &mybbox, BBox const &redrawbbox,
     BBox bb(right - 1 - x, top + x, right - x, bottom - 1 - x);
     bb &= redrawbbox;
     if (bb) {
-      Point pp(bb.topleft());
+      QPoint pp(bb.topleft());
       bb.shift(-right + 1 + x, 0);
       parent->vertborder->partput(bb, pp);
     }

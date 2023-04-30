@@ -1,33 +1,22 @@
 // bricks/data.C
 
 #include "data.h"
-#include "../basics/Throw.h"
-#include "../basics/Filename.h"
-#include <errno.h>
-#include <string.h>
-
-/* data is stored as one byte per line, lsb=leftmost cell. */
+#include <QFile>
 
 const char BDL_EMPTY = '-';
 
-// ================================ BDLine ===================================
-BDLine::BDLine() {
-  for (unsigned int i = 0; i < BD_MAXSIZE; i++)
-    cell[i] = BDL_EMPTY;
-}
-
 // ================================ BDLines ==================================
 inline bool BDLines::safecell(int x, int y) const {
-  return (x < 0 || y < 0 || x >= int(BD_MAXSIZE) || y >= int(BD_MAXSIZE))
-         ? false
-         : line[y].cell[x] != BDL_EMPTY;
+  if (x<0 || y<0 || y>=size() || x>=(*this)[y].size())
+    return false;
+  return (*this)[y][x] != BDL_EMPTY;
 }
 
-unsigned int BDLines::count() const {
+unsigned int BDLines::countcells() const {
   int res = 0;
-  for (unsigned int y = 0; y < hei; y++)
+  for (unsigned int y = 0; y < size(); y++)
     for (unsigned int x = 0; x < BD_MAXSIZE; x++)
-      res += (line[y].cell[x] != BDL_EMPTY);
+      res += safecell(x, y);
   return res;
 }
 
@@ -71,15 +60,16 @@ inline int roty(int x, int y, int rot, BrickData::RotStyle rotsty) {
  * rotsty is the rotation style
  */
 BrickData::BrickData(BDLines const &lines, int rot, RotStyle rotsty):
-  CellMatrix(lines.hei), cells_(lines.count()), xx(0), yy(0) {
-  xx = new byte[cells_];
-  yy = new byte[cells_];
-  int n = (rotsty == ROT_4x4_TWO && rot & 2) ? cells_ - 1 : 0;
+  CellMatrix(BD_MAXSIZE), cells_(lines.countcells()), xx(0), yy(0) {
+  xx = new unsigned char[cells_];
+  yy = new unsigned char[cells_];
+  int n = (rotsty == ROT_4x4_TWO && (rot & 2)) ? cells_ - 1 : 0;
   int dn = n ? -1 : 1;
   for (unsigned int y = 0; y < height(); y++)
     for (unsigned int x = 0; x < BD_MAXSIZE; x++)
       if (lines.safecell(x, y)) {
-        int rx = rotx(x, y, rot, rotsty), ry = roty(x, y, rot, rotsty);
+        int rx = rotx(x, y, rot, rotsty);
+        int ry = roty(x, y, rot, rotsty);
         set(rx, ry);
         xx[n] = rx;
         yy[n] = ry;
@@ -88,10 +78,8 @@ BrickData::BrickData(BDLines const &lines, int rot, RotStyle rotsty):
 }
 
 BrickData::~BrickData() {
-  if (yy)
-    delete[] yy;
-  if (xx)
-    delete[] xx;
+  delete[] yy;
+  delete[] xx;
 }
 
 /* -------------------------- BrickData::print ---------------------------- */
@@ -112,69 +100,47 @@ void BrickData::print() const {
 
 // ============================ RBrickData ===================================
 
-RBrickData::RBrickData(FILE *src, int t): bd(0) {
-  BDLines lines;
-  int n;
-  char col[20];
-  char buf[80];
-  *buf = 0;
-  errno = 0;
-  while (*buf < 32 && !feof(src))
-    fgets(buf, 80, src);
-  if (sscanf(buf, "%i %s", &n, col) != 2)
-    athrow("RBrickData: Bad brick data");
-  if (t >= 0 && t != n)
-    athrow("RBrickData: Bad brick number");
+RBrickData::RBrickData(QTextStream *src, int t): bd(0) {
+  QString buf = src->readLine().split("-")[0].trimmed();
+  while (buf.isEmpty())
+    buf = src->readLine().split("-")[0].trimmed();
+  QStringList bits = buf.split(" ");
+  if (bits.size()<2)
+    throw("RBrickData: Bad brick data");
+  if (bits[0].toInt() != t)
+    throw("RBrickData: Bad brick number");
 
-  if (strchr(col, '/')) { // modern colour spec rotstyle/RGB
-    switch (col[0]) {
-    case '0':
+  rots = 4;
+  QStringList cbits = bits[2].split(",");
+  colour_ = RGB(255.999*cbits[0].toFloat(),
+                255.999*cbits[1].toFloat(),
+                255.999*cbits[2].toFloat());
+  switch (bits[1].toInt()) {
+    case 0:
       rotsty = BrickData::ROT_4x4;
-      rots = 4;
-      lines.hei = 4;
       break;
-
-    case '2':
+    case 2:
       rotsty = BrickData::ROT_4x4_TWO;
-      rots = 4;
-      lines.hei = 4;
       break;
-
-    case '3':
+    case 3:
       rotsty = BrickData::ROT_3x3;
-      rots = 4;
-      lines.hei = 3;
       break;
-
     default:
-      athrow("RBrickData: Illegal rotation style");
+      throw "RBrickData: Illegal rotation style";
     }
-    bd = new BrickData *[rots];
-    for (unsigned int i = 0; i < rots; i++)
-      bd[i] = 0;
-    // int colr=atoi(col+2);
-    // #define COLFOO(x) (((x)+.5)/4)
-    // sprintf(col,"%5.3f,%5.3f,%5.3f",
-    // COLFOO(colr%10),COLFOO((colr/10)%10),COLFOO((colr/100)%10));
-    colour_ = col + 2;
-  }
 
+  BDLines lines;
   for (unsigned int y = 0; y < BD_MAXSIZE; y++)
-    fgets(lines.line[y].cell, BD_MAXSIZE + 2, src);
-  if (errno)
-    athrow(string("RBrickData:: Error reading bricks: ") + strerror(errno));
+    lines << src->readLine();
 
   for (unsigned int rot = 0; rot < rots; rot++)
     bd[rot] = new BrickData(lines, rot, rotsty);
 }
 
 RBrickData::~RBrickData() {
-  if (bd) {
-    for (unsigned int i = 0; i < rots; i++)
-      if (bd[i])
-        delete bd[i];
-    delete[] bd;
-  }
+  for (unsigned int i = 0; i < rots; i++)
+    if (bd[i])
+      delete bd[i];
 }
 
 void RBrickData::print() const {
@@ -187,29 +153,25 @@ void RBrickData::print() const {
 
 // ========================= SBrickData ======================================
 
-SBrickData::SBrickData(Filename const &file): rbd(0) {
-  FILE *f = fopen(file.name(), "r");
-  if (!f)
-    athrow(string("SBrickData: Couldn't open `") + file.name() + "': "
-           + strerror(errno));
-  int r = fscanf(f, "%i\n", &n);
-  if (r == 0)
-    athrow("SBrickData: Couldn't determine number of bricks");
-  if (n == 0)
-    athrow("SBrickData: Zero bricks");
+SBrickData::SBrickData(QString const &filename): rbd(0) {
+  QFile f(filename);
+  if (!f.open())
+    throw QString("SBrickData: Couldn't open “" + filename + "”");
+  QTextStream ts(&f);
+  QString txt = ts.readLine().split("-")[0].trimmed();
+  bool ok;
+  n = txt.toInt(&ok);
+  if (n<=0 || !bok)
+    throw "SBrickData: Couldn't determine number of bricks";
   rbd = new RBrickData *[n];
   for (int i = 0; i < n; i++)
-    rbd[i] = new RBrickData(f, i);
-  fclose(f);
+    rbd[i] = new RBrickData(&ts, i);
 }
 
 SBrickData::~SBrickData() {
-  if (rbd) {
-    for (int i = 0; i < n; i++)
-      if (rbd[i])
-        delete rbd[i];
-    delete[] rbd;
-  }
+  for (int i = 0; i < n; i++)
+    delete rbd[i];
+  delete[] rbd;
 }
 
 void SBrickData::print() const {

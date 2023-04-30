@@ -13,14 +13,13 @@
 #include "FallBrick.h"
 #include "Referee.h"
 #include "KbdBuffer.h"
-#include "ControlBuf.h"
 #include "WishList.h"
 #include "Fortuna.h"
 #include "NextBox.h"
 #include "VisPit.h"
 #include "LogPit.h"
 #include "GameTime.h"
-#include "Game.h"
+#include "NiceGame.h"
 
 #include "../bricks/Probability.h"
 #include "../options/Player.h"
@@ -31,13 +30,11 @@
 const int AUTOREP_IVAL = 50;
 const int AUTOREP_DELAY = 500;
 
-PlPlayer::PlPlayer(Game *g, int pos,
+PlPlayer::PlPlayer(NiceGame *g, int pos,
                    Player const &p,
                    SBrickData const &sbd, GlobalOpts const &glopts,
-                   class Keyboard *kbd, class PollServer &pollserv,
-                       int lvl, Probability const &prob,
-                       int x0, int y0, int rot0, int dy):
-  Sleeper(pollserv),
+                   int lvl, Probability const &prob,
+                   int x0, int y0, int rot0, int dy):
   game(g), player(p), state(PlPlayer::INIT),
   levup_autorep(0), levdn_autorep(0) {
   kronos = new Kronos(lvl);
@@ -47,25 +44,22 @@ PlPlayer::PlPlayer(Game *g, int pos,
   brickenv = 0;
   referee = new Referee(*kronos);
   kbdbuffer = new KbdBuffer(player.keys(pos), glopts.keys(pos));
-  regwaker(kbdbuffer);
-  ctrlbuf = new ControlBuf(kbd, kbdbuffer);
   wishlist = new WishList(*fallbrick, *kronos);
   fortuna = new Fortuna(prob);
   nextbox = 0;
   other = 0;
 }
 
-void PlPlayer::connect(NextBox *nb, LogPit &lp, PlPlayer *oth) {
+void PlPlayer::connect(NextBox *nb, LogPit *lp, PlPlayer *oth) {
   other = oth;
   if (brickenv) {
     delete brickenv;
     brickenv = 0;
   }
   brickenv
-    = other ? (BrickEnv *)new BrickEnv_Team(lp,
-                                            *other->fallbrick) : (BrickEnv *)
-      new BrickEnv_Solo(lp);
-  regwaker(&lp);
+    = other
+    ? (BrickEnv *)new BrickEnv_Team(*lp, *other->fallbrick)
+    : (BrickEnv *)new BrickEnv_Solo(*lp);
   fallbrick->setenv(brickenv);
   if (other)
     fortuna->regother(other->fortuna);
@@ -89,8 +83,7 @@ PlPlayer::NBRes PlPlayer::newbrick() {
     queued_donepud = false;
     game->showbrick(fallbrick->position(), this);
     kronos->newbrick();
-    sendreq(kronos->getnextdown());
-    nextbox->update(nextbno = fortuna->next(), 0);
+    nextbox->setbrick(nextbno=fortuna->next(), 0);
     return OK;
   }
   return OK; // shouldn't execute - just to avoid compiler warning
@@ -100,7 +93,6 @@ PlPlayer::~PlPlayer() {
   dbx(1, "~PlPlayer(%p)", this);
   delete fortuna;
   delete wishlist;
-  delete ctrlbuf;
   delete kbdbuffer;
   delete referee;
   if (brickenv)
@@ -157,7 +149,6 @@ void PlPlayer::poll_playing() {
   BufferCode bc = kbdbuffer->read();
   if (bc != BC_None) {
     wishlist->logkey(bc) || globalkey(bc);
-    warn();
   }
 
   WLResult wlr = wishlist->poll();
@@ -166,11 +157,11 @@ void PlPlayer::poll_playing() {
     if (wlr.othermoved)
       game->showbrick(other->fallbrick->position(), other);
   }
-  if (wlr.gonedown) {
-    sendreq(kronos->getnextdown());
-    if (wlr.othermoved)
-      other->sendreq(other->kronos->getnextdown());
-  }
+  //if (wlr.gonedown) {
+  //  sendreq(kronos->nextdown());
+  //  if (wlr.othermoved)
+  //    other->sendreq(other->kronos->nextdown());
+  //}
   if (wlr.landed)
     land(wlr.dropped);
 }
@@ -186,7 +177,7 @@ void PlPlayer::poll_delnew() {
 
   case DIE:
     setstate(DEAD);
-    game->req_to_quit(true, this);
+    game->terminate(true);
     break;
   }
 }
@@ -195,7 +186,7 @@ void PlPlayer::poll_pause() { // !!!!!
   BufferCode bc = kbdbuffer->read();
   switch (bc) {
   case BC_iQuit:
-    game->req_to_quit(false, this);
+    game->terminate(false);
     break;
 
   case BC_iPause:
@@ -208,7 +199,6 @@ void PlPlayer::poll_pause() { // !!!!!
       levdn_autorep->reset(AUTOREP_DELAY);
     else
       levdn_autorep = new GTimer(AUTOREP_DELAY);
-    sendreq(levdn_autorep->getnext());
     break;
 
   case BC_iLevUp:
@@ -217,7 +207,6 @@ void PlPlayer::poll_pause() { // !!!!!
       levup_autorep->reset(AUTOREP_DELAY);
     else
       levup_autorep = new GTimer(AUTOREP_DELAY);
-    sendreq(levup_autorep->getnext());
     break;
 
   case BC_iLeft:
@@ -247,12 +236,10 @@ void PlPlayer::poll_pause() { // !!!!!
   default:
     if (levdn_autorep && levdn_autorep->ivalgone()) {
       levdn_autorep->reset(AUTOREP_IVAL);
-      sendreq(levdn_autorep->getnext());
       game->req_to_changelev(-1, this);
     }
     if (levup_autorep && levup_autorep->ivalgone()) {
       levup_autorep->reset(AUTOREP_IVAL);
-      sendreq(levup_autorep->getnext());
       game->req_to_changelev(+1, this);
     }
     break;
@@ -264,7 +251,7 @@ bool PlPlayer::globalkey(BufferCode &bc) { // !!!!!
   dbx(2, "PlPlayer::globalkey");
   switch (bc) {
   case BC_iQuit:
-    game->req_to_quit(false, this);
+    game->terminate(false);
     return true;
 
   case BC_iPause:
@@ -289,7 +276,8 @@ void PlPlayer::ok_to_land() {
     queued_okland = true;
     return;
   }
-  tthrow(state != DELLAND, "PlPlayer: Unexpected ok_to_land");
+  if (state != DELLAND)
+    throw "PlPlayer: Unexpected ok_to_land";
   queued_okland = false;
   dbx(1, "PlPlayer(%p)::ok_to_land", this);
   setstate(LANDED);
@@ -306,8 +294,8 @@ void PlPlayer::done_pudding(int lns) {
     queued_donepud = true;
     return;
   }
-  tthrow(!queued_donepud && state != LANDED,
-         "PlPlayer: Unexpected done_pudding");
+  if (!queued_donepud && state != LANDED)
+    throw "PlPlayer: Unexpected done_pudding";
   queued_donepud = false;
   dbx(1, "PlPlayer(%p)::done_pudding", this);
   setstate(DELNEW);
@@ -342,10 +330,10 @@ void PlPlayer::unpause(bool payforit) {
     dbx(1, "PlPlayer(%p) unpauses (used to own!)");
   } else {
     dbx(1, "PlPlayer(%p) unpauses (didn't own)");
-    tthrow(state != OTHPAUSED, "PlPlayer: Unexpected unpause");
+    if (state != OTHPAUSED)
+      throw "PlPlayer: Unexpected unpause";
   }
   kronos->markpause(false, payforit);
-  sendreq(kronos->getnextdown());
   setstate(PLAYING);
   if (queued_okland)
     ok_to_land();
@@ -356,5 +344,8 @@ void PlPlayer::unpause(bool payforit) {
 void PlPlayer::setstate(State s) {
   state = s;
   dbx(1, "PlPlayer(%p)::state = %i", this, int(s));
-  warn();
+}
+
+void PlPlayer::key(int code, bool in_not_out) {
+  kbdbuffer->enter(code, in_not_out);
 }

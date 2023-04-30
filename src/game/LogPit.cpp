@@ -6,7 +6,7 @@
 
 // Waker info: sends warn() whenever contents change.
 
-word LogPit::fullline = ~0;
+unsigned int LogPit::fullline = ~0;
 const unsigned int LP_LEFTMARG = 4;
 const unsigned int LP_BOTTOMMARG = 4;
 
@@ -20,7 +20,7 @@ LogPit::LogPit(unsigned int w, unsigned int h, const SBrickData &sbdat):
 }
 
 LogPit::LogPit(const LogPit &lp):
-  CellMatrix(lp), Waker(*this),
+  CellMatrix(lp),
   wid(lp.wid), emptyline(lp.emptyline), sbd(lp.sbd) {
 }
 
@@ -31,14 +31,12 @@ void LogPit::or_(int bno, int rot, int x, int y) {
   const BrickData &b(sbd.brick(bno, rot));
   for (unsigned int i = 0; i < b.cells(); i++)
     set(x + b.x(i), y + b.y(i));
-  sendwarn();
 }
 
 void LogPit::bic(int bno, int rot, int x, int y) {
   const BrickData &b(sbd.brick(bno, rot));
   for (unsigned int i = 0; i < b.cells(); i++)
     set(x + b.x(i), y + b.y(i), 0);
-  sendwarn();
 }
 
 bool LogPit::tst(int bno, int rot, int x, int y) const {
@@ -63,7 +61,6 @@ void LogPit::collapseline(int y, int dir) {
       line(i) = line(i - 1);
     line(0) = emptyline;
   }
-  sendwarn();
 }
 
 int LogPit::findfullline() const {

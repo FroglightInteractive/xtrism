@@ -2,7 +2,6 @@
 
 #include "TReso.h"
 
-#include "../basics/Throw.h"
 
 int TReso::best(int sw, int sh) const {
   int f = minfact, af;
@@ -10,7 +9,8 @@ int TReso::best(int sw, int sh) const {
 
 // sw=sw<?640;
 
-  tthrow(w > sw || h > sh, "TEnv: TReso: Display too small - cannot use it");
+  if (w > sw || h > sh)
+    throw "TEnv: TReso: Display too small - cannot use it";
   do {
     af = f;
     f++;

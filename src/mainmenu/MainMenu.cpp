@@ -18,7 +18,7 @@
 
 class ShadedTButton: public TextButton {
 public:
-  ShadedTButton(GBParent *p, const Area &area, char const *txt,
+  ShadedTButton(GBParent *p, const QSize &area, char const *txt,
                 class TImage &bg0, bool bgok0):
     TextButton(p, area, txt, tf()), bg(bg0), bgok(bgok0) {
   }
@@ -45,7 +45,7 @@ void ShadedTButton::redraw(BBox const &bb) {
 MainMenu::MainMenu(): TopBox(tenv()) {
   TImageFile timf(tenv(), (cachedir() + "mmbg").addpart(tenv().id()));
   backg = new MMBG(tenv(), timf.readable() ? &timf : 0);
-  Area pbarea(tenv().actualfactor() * 3, tenv().actualfactor() * 2);
+  QSize pbarea(tenv().actualfactor() * 3, tenv().actualfactor() * 2);
   playbuttons[0] = new SoloButton(this, pbarea, false,
                                   "Solo Play", *backg, timf.readable());
   playbuttons[1] = new TeamButton(this, pbarea,
@@ -55,7 +55,7 @@ MainMenu::MainMenu(): TopBox(tenv()) {
   playbuttons[3] = new SoloButton(this, pbarea, true,
                                   "Solo Play", *backg, timf.readable());
 
-  textbut = new ShadedTButton(this, Area(int(tenv().width() * .75),
+  textbut = new ShadedTButton(this, QSize(int(tenv().width() * .75),
                                          tenv().height() / 24),
                               "X T R I S M", *backg, timf.readable());
 
@@ -63,7 +63,7 @@ MainMenu::MainMenu(): TopBox(tenv()) {
     = new BoxMarblers(tenv(), 128, 64, max(tenv().width(), tenv().height()));
 
   for (int k = 0; k < 2; k++)
-    selectors[k] = new PlayerSelector(this, Area(tenv().actualfactor() * 3,
+    selectors[k] = new PlayerSelector(this, QSize(tenv().actualfactor() * 3,
                                                  tenv().actualfactor()),
                                       k > 0,
                                       *backg, timf.readable(),
@@ -99,9 +99,9 @@ MainMenu::MainMenu(): TopBox(tenv()) {
 
 #if 0
   // + larie
-  // Box3D *boxje=new Box3D(this,Area(tenv().width()/4,tenv().height()/5),
+  // Box3D *boxje=new Box3D(this,QSize(tenv().width()/4,tenv().height()/5),
   // bms->find(TRGB(160,160,80)));
-  ListBox *boxje = new ListBox(this, Area(tenv().width() / 4,
+  ListBox *boxje = new ListBox(this, QSize(tenv().width() / 4,
                                           ListBox::heightneeded(6, tf())),
                                tf(), tfyellow(),
                                bms->find(TRGB(160, 160, 80)));
@@ -121,7 +121,7 @@ MainMenu::MainMenu(): TopBox(tenv()) {
   boxje->add("Item Fourteen");
   boxje->add("Item Fifteen");
   boxje->add("Item Sixteen");
-  // inpf=new InputField(this,Area(tenv().width()/4-8,tenv().height()/10),
+  // inpf=new InputField(this,QSize(tenv().width()/4-8,tenv().height()/10),
   // "Hello world",tf(),poll,tenv());
   newchild(boxje, GBPos(this, 1), GBPos(this, 1), GBPos(this, 1),
            GBPos(this, 5));

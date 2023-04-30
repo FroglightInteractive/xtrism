@@ -1,6 +1,6 @@
 // bsprites.C
 
-/* BrickSprites is a bucket containing TSprites corresponding to every cell
+/* BrickSprites is a bucket containing QPixmaps corresponding to every cell
    in a brickset. Given an SBrickData, it can construct itself automatically,
    creating BCImageFiles and BCellFiles if necessary.
  */
@@ -8,115 +8,63 @@
 #include "data.h"
 #include "bsprites.h"
 #include "brickcell.h"
-#include "../basics/Throw.h"
-#include "../basics/Filename.h"
-#include "../basics/dbx.h"
-#include "../env/TImage.h"
-#include "../env/TSprite.h"
-#include "../env/TImageFile.h"
 #include "../bytemap/WideRGB.h"
 #include "../bytemap/ByteImage.h"
+#include "../bytemap/RGBImage.h"
 
 #include <stdio.h>
 
 //////////////////////////////// BrickSprites ////////////////////////////////
-BrickSprites::BrickSprites(const SBrickData &sbd, const Filename &basename,
-                           int size, const TEnv &env, int style):
-  cells(0), myresp(0) {
+BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
+                           int size, int style) {
   dbx(1, "BrickSprites::BrickSprites");
-
-  // create base filename : datadir/bci-SIZE
-  Filename base(basename);
-  char buf[10];
-  sprintf(buf, "%i", size);
-  base.addpart(buf);
-
-  /* create TSprites (in a strange way, because array constructors can't
-     take arguments. */
-  n = BD_MAXCELL * BD_MAXROT * sbd.number();
-  cells = new TSprite *[n];
-  for (int i = 0; i < n; i++)
-    cells[i] = 0;
-  myresp = new bool[n];
-
-  // opening image file
-  TImageFile timf(env, base);
-  TImage tim(env, size, size);
-  BrickCell *mother = 0, *rotd = 0, *cell = 0;
-  WideRGB rgb0, rgb1;
-  bool create = !timf.readable();
 
   // reading images (if nec. creating them)
   dbx(2, "BS: going to read images. create=%i", create);
   unsigned int nn = sbd.number();
   for (unsigned int bno = 0; bno < nn; bno++) {
     RBrickData const &rbd = sbd[bno];
-    if (create) {
-      mother = new BrickCell(size * rbd.height());
-      switch (style) {
-      case 0:
-        break;
-
-      case 1:
-        mother->drawstripes();
-        break;
-      }
-      rgb0 = TRGB(rbd.colour());
-      rgb1 = rgb0;
-      rgb1.r += 100;
-      rgb1.g += 100;
-      rgb1.b += 100;
-      rgb0.r -= 100;
-      rgb0.g -= 100;
-      rgb0.b -= 100;
-    }
-    switch (rbd.rotstyle()) {
-    case BrickData::ROT_4x4:
-    case BrickData::ROT_4x4_TWO:
-    case BrickData::ROT_3x3:
-      for (unsigned int rot = 0; rot < 4; rot++) {
-        if (create && rot)
-          rotd = new BrickCell(*mother, rot);
-        for (unsigned int cel = 0; cel < 4; cel++) {
-          if (create) {
-            cell = docreate(cel, rotd ? rotd : mother, size, rbd, rot);
-            byteimage(tim, *cell, rgb0, rgb1);
-            timf.write(&tim);
-            delete cell;
-          } else {
-            timf.read(&tim);
+    WideRGB rgb0 = rbd.colour();
+    WideRGB rgb1 = rbd.colour();
+    rgb1.r += 100;
+    rgb1.g += 100;
+    rgb1.b += 100;
+    rgb0.r -= 100;
+    rgb0.g -= 100;
+    rgb0.b -= 100;
+    BrickCell *base = 0;
+    for (unsigned int rot = 0; rot < BD_MAXROT; rot++) {
+      BrickCell *rotd = 0;
+      for (unsigned int cel = 0; cel < BD_MAXCEL; cel++) {
+        QString fn = QString("%1/brick-%2-%3--%4-%5-%6.png")
+          .arg(cachedir).arg(size).arg(style)
+          .arg(bno).arg(rot).arg(cel);
+        if (QFileInfo(fn).exists()) {
+          cells << QPixmap(fn);
+        } else {
+          if (!base) {
+            base = new BrickCell(size * rbd.height());
+            if (style==1)
+              base->drawstripes();
           }
-          (cells[cel + BD_MAXCELL * (rot + BD_MAXROT * bno)]
-             = new TSprite(env, size, size))->read(tim);
-          myresp[cel + BD_MAXCELL * (rot + BD_MAXROT * bno)] = true;
-          dbx(-980804, "bs:cel=%i rot=%i bno=%i size=%i create=%i",
-              cel, rot, bno, size, create);
+          if (rot && !rotd)
+            rotd = new BrickCell(*base, rot);
+          BrickCell *cell = docreate(cel, rotd ? rotd : base, size, rbd, rot);
+          RGBImage tim(size, size);
+          byteimage(tim, *cell, rgb0, rgb1);
+          delete cell;
+          tim.save(fn);
+          cells << QPixmap::fromImage(tim);
         }
-        if (rotd)
-          delete rotd;
-        rotd = 0;
       }
-      break;
-
-    default:
-      athrow("BrickSprites: undefined rotation style");
+      delete rotd;
     }
-    if (mother)
-      delete mother;
-    mother = 0;
+    delete base;
   }
   dbx(2, "BS: done");
 }
 
 BrickSprites::~BrickSprites() {
-  if (cells) {
-    for (int i = 0; i < n; i++)
-      if (cells[i] && myresp && myresp[i])
-        delete cells[i];
-    delete[] cells;
-  }
-  if (myresp)
-    delete[] myresp;
 }
 
 int BrickSprites::size() const {
@@ -159,9 +107,5 @@ BrickCell *BrickSprites::docreate(int cel,
                  bd.safecell(x - 1, y), bd.safecell(x - 1, y + 1),
                  bd.safecell(x, y + 1), bd.safecell(x + 1, y + 1));
   bc->drawborders(max(size / 10, 1), sur);
-/*  for (int x=0; x<3*cel+3; x++)
-    for (int y=0; y<4; y++)
-    if (x%3)
-    bc->c(x+3,y+3)=0; */// number the bricks for testing purps
   return bc;
 }

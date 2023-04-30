@@ -5,8 +5,8 @@
 
 class TReso { // dev.indep.
 public:
-  TReso(int xx, int yy, int mminfact, int mmaxfact, bool fs=0):
-    x(xx), y(yy), minfact(mminfact), maxfact(mmaxfact), fullscr(fs) {
+  TReso(int x, int y, int minfact, int mmaxfact, bool fs=0):
+    x(x), y(y), minfact(minfact), maxfact(maxfact), fullscr(fs) {
   }
   int best(int sw, int sh) const;
   int actx(int f)  const {

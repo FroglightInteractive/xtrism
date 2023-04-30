@@ -6,7 +6,6 @@
 #include <string>
 
 #include "KbdBuffer.h"
-#include "../basics/Throw.h"
 
 /////////////////////////////////////////////////////////////////////////////
 KeyCodes::KeyCodes(TKeyCode const *kcs) {
@@ -192,17 +191,10 @@ bool KbdBuffer::enter(TKeyCode kc, bool in_not_out) {
 }
 
 void KbdBuffer::enter(BufferCode b) {
-  if (data.empty())
-    sendwarn();
   data.push_back(b);
-/*  data[wp]=b;
-   if (wp.inc() == rp)
-    athrow("KbdBuffer: overflow");*/
 }
 
 void KbdBuffer::putback(BufferCode b) {
-  if (data.empty())
-    sendwarn();
   data.push_front(b);
 }
 
@@ -214,11 +206,6 @@ BufferCode KbdBuffer::read() {
     data.erase(data.begin());
     return b;
   }
-  /* if (wp == rp)
-     return BufferCode(BC_None);
-     BufferCode r(data[rp]);
-     rp.inc();
-     return r; */
 }
 
 void KbdBuffer::ithreekey(KeyNumber nw) {

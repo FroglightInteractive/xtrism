@@ -27,19 +27,19 @@ public:
     godown.reset();
   }
   int dt_godown() const {
-    return godown.getival();
+    return godown.ival();
   }                                                    // } Referee will
   int dt_used() const {
-    return brick.gettime();
+    return brick.elapsed();
   }                                                    // } want to know
   bool safeival() const;   // for WishList to judge drop request
   void markpause(bool pause, bool godown_only=0);
-  TTime const &getnextdown() {
-    return godown.getnext();
+  int nextdown() {
+    return godown.next();
   }
 private:
   GTimer godown, brick;
-  TTime pausetime;
+  int pausetime;
   int virtuallines;
   bool inispd;
 };

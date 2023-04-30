@@ -11,25 +11,21 @@ class FBResult {
 public:
   FBResult(): moved(0), othermoved(0), hitother(0) {
   }
-  byte moved : 1,
-    othermoved : 1,
-    hitother : 1;
+  bool moved, othermoved, hitother;
 };
 
 class FBHResult: public FBResult {
 public:
   FBHResult(): FBResult(), hitwall(0), shooshed(0) {
   }
-  byte hitwall : 1,
-    shooshed : 1;
+  bool hitwall, shooshed;
 };
 
 class FBVResult: public FBResult {
 public:
   FBVResult(): FBResult(), landed(0), dropped(0) {
   }
-  byte landed : 1,
-    dropped : 1;
+  bool landed, dropped;
 };
 
 class FallBrick {
@@ -81,10 +77,10 @@ private:
   int x0, y0, rot0, dy;
   class BrickEnv *env;
 
-  struct FBPoint {
+  struct FBQPoint {
     short x, y;
   };
-  static FBPoint const moveforrotl[];
-  static FBPoint const moveforrotr[];
+  static FBQPoint const moveforrotl[];
+  static FBQPoint const moveforrotr[];
 };
 #endif

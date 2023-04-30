@@ -24,29 +24,17 @@
 #ifndef _bricks_data_H
 #define _bricks_data_H
 
-#include "../basics/Byte.h"
+#include "RGB.h"
 #include "CellMatrix.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
+#include <QString>
+#include <QTextStream>
 #include "Consts.h"
+#include <QStringList>
 
-class BDLine {
+class BDLines: public QStringList {
 public:
-  BDLine();
-public:
-  char cell[BD_MAXSIZE + 2];
-};
-
-class BDLines {
-public:
-  BDLines() {
-  }
   inline bool safecell(int x, int y) const;
-  unsigned int count() const;
-public:
-  unsigned int hei;
-  BDLine line[BD_MAXSIZE];
+  unsigned int countcells() const;
 };
 
 class BrickData: public CellMatrix {
@@ -55,7 +43,6 @@ public:
     ROT_4x4=0,
     ROT_3x3=3,
     ROT_4x4_TWO=2,
-    // ROT_COLOURTETRIS=1,
   };
 public:
   BrickData(BDLines const &lines, int rot, RotStyle rotsty);
@@ -81,18 +68,19 @@ public:
   }
 private:
   unsigned int cells_;
-  byte *xx, *yy;
+  unsigned char *xx, *yy;
 };
 
 class RBrickData {
 public:
-  RBrickData(FILE *src, int t=-1);
+  RBrickData(QTextStream *src, int t=-1);
   ~RBrickData();
   const BrickData &operator[](unsigned int r) const {
-    tthrow(r >= rots, "RBrickData: illegal rotation");
+    if (r >= rots)
+      throw "RBrickData: illegal rotation";
     return *(bd[r]);
   }
-  const string &colour() const {
+  RGB const &colour() const {
     return colour_;
   }
   BrickData::RotStyle rotstyle() const {
@@ -104,14 +92,14 @@ public:
   }
 private:
   unsigned int rots;
-  BrickData **bd;
-  string colour_;
+  BrickData *bd[BD_MAXROTS];
+  RGB colour_;
   BrickData::RotStyle rotsty;
 };
 
 class SBrickData {
 public:
-  SBrickData(class Filename const &file);
+  SBrickData(QString const &filename);
   ~SBrickData();
   const RBrickData &operator[](int n) const {
     return *(rbd[n]);

@@ -5,15 +5,14 @@
 
 #include "GBox.h"
 #include <stdio.h>
-#include "../basics/Byte.h"
 
 class Box3D: public GBox {
 public:
-  Box3D(class GBParent *p, class Area const &area,
+  Box3D(class GBParent *p, class QSize const &area,
             class BoxMarbler *contents): GBox(p, area), bm(contents) {
   }
   virtual void redraw(class BBox const & bbox);
-  virtual bool mouse(int b, bool io, const Point &p) {
+  virtual bool mouse(int b, bool io, const QPoint &p) {
     printf("Box3D: Click! %i/%i (%i,%i) (this=%p)\n",
            b, io, p.x(), p.y(), this);
     return true;

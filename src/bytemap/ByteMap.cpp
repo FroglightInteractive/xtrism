@@ -2,75 +2,42 @@
 
 #include <stdlib.h>
 #include "ByteMap.h"
+#include "../basics/minmax.h"
 #include "../basics/dbx.h"
-#include "../env/TCompress.h"
-#include <string.h>
 
-// #define SAFETY
-#ifdef SAFETY
-const int MARGIN = 1000;
-#endif
-
-ByteMap::ByteMap(unsigned int w, unsigned int h, byte ini):
-  wid(w), hei(h) {
-#ifdef SAFETY
-  dat = new byte[wid * hei + 2 * MARGIN] + MARGIN;
-  memset(dat - MARGIN, 0x35, wid * hei + 2 * MARGIN);
-#else
-  dat = new byte[wid * hei];
-  memset(dat, ini, wid * hei);
-#endif
+ByteMap::ByteMap(unsigned int w, unsigned int h, unsigned char ini):
+  wid(w), hei(h), store(wid*hei, ini) {
+  dat = store.data();
 }
 
-ByteMap::ByteMap(unsigned int w, unsigned int h, TDecompress &src):
-  wid(w), hei(h) {
-#ifdef SAFETY
-  dat = new byte[wid * hei + 2 * MARGIN] + MARGIN;
-  memset(dat - MARGIN, 0x35, wid * hei + 2 * MARGIN);
-#else
-  dat = new byte[wid * hei];
-#endif
-  if (!src.read(dat, wid * hei)) {
-    tthrow(src.eof(), "ByteMap: unexpected EOF");
-    athrow("ByteMap: cannot read data");
-  }
+ByteMap::ByteMap(QString filename) {
+  QImage img(filename);
+  if (img.format() != QImage::Format_Grayscale8)
+    img = img.convertToFormat(QImage::Format_Grayscale8);
+  wid = img.width();
+  hei = img.height();
+  store.resize(wid*hei);
+  dat = store.data();
+  for (int y=0; y<hei; y++)
+    memcpy(line(y), img.constScanLine(y), wid);
 }
 
 ByteMap::~ByteMap() {
-#ifdef SAFETY
-  dbx(3, "~ByteMap: safety check");
-  for (int i = 0; i < MARGIN; i++)
-    if (dat[wid * hei + i] != 0x35)
-      athrow("~ByteMap: overflow past data");
-  dat -= MARGIN;
-  for (int i = 0; i < MARGIN; i++)
-    if (dat[i] != 0x35)
-      athrow("~ByteMap: overflow before data");
-#endif
-  delete[] dat;
 }
 
 ByteMap::ByteMap(ByteMap const &oth, unsigned int x, unsigned int y,
-                 unsigned int w, unsigned int h): wid(w), hei(h) {
-#ifdef SAFETY
-  dat = new byte[wid * hei + 2 * MARGIN] + MARGIN;
-  memset(dat - MARGIN, 0x35, wid * hei + 2 * MARGIN);
-#else
-  dat = new byte[wid * hei];
-#endif
+                 unsigned int w, unsigned int h): wid(w), hei(h),
+                                                  store(wid*hei) {
+  dat = store.data();
   for (unsigned int a = 0; a < hei; a++)
     memcpy(line(a), oth.cline(y + a) + x, wid);
 }
 
-ByteMap::ByteMap(ByteMap const &oth, int rot): wid(oth.wid), hei(oth.hei) {
+ByteMap::ByteMap(ByteMap const &oth, int rot): wid(oth.wid), hei(oth.hei),
+                                               store(wid*hei){
   if (hei != wid)
-    athrow("ByteMap: cannot rotate non-square map");
-#ifdef SAFETY
-  dat = new byte[wid * hei + 2 * MARGIN] + MARGIN;
-  memset(dat - MARGIN, 0x35, wid * hei + 2 * MARGIN);
-#else
-  dat = new byte[wid * hei];
-#endif
+    throw("ByteMap: cannot rotate non-square map");
+  dat = store.data();
   switch (rot & 3) {
   case 0:
     memcpy(dat, oth.dat, wid * hei);
@@ -96,6 +63,6 @@ ByteMap::ByteMap(ByteMap const &oth, int rot): wid(oth.wid), hei(oth.hei) {
   }
 }
 
-void ByteMap::write(TCompress &dst) const {
-  tthrow(dst.write(dat, wid * hei), "ByteMap: cannot write data");
+void ByteMap::write(QString filename) const {
+  QImage(dat, wid, hei, hei, QImage::Format_Grayscale8).save(filename);
 }

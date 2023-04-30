@@ -6,7 +6,7 @@
 #include "../gfx/GBParent.h"
 #include "../basics/Infty.h"
 
-InputField::InputField(class GBParent *par, class Area const &area,
+InputField::InputField(class GBParent *par, class QSize const &area,
                            string const &initcont, class TFont &font0,
                              class PollServer &pserv, class TEnv &env0):
   GBox(par, area), Sleeper(pserv),
@@ -26,7 +26,7 @@ void InputField::redraw(BBox const &bb) {
   font.setclip(BBox(-INFTY, -INFTY, INFTY, INFTY));
 }
 
-bool InputField::mouse(int button, bool ino, Point const &xy) {
+bool InputField::mouse(int button, bool ino, QPoint const &xy) {
   dbx(-20060107, "IF:mouse (%p): button=%i ino=%i", this, button, ino);
   if (ino && button == 1) {
     takefocus();

@@ -40,7 +40,7 @@ void PlayButton::visualselect(bool sel) {
   parent()->redraw(bbox());
 }
 
-bool PlayButton::mouse(int b, bool io, const Point &p) {
+bool PlayButton::mouse(int b, bool io, const QPoint &p) {
   printf("PlayButton: Click! %i/%i (%i,%i) (this=%p)\n",
          b, io, p.x(), p.y(), this);
   if (io) {

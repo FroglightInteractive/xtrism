@@ -7,7 +7,7 @@
 
 class MMBG: public TImage {
 public:
-  MMBG(class TEnv const &env, class TImageFile *timf=0);
+  MMBG(class TEnv const &env, QString filename=QString());
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 Kronos::Kronos(int virtlines):
   godown(GameTime::dt_godown(virtlines)),
-  brick(0), pausetime(TTime::INFINITE_PAST),
+  brick(0), pausetime(GameTime::now()),
   virtuallines(virtlines), inispd(true) {
 }
 
@@ -28,16 +28,16 @@ void Kronos::updlevel(int lines) {
 }
 
 bool Kronos::safeival() const {
-  return brick.gettime() > GameTime::safeival(virtuallines);
+  return brick.elapsed() > GameTime::safeival(virtuallines);
 }
 
 void Kronos::markpause(bool pause, bool godown_only) {
-  TTime const &t = GameTime::now();
-  if (pause)
+  int t = GameTime::now();
+  if (pause) {
     pausetime = t;
-  else {
+  } else {
     int dt = t - pausetime;
-    if (godown.gettime() < dt)   // godown reset during pause, ie setlevel
+    if (godown.elapsed() < dt)   // godown reset during pause, ie setlevel
       godown.reset();   // if so, reset again
     else
       godown.adjust(dt);   // else just adjust for time spent paused

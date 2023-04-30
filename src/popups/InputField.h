@@ -19,13 +19,13 @@ class InputField: public GBox, public Waker, public Sleeper {
 public:
   enum { W_NONE=0, W_CHANGE, W_ENTER };
 public:
-  InputField(class GBParent *par, class Area const &area,
+  InputField(class GBParent *par, class QSize const &area,
                  string const &initcont, class TFont &font,
                    class PollServer &pserv, class TEnv &env);
 public:
   // from GBox
   virtual void redraw(class BBox const & bbox);
-  virtual bool mouse(int button, bool ino, class Point const & xy);
+  virtual bool mouse(int button, bool ino, class QPoint const & xy);
   virtual bool key(int key, bool in_not_out);
   virtual bool offerfocus();
   virtual void forcedlosefocus();

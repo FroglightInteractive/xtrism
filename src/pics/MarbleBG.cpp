@@ -12,20 +12,20 @@
 #define PI 3.14159265358979323846               /* pi */
 #endif
 
-const float X0 = 0.5;
-const float Y0 = 0.5;
-const float DECAY = 2. / 3;
-const float GREY0 = 0;
-const float dGREY = 1.5;
+constexpr float X0 = 0.5;
+constexpr float Y0 = 0.5;
+constexpr float DECAY = 2. / 3;
+constexpr float GREY0 = 0;
+constexpr float dGREY = 1.5;
 
 void marblebg(unsigned int w, unsigned int h, unsigned int bw,
               float left, float top, float right, float bottom,
-              TImage &img, int offset_x, int offset_y,
+              RGBMap &img, int offset_x, int offset_y,
               ByteMap const *bytemap) {
   if (offset_x < 0 || offset_y < 0
       || offset_x + w > img.width() || offset_y + h > img.height())
     // return;
-    athrow("marblebg: doesn't fit in TImage");
+    throw("marblebg: doesn't fit in TImage");
   BrickCell *bc = 0;
   if (!bytemap || bytemap->width() < w || bytemap->height() < h) {
     bc = new BrickCell(w, h);
@@ -56,8 +56,8 @@ void marblebg(unsigned int w, unsigned int h, unsigned int bw,
       if (phi < -PI) phi += 2 * PI;
       float blue = max(cosf(phi * DECAY), 0.f);
       float grey = bytemap->cc(x, y) * dGREY + GREY0;
-      img.putpix(x + offset_x, y + offset_y,
-                 cm(TRGB(grey * red, grey * green, grey * blue)));
+      img.rset(x + offset_x, y + offset_y,
+               grey * red, grey * green, grey * blue);
     }
 
   if (bc)

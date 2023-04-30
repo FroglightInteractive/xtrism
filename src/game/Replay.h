@@ -3,8 +3,6 @@
 #ifndef _Replay_H
 #define _Replay_H
 
-#include "../env/TTime.h"
-
 class Replay {
 public:
   Replay(class Logger *logger, class VisPit *vp,

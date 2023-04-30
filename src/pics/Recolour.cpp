@@ -1,12 +1,11 @@
 // Recolour.C
 
 #include "Recolour.h"
-#include "../env/TEnv.h"
-#include "../env/TImage.h"
+#include "../bytemap/RGBMap.h"
 #include "../basics/BBox.h"
 #include <math.h>
 
-inline void recolour(TImage *dst, TImage const *src,
+inline void recolour(RGBMap *dst, RGBMap const *src,
                      int dst_x, int dst_y, int src_x, int src_y,
                      float mul, int add) {
   TCmap const &tcm(src->tenv().cmap());
@@ -15,7 +14,7 @@ inline void recolour(TImage *dst, TImage const *src,
   dst->putpix(dst_x, dst_y, tcm(rgb));
 }
 
-inline void recolour(TImage *dst, TImage const *src,
+inline void recolour(RGBMap *dst, RGBMap const *src,
                      int dst_x, int dst_y, int src_x, int src_y,
                      int add) {
   TCmap const &tcm(src->tenv().cmap());
@@ -24,7 +23,7 @@ inline void recolour(TImage *dst, TImage const *src,
   dst->putpix(dst_x, dst_y, tcm(rgb));
 }
 
-inline void recolour(TImage *img,
+inline void recolour(RGBMap *img,
                      int x, int y,
                      float mul, int add) {
   TCmap const &tcm(img->tenv().cmap());
@@ -33,7 +32,7 @@ inline void recolour(TImage *img,
   img->putpix(x, y, tcm(rgb));
 }
 
-inline void recolour(TImage *img,
+inline void recolour(RGBMap *img,
                      int x, int y,
                      int add) {
   TCmap const &tcm(img->tenv().cmap());
@@ -42,14 +41,14 @@ inline void recolour(TImage *img,
   img->putpix(x, y, tcm(rgb));
 }
 
-void recolour_rectangle(TImage *img, BBox const &bbox,
+void recolour_rectangle(RGBMap *img, BBox const &bbox,
                         float mul, int add) {
   for (int y = bbox.top(); y < bbox.bottom(); y++)
     for (int x = bbox.left(); x < bbox.right(); x++)
       recolour(img, x, y, mul, add);
 }
 
-void recolour_rect_edges(TImage *img, BBox const &bbox,
+void recolour_rect_edges(RGBMap *img, BBox const &bbox,
                          int bw,
                          int depth) {
   int x, y;
@@ -68,8 +67,8 @@ void recolour_rect_edges(TImage *img, BBox const &bbox,
     }
 }
 
-void recolour_circle(TImage *img,
-                     Point const &centre,
+void recolour_circle(RGBMap *img,
+                     QPoint const &centre,
                      int radius, float mul, int add,
                      int r1, int depth) {
   int rad2 = radius * radius;
@@ -91,8 +90,8 @@ void recolour_circle(TImage *img,
   }
 }
 
-void recolour_topline(TImage *dst,
-                      TImage const *src, Point const &srctopleft,
+void recolour_topline(RGBMap *dst,
+                      RGBMap const *src, QPoint const &srctopleft,
                       int depth, bool /*left*/, bool right) {
   int bw = dst->height();
   int w = dst->width();
@@ -103,9 +102,9 @@ void recolour_topline(TImage *dst,
                depth);
 }
 
-void recolour_bottomline(TImage *dst,
-                         TImage const *src,
-                         Point const &srctopleft,
+void recolour_bottomline(RGBMap *dst,
+                         RGBMap const *src,
+                         QPoint const &srctopleft,
                          int depth, bool left, bool /*right*/) {
   int bw = dst->height();
   int w = dst->width();
@@ -116,9 +115,9 @@ void recolour_bottomline(TImage *dst,
                -depth);
 }
 
-void recolour_leftline(TImage *dst,
-                       TImage const *src,
-                       Point const &srctopleft,
+void recolour_leftline(RGBMap *dst,
+                       RGBMap const *src,
+                       QPoint const &srctopleft,
                        int depth) {
   int bw = dst->width();
   int h = dst->height();
@@ -128,9 +127,9 @@ void recolour_leftline(TImage *dst,
 
 }
 
-void recolour_rightline(TImage *dst,
-                        TImage const *src,
-                        Point const &srctopleft,
+void recolour_rightline(RGBMap *dst,
+                        RGBMap const *src,
+                        QPoint const &srctopleft,
                         int depth) {
   int bw = dst->width();
   int h = dst->height();

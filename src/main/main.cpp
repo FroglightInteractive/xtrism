@@ -6,71 +6,48 @@
 #include <time.h>
 #include <string.h>
 
-#include "../env/TEnv.h"
 #include "../globals/Globals.h"
 #include "../mainmenu/MainMenu.h"
 #include <exception>
-#include "../basics/Filename.h"
 #include <QApplication>
+#include "../gfx/TextButton.h"
+#include <QDir>
 
-void my_exc() {
-  fprintf(stderr, "XTrism: my_exc (Unexpected exception)\n");
-  exit(1);
-}
-
-void my_term() {
-  fprintf(stderr,
-          "XTrism: my_term (eg. exception thrown before exception caught)\n");
-  exit(1);
-}
-
-#include "../gfx/Button.h"
 MainMenu *mmp;
+
 void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
-  char buf[300];
-  sprintf(buf, "%s: %i in %i lines (%.1f ppb); bset %i - ", name, sc, li, ppb,
-          bs + 1);
-  time_t t = time(0);
-  strftime(buf + strlen(buf), 100, "%d %b %Y %H:%M", localtime(&t));
-  if (sc != 0) {
-    string s = datadir().name();
+  QString buf = QString("%1: %2 in %3 lines (%4 ppb); bset %5")
+    .arg(name).arg(sc).arg(li).arg(ppb, 0, 'f', 1).arg(bs + 1);
+  QDateTime dt(QDateTime::currentDateTime());
+  buf += dt.toString(" - MMMM d yyyy hh:mm");
+  if (sc > 0) {
+    QString s = datadir();
     s += "/hisc";
-    FILE *f = fopen(s.c_str(), "a");
-    if (f) {
-      fprintf(f, "%s\n", buf);
-      fclose(f);
-    }
+    QFile f(s);
+    f.open(QFile::Append);
+    f.write(buf.toUtf8());
+    f.write("\n");
   }
-  mmp->textbut->settext(buf);
+  mmp->textbut->setText(buf);
 }
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);
   int r = 0;
-  set_terminate(&my_term);
-  set_unexpected(&my_exc);
-  dbx(1, "start of main");
-/*  char *b=new char[1000*1000];
-   char *c=new char[1000*1000];
-   char *d=new char[1000*1000];
-   for (int i=0; i<1000*1000; i+=581)
-    { b[i]=123; c[i]=63; d[i]=78; } */
-
+  qDebug() << "start of main";
   try {
-    global_init(argc, argv);
-// throw "Hello world";
-
-    mmp = new MainMenu;
-    tenv().loop();
+    global_init(argc, argv, &app);
+    mmp = new MainMenu(mainwindow());
+    app.exec();
     delete mmp;
     global_destroy();
-  } catch (string &s) {
-    printf("exc:main.string: %s\n", s.c_str());
+  } catch (QString &s) {
+    qDebug() << "exc:main.string: " << s;
   } catch (char *s) {
-    printf("exc:main.char*: %s\n", s);
+    qDebug() << "exc:main.char*: " << s;
   } catch (...) {
-    printf("exc:main....: unknown expection\n");
+    qDebug() << "exc:main....: unknown expection";
   }
-  dbx(1, "end of main");
+  qDebug() << "end of main";
   return r;
 }
