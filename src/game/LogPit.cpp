@@ -1,7 +1,7 @@
 // LogPit.H
 
 #include "LogPit.h"
-#include "../bricks/data.h"
+#include "BrickData.h"
 #include "../basics/dbx.h"
 
 // Waker info: sends warn() whenever contents change.

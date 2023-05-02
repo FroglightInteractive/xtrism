@@ -5,7 +5,7 @@
 #include "MainWindow.h"
 #include <QFileInfo>
 #include <QDebug>
-#include "RGBMap.h"
+#include "RGBImage.h"
 
 MMBG::MMBG(QSize size, QString filename) {
   if (QFileInfo(filename).exists()) {
@@ -13,10 +13,10 @@ MMBG::MMBG(QSize size, QString filename) {
   } else {
     // we'll have to build it from scratch...
     qDebug() << "Making main menu background (this may take a while)\n";
-    MMPict mmp(size.width(), size.height());
-    pm = QPixmap::fromImage(*mmp.rgbmap());
+    RGBImage mmp(mmPict(size.width(), size.height()));
+    pm = QPixmap::fromImage(mmp.toQImage());
     if (!filename.isEmpty())
-      mmp.rgbmap()->save(filename);
+      mmp.save(filename);
   }
 }
 

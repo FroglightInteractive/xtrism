@@ -5,11 +5,11 @@
 #define WIDERGB_H
 
 #include "../basics/minmax.h"
-#include "RGB.h"
+#include <QColor>
 
 class WideRGB { 
 public:
-  WideRGB(RGB rgb): r(rgb.r), g(rgb.g), b(rgb.b) {
+  WideRGB(QRgb rgb): r(qRed(rgb)), g(qGreen(rgb)), b(qBlue(rgb)) {
   }
   WideRGB(int rr, int gg, int bb): r(rr), g(gg), b(bb) {
     limit();
@@ -21,13 +21,13 @@ public:
   }
   WideRGB(const WideRGB &x): r(x.r), g(x.g), b(x.b) {
   }
-  RGB toRGB() const {
-    return RGB(r, g, b);
+  QRgb toRGB() const {
+    return qRgb(r, g, b);
   }
-  WideRGB &operator=(const RGB &rgb) {
-    r = rgb.r;
-    g = rgb.g;
-    b = rgb.b;
+  WideRGB &operator=(const QRgb &rgb) {
+    r = qRed(rgb);
+    g = qGreen(rgb);
+    b = qBlue(rgb);
     return *this;
   }
   WideRGB &operator=(const WideRGB &rgb) {
@@ -52,7 +52,7 @@ public:
     limitadd(-grey, -grey, -grey);
     return *this;
   }
-  WideRGB &recolour(float mul, int add) {
+  WideRGB &recolor(float mul, int add) {
     r = short(r * mul) + add;
     g = short(g * mul) + add;
     b = short(b * mul) + add;
@@ -72,9 +72,12 @@ private:
       g = short(g * a);
       b = short(b * a);
     }
-    makeatleast(r, short(0));
-    makeatleast(g, short(0));
-    makeatleast(b, short(0));
+    if (r<0)
+      r=0;
+    if (g<0)
+      g=0;
+    if (b<0)
+      b=0;
   }
   void limitadd(short rr, short gg, short bb) {
     r += rr;

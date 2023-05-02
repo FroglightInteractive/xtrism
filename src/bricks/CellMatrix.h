@@ -23,13 +23,11 @@ public:
 protected:
   void set(unsigned int x, unsigned int y, bool set=1);
   unsigned int &line(unsigned int y) {
-    if (y >= hei)
-      throw "CellMatrix: bad access";
+    Q_ASSERT_X(y<hei, "line", "CellMatrix: bad access");
     return data[y];
   }
   unsigned int const &line(unsigned int y) const {
-    if (y >= hei)
-      throw "CellMatrix: bad access";
+    Q_ASSERT_X(y<hei, "cline", "CellMatrix: bad access");
     return data[y];
   }
 private:

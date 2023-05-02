@@ -24,12 +24,12 @@
 #ifndef _bricks_data_H
 #define _bricks_data_H
 
-#include "RGB.h"
 #include "CellMatrix.h"
 #include <QString>
 #include <QTextStream>
 #include "Consts.h"
 #include <QStringList>
+#include <QColor>
 
 class BDLines: public QStringList {
 public:
@@ -76,10 +76,10 @@ private:
 class RBrickData: public QVector<BrickData> {
 public:
   RBrickData();
-  RBrickData(int rotstyle, RGB rgb, QStringList lines);
+  RBrickData(int rotstyle, QRgb rgb, QStringList lines);
   ~RBrickData();
-  RGB const &colour() const {
-    return colour_;
+  QRgb const &color() const {
+    return color_;
   }
   BrickData::RotStyle rotstyle() const {
     return rotsty;
@@ -89,7 +89,7 @@ public:
     return (*this)[0].height();
   }
 private:
-  RGB colour_;
+  QRgb color_;
   BrickData::RotStyle rotsty;
 };
 

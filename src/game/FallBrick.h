@@ -3,7 +3,7 @@
 #ifndef _FallBrick_H
 #define _FallBrick_H
 
-#include "../bricks/data.h"
+#include "BrickData.h"
 #include "FBPos.h"
 #include "BrickEnv.h"
 

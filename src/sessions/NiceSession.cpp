@@ -7,35 +7,35 @@
 #include "../sound/Sounds.h"
 #include "MainWindow.h"
 #include <QFileInfo>
-#include "brickcell.h"
-#include "MarbleBG.h"
+#include "BrickCell.h"
 #include "Probability.h"
 #include <QEventLoop>
 #include <QPainter>
 #include <QKeyEvent>
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
-  QWidget(mw), bg_(mw->width(), mw->height()) {
+  QWidget(mw) {
   resize(mw->size());
   move(0, 0);
+  QString fn0 = QString("%1/gamebg0-%2-%3x%4.jpg").arg(cachedir()).arg(id)
+    .arg(width()).arg(height());
   QString fn = QString("%1/gamebg-%2-%3x%4.jpg").arg(cachedir()).arg(id)
     .arg(width()).arg(height());
-  if (QFileInfo(fn).exists()) {
-    bg_.load(fn);
+  QRect src = playbutton->geometry();
+  QSize base = mw->size();
+  if (QFileInfo(fn0).exists()) {
+    bg_ = Rainbow(GrayImage::fromFile(fn0), src, base);
   } else {
-    BrickCell bc(width(), height());
-    QRect pbr = playbutton->geometry();
-    float l = pbr.left() * 1.0 / width();
-    float t = pbr.top() * 1.0 / height();
-    float r = pbr.right() * 1.0 / width();
-    float b = pbr.bottom() *1.0 / height();
-    marblebg(width(), height(), 0,
-             l,t,r,b,
-             bg_, 0, 0,
-             &bc);
-    bg_.save(fn);
+    bg_ = Rainbow(size(), src, base);
+    bg_.image().save(fn0);
   }
-  bg = QPixmap::fromImage(bg_);
+  if (QFileInfo(fn).exists()) {
+    bg = QPixmap(fn);
+  } else {
+    QImage img = bg_.create().toQImage();
+    img.save(fn);
+    bg = QPixmap::fromImage(img);
+  }
   mm = playbutton ? playbutton->parentWidget() : 0;
 }
 
@@ -120,7 +120,7 @@ void NiceSession::paintEvent(QPaintEvent *) {
 }
 
 
-RGBMap const &NiceSession::background() const {
+Rainbow const &NiceSession::background() const {
   return bg_;
 }
 

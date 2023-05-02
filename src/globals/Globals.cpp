@@ -4,11 +4,11 @@
 #include <QStandardPaths>
 #include "Globals.h"
 #include "../env/MainWindow.h"
-#include "../bricks/bsprites.h"
+#include "BrickSprites.h"
 #include "../basics/dbx.h"
 #include "../options/Options.h"
 #include "../bricks/Probability.h"
-#include "../bricks/data.h"
+#include "BrickData.h"
 #include "../basics/Infty.h"
 #include "../sound/Sounds.h"
 #include "../env/TReso.h"
@@ -32,7 +32,7 @@ static int gl_inited = false;
 
 void global_init(int argc, char **argv, class QApplication *app) {
   int minf = 20;
-  int maxf = 300;
+  int maxf = 60;
   //if (argc > 2 && strcmp(argv[1], "-size") == 0)
   //  minf = maxf = atoi(argv[2]);
   dbx(1, "global_init()");
@@ -42,7 +42,7 @@ void global_init(int argc, char **argv, class QApplication *app) {
     throw "global_init(): double initialization";
   gl_inited = true;
 
-  gl_mainwindowp = new MainWindow(TReso(16, 12, minf, maxf, true));
+  gl_mainwindowp = new MainWindow(TReso(16, 12, minf, maxf, false));
   qDebug() << "mw" << gl_mainwindowp->size();
 
   gl_soundsp = new Sounds(); //datadir() + "sound");

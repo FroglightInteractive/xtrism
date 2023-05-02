@@ -50,7 +50,7 @@ SoloButton::SoloButton(QString text, Options::PPos pos,
 }
 
 void SoloButton::play() {
-  NiceSession session("1",
+  NiceSession session(pos==Options::PPos::Left ? "1" : "4",
                       options().currentPlayer(pos),
                       options().currentBrickset(pos),
                       mainwindow(), this);

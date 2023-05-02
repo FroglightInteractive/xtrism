@@ -19,7 +19,7 @@ public:
   }
   int size() const;
 private:
-  class BrickCell *docreate(int cel, class BrickCell const *base,
+  class BrickCell docreate(int cel, class BrickCell const &base,
                             int size,
                             class RBrickData const &rbd, int rot);
 private:

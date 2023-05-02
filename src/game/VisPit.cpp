@@ -1,8 +1,8 @@
 // VisPit.C
 
 #include "VisPit.h"
-#include "../bricks/data.h"
-#include "../bricks/bsprites.h"
+#include "BrickData.h"
+#include "BrickSprites.h"
 #include "../basics/dbx.h"
 
 // Waker info: sends warn() whenever contents change

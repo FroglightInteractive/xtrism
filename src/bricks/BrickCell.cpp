@@ -1,18 +1,18 @@
 // brickcell.C
 
-#include "brickcell.h"
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
+#include "BrickCell.h"
+#include <cmath>
 
 BrickCell::BrickCell(unsigned int w, unsigned int h,
-                     unsigned int depth): ByteMap(w, h ? h : w) {
-  drawbasis(depth);
+                     unsigned int depth): GrayImage(w, h ? h : w) {
+  if (w>0 && height()>0)
+    drawbasis(depth);
 }
 
 void BrickCell::drawborders(unsigned int bw, const BCSurround &sur,
                             int depth) {
+  if (bw>=wid || bw>=hei)
+    return;
   if (!sur.e) // east edge
     a_rect(wid - bw, bw, bw, hei - 2 * bw, -depth);
 
@@ -170,13 +170,13 @@ inline unsigned int BrickCell::random(unsigned int w, unsigned int n,
 void BrickCell::drawstripes(unsigned int depth) {
   for (unsigned int y = 0; y < hei; y++) {
     for (unsigned int x = 0; x < wid; x++) {
-      float phase = (y + x) * 10 * 3.141592 / sqrt(hei * hei + wid * wid);
-      int a = int(cc(x, y) + depth * cos(phase));
+      float phase = (y + x) * 10 * 3.141592 / std::sqrt(hei * hei + wid * wid);
+      int a = int(get(x, y) + depth * std::cos(phase));
       if (a < 0)
         a = 0;
       if (a > 255)
         a = 255;
-      c(x, y) = a;
+      pix(x, y) = a;
     }
   }
 }
@@ -185,10 +185,10 @@ void BrickCell::drawbasis(unsigned int depth) {
   unsigned int x, y;
   for (y = 0; y < hei; y++)
     for (x = 0; x < wid; x++)
-      c(x, y) = random(pixc(x - 1, y), pixc(x, y - 1), pixc(x + 1, y - 1));
+      pix(x, y) = random(pixc(x - 1, y), pixc(x, y - 1), pixc(x + 1, y - 1));
 
   unsigned int a0 = (256 - depth) / 2;
   for (y = 0; y < hei; y++)
     for (x = 0; x < wid; x++)
-      c(x, y) = a0 + depth * cc(x, y) / 256;
+      pix(x, y) = a0 + depth * get(x, y) / 256;
 }

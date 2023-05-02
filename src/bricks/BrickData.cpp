@@ -1,6 +1,6 @@
 // bricks/data.C
 
-#include "data.h"
+#include "BrickData.h"
 #include <QFile>
 
 const char BDL_EMPTY = '-';
@@ -106,7 +106,7 @@ RBrickData::RBrickData() {
   rotsty = BrickData::ROT_4x4;
 }
 
-RBrickData::RBrickData(int rotstyle, RGB rgb, QStringList lines) {
+RBrickData::RBrickData(int rotstyle, QRgb rgb, QStringList lines) {
   if (rotstyle==0)
     rotsty = BrickData::ROT_4x4;
   else if (rotstyle==2)
@@ -116,7 +116,7 @@ RBrickData::RBrickData(int rotstyle, RGB rgb, QStringList lines) {
   else
     throw "Illegal rotstyle";
 
-  colour_ = rgb;
+  color_ = rgb;
   BDLines bdl(lines);
   for (unsigned int rot = 0; rot<4; rot++)
     *this << BrickData(bdl, rot, rotsty);
@@ -126,7 +126,8 @@ RBrickData::~RBrickData() {
 }
 
 void RBrickData::print() const {
-  printf("Type = %i; Colour = %i %i %i\n", rotsty, colour_.r, colour_.g, colour_.b);
+  printf("Type = %i; Colour = %i %i %i\n", rotsty,
+         qRed(color_), qGreen(color_), qBlue(color_));
   for (unsigned int r = 0; r < 4; r++) {
     (*this)[r].print();
     printf("\n");

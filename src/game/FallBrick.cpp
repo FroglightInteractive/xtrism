@@ -4,7 +4,7 @@
 #include "BrickEnv.h"
 #include "../basics/Infty.h"
 #include "../basics/dbx.h"
-
+#include <QDebug>
 #include "../sound/Sounds.h"
 
 FallBrick::FallBrick(const SBrickData &sbdat, int x_0, int y_0,
@@ -178,6 +178,7 @@ FBVResult FallBrick::godown() {
     res.landed = 1;
     break;
   }
+  qDebug() << "fallbrick" << res.moved << res.landed;
   return res;
 }
 

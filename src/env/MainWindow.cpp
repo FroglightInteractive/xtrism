@@ -11,8 +11,9 @@ MainWindow::MainWindow(TReso const &reso) {
   bool full = reso.fullscreen();
   actfactor = reso.best(screensize.width(), screensize.height());
   
-  QFont fnt("Albertus Medium");
-  fnt.setPixelSize(actfactor*0.3);
+  //  QFont fnt("Albertus Medium");
+  QFont fnt("Charter");
+  fnt.setPixelSize(actfactor*0.27);
   fnt.setWeight(QFont::Bold);
   setFont(fnt);
 

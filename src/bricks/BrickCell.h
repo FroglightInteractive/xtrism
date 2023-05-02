@@ -19,7 +19,7 @@
 #define _brickcell_h
 
 #include <stdio.h>
-#include "../bytemap/ByteMap.h"
+#include "GrayImage.h"
 
 class BCSurround {
 public:
@@ -32,21 +32,17 @@ public:
     se : 1;
 };
 
-class BrickCell: public ByteMap {
+class BrickCell: public GrayImage {
 public:
   BrickCell(unsigned int w, unsigned int h=0, unsigned int depth=128);
-  BrickCell(const ByteMap &other, int rot=0): ByteMap(other, rot) {
-  }
-  BrickCell(const ByteMap &other, unsigned int x, unsigned int y,
-            unsigned int w, unsigned int h=0):
-    ByteMap(other, x, y, w, h ? h : w) {
-  }
+  BrickCell(GrayImage const &oth): GrayImage(oth) { }
+  BrickCell(GrayImage &&oth): GrayImage(oth) { }
   void drawborders(unsigned int borderwidth, const BCSurround &sur,
                    int depth=100);
   void drawstripes(unsigned int depth=50);
 private:
   unsigned char pixc(unsigned int x, unsigned int y) {
-    return (x < wid && y < hei) ? cc(x, y) : 128;
+    return (x < wid && y < hei) ? pix(x, y) : 128;
   }
   inline unsigned int random(unsigned int w, unsigned int n, unsigned int nw);
   void drawbasis(unsigned int depth);

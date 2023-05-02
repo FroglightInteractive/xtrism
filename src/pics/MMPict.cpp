@@ -2,37 +2,9 @@
 
 #include "MMPict.h"
 #include "MidPtDisp.h"
-#include "../bytemap/RGBMap.h"
-#include <math.h>
-#include "../basics/minmax.h"
-
-MMPict::MMPict(int w0, int h0, MidPtDisp const *tb_cloud0,
-               RGBMap *rgbmap0, bool doitnow):
-  wid(w0), hei(h0) {
-  if (rgbmap0) {
-    rgbm = rgbmap0;
-    rgbismine = false;
-  } else {
-    rgbm = new RGBMap(wid, hei);
-    rgbismine = true;
-  }
-  if (tb_cloud0) {
-    tb_cloud = tb_cloud0;
-    cloudismine = false;
-  } else {
-    tb_cloud = new MidPtDisp(log(wid) / log(2));
-    cloudismine = true;
-  }
-  if (doitnow)
-    drawit(0, hei);
-}
-
-MMPict::~MMPict() {
-  if (cloudismine)
-    delete tb_cloud;
-  if (rgbismine)
-    delete rgbm;
-}
+#include "RGBImage.h"
+#include <cmath>
+#include "minmax.h"
 
 const float HAZE1 = 530;
 const float HAZE0 = -100;
@@ -102,7 +74,7 @@ inline float zeta(float x, float y) { // z coordinate for clouds
   float b = y + 2 * BETA * H_0 * x2;
   float a = DELTA * BETA * H_0 + BETA * H_0 * x2 / DELTA;
   float c = DELTA * (y - H_0) + DELTA * BETA * H_0 * x2;
-  return (sqrt(b * b - 4 * a * c) - b) / (2 * a);
+  return (std::sqrt(b * b - 4 * a * c) - b) / (2 * a);
 }
 
 inline float zetag(float x, float y) { // z coord for ground
@@ -113,22 +85,22 @@ inline float zetag(float x, float y) { // z coord for ground
   float D = b * b - 4 * a * c;
   if (D < 0)
     D = 0;
-  return (sqrt(D) - b) / (2 * a);
+  return (std::sqrt(D) - b) / (2 * a);
 }
 
 inline float xi(float x, float zeta) { // x coordinate for clouds & ground
   return x * (DELTA + zeta) / DELTA;
 }
 
-void MMPict::drawit(int top, int bottom) {
+RGBImage mmPict(int wid, int hei) {
+  RGBImage img(wid, hei);
+  MidPtDisp tb_cloud(std::log(wid) / std::log(2));
+  
   int hori = int(HORISCR * hei);
-  int th = tb_cloud->height();
-  int tw = tb_cloud->width();
+  int th = tb_cloud.height();
+  int tw = tb_cloud.width();
 
-  int b2 = std::min(hori, bottom);
-  int t2 = std::max(hori, top);
-
-  for (int y = top; y < b2; y++) { // doing sky
+  for (int y = 0; y < hori; y++) { // doing sky
     float eta = float(y) / hei;
     float a = HORISCR - eta;
     float xp = exp(-a / HAZE1a);
@@ -148,10 +120,10 @@ void MMPict::drawit(int top, int bottom) {
       ftx -= tx;
       int tx2 = (tx + 1) & (tw - 1);
       tx &= (tw - 1);
-      float cloud = ( ((*tb_cloud)(tx, ty) * (1 - ftx)
-                       + (*tb_cloud)(tx2, ty) * ftx) * (1 - fty)
-                      + ((*tb_cloud)(tx, ty2) * (1 - ftx)
-                         + (*tb_cloud)(tx2, ty2) * ftx) * fty)
+      float cloud = ( (tb_cloud(tx, ty) * (1 - ftx)
+                       + tb_cloud(tx2, ty) * ftx) * (1 - fty)
+                      + (tb_cloud(tx, ty2) * (1 - ftx)
+                         + tb_cloud(tx2, ty2) * ftx) * fty)
                     + CLOUD0;
       cloud *= c_e_0;     // damp cloudyness near horizon
       cloud = std::max(cloud, 0.f);
@@ -163,10 +135,10 @@ void MMPict::drawit(int top, int bottom) {
       float red = cloud * dRED + RED0;
       float green = cloud * dGREEN + GREEN0;
       float blue = cloud * dBLUE + BLUE0;
-      rgbm->rset(x, y, int(red * grey), int(green * grey), int(blue * grey));
+      img.rset(x, y, red * grey, green * grey, blue * grey);
     }
   }
-  for (int y = t2; y < bottom; y++) { // doing grass
+  for (int y = hori; y < hei; y++) { // doing grass
     float a = float(y) / hei - HORISCR;
     float xp = exp(-a / HAZE1a_g);
     float haze = std::max(HAZE1_g * xp + HAZE0_g, 0.f);
@@ -185,10 +157,10 @@ void MMPict::drawit(int top, int bottom) {
       ftx -= tx;
       int tx2 = (tx + 1) & (tw - 1);
       tx &= (tw - 1);
-      float cloud = ( ((*tb_cloud)(tx, ty) * (1 - ftx)
-                       + (*tb_cloud)(tx2, ty) * ftx) * (1 - fty)
-                      + ((*tb_cloud)(tx, ty2) * (1 - ftx)
-                         + (*tb_cloud)(tx2, ty2) * ftx) * fty)
+      float cloud = ( (tb_cloud(tx, ty) * (1 - ftx)
+                       + tb_cloud(tx2, ty) * ftx) * (1 - fty)
+                      + (tb_cloud(tx, ty2) * (1 - ftx)
+                         + tb_cloud(tx2, ty2) * ftx) * fty)
                     + CLOUD0_g;
       cloud += ROUGHg * cos(cloud * ROUGHFREQg);
       cloud *= c_e_0;     // damp cloudyness near horizon
@@ -197,7 +169,12 @@ void MMPict::drawit(int top, int bottom) {
       float red = cloud * dREDg + RED0g + haze * hREDg;
       float green = cloud * dGREENg + GREEN0g + haze * hGREENg;
       float blue = cloud * dBLUEg + BLUE0g + haze * hBLUEg;
-      rgbm->rset(x, y, int(red * grey), int(green * grey), int(blue * grey));
+      img.rset(x, y, red * grey, green * grey, blue * grey);
     }
   }
+  return img;
+}
+
+RGBImage mmPict(QSize s) {
+  return mmPict(s.width(), s.height());
 }

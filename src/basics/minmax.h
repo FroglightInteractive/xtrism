@@ -6,16 +6,6 @@
 
 #include <algorithm>
 
-template <class X> void makeatleast(X &a, X const &b) {
-  if (a < b)
-    a = b;
-}
-
-template <class X> void makeatmost(X &a, X const &b) {
-  if (a > b)
-    a = b;
-}
-
 template <class X> unsigned char clip255(X const &x) {
   return x<0 ? 0 : x>255 ? 255 : (unsigned char)x;
 }

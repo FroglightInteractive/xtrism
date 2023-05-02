@@ -1,15 +1,10 @@
 // GrayImage.h
 
-#ifndef GRAYIMAGE_H
-
-#define GRAYIMAGE_H
-
-// GrayImage.H
-
 #ifndef _GrayImage_H
 #define _GrayImage_H
 
 #include <QImage>
+#include "BBox.h"
 
 class GrayImage {
 public:
@@ -23,9 +18,16 @@ public:
                     unsigned int w, unsigned int h) const;
   GrayImage rotated(int rot) const;   // in units of 90 deg, ccw
   static GrayImage fromFile(QString filename);
-  static GrayImage fromQImage(QImage);
+  static GrayImage fromQImage(QImage const &);
   QImage const &toQImage() const;
-  void save(QString filename);
+  void save(QString filename) const;
+public:
+  inline void recolorPix(int x, int y, float mul, int add);
+  void recolorRect(BBox const &bbox, float mul, int add);
+  void recolorRectEdges(BBox const &bbox, int bw, int depth); // now inside bbox
+  void recolorCircle(QPoint const &center,
+                     int radius, float mul, int add,
+                     int r1, int depth);
 public:  
   unsigned char *data() {
     return dat;
@@ -54,6 +56,9 @@ public:
   unsigned int height() const {
     return hei;
   }
+  QSize size() const {
+    return QSize(wid, hei);
+  }
   void alter(int x, int y, int o) {
     alter(pix(x, y), o);
   }
@@ -79,9 +84,4 @@ protected:
 };
 
 #endif
-class GrayImage {
-public:
-  GrayImage();
-};
 
-#endif

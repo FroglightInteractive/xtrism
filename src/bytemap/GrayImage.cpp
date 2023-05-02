@@ -6,7 +6,7 @@
 #include "../basics/dbx.h"
 
 GrayImage::GrayImage(unsigned int w, unsigned int h):
-  store(wid, hei, QImage::Format_Grayscale8) {
+  store(w, h, QImage::Format_Grayscale8) {
   dat = store.bits();
   wid = store.width();
   hei = store.height();
@@ -14,8 +14,8 @@ GrayImage::GrayImage(unsigned int w, unsigned int h):
 }
 
 GrayImage::GrayImage(unsigned int w, unsigned int h, unsigned char ini):
-  store(wid, hei, QImage::Format_Grayscale8) {
-  store.fibpl(ini);
+  store(w, h, QImage::Format_Grayscale8) {
+  store.fill(ini);
   dat = store.bits();
   wid = store.width();
   hei = store.height();
@@ -41,7 +41,7 @@ GrayImage::GrayImage(GrayImage &&oth) {
   bpl = store.bytesPerLine();
 }
 
-GrayImage &operator=(GrayImage const &oth) {
+GrayImage &GrayImage::operator=(GrayImage const &oth) {
   store = oth.store;
   store.detach();
   dat = store.bits();
@@ -51,7 +51,7 @@ GrayImage &operator=(GrayImage const &oth) {
   return *this;
 }
 
-GrayImage &operator=(GrayImage &&oth) {
+GrayImage &GrayImage::operator=(GrayImage &&oth) {
   store = std::move(oth.store);
   dat = store.bits();
   wid = store.width();
@@ -61,19 +61,26 @@ GrayImage &operator=(GrayImage &&oth) {
 }
 /* End of boiler plate copy/move code */
 
-GrayImage GrayImage::fromQImage(QImage img) {
-  if (img.format() != QImage::Format_Grayscale8)
-    img = img.convertTo(QImage::Format_Grayscale8);
-  int w = img.width();
-  int h = img.height();
-  GrayImage out(w, h);
-  for (int y=0; y<h; y++)
-    memcpy(out.line(y), img.constScanLine(y), w);
+GrayImage GrayImage::fromQImage(QImage const &img) {
+  GrayImage out(0,0);
+  out.store = img.convertToFormat(QImage::Format_Grayscale8);
+  out.store.detach();
+  out.dat = out.store.bits();
+  out.wid = out.store.width();
+  out.hei = out.store.height();
+  out.bpl = out.store.bytesPerLine();
   return out;
 }  
 
 GrayImage GrayImage::fromFile(QString filename) {
-  return fromQImage(QImage(filename));
+  GrayImage out(0,0);
+  out.store.load(filename);
+  out.store.convertTo(QImage::Format_Grayscale8);
+  out.dat = out.store.bits();
+  out.wid = out.store.width();
+  out.hei = out.store.height();
+  out.bpl = out.store.bytesPerLine();
+  return out;
 }
 
 GrayImage GrayImage::cropped(unsigned int x, unsigned int y,
@@ -113,3 +120,67 @@ QImage const &GrayImage::toQImage() const {
 void GrayImage::save(QString filename) const {
   toQImage().save(filename);
 }
+
+//////////////////////////////////////////////////////////////////////
+inline void GrayImage::recolorPix(int x, int y, float mul, int add) {
+  unsigned char &c(pix(x, y));
+  c = clip255(mul*c + add);
+}
+
+void GrayImage::recolorRect(BBox const &bbox, float mul, int add) {
+  int x0 = bbox.left();
+  int y0 = bbox.top();
+  int x1 = x0 + bbox.width();
+  int y1 = y0 + bbox.height();
+  Q_ASSERT_X(x0>=0 && y0>=0 && x1<=wid && y1<=hei, "recolorRect", "too big");
+  for (int y=y0; y<y1; y++)
+    for (int x=x0; x<x1; x++)
+      recolorPix(x, y, mul, add);
+}
+  
+void GrayImage::recolorRectEdges(BBox const &bbox, int bw, int depth) {
+  int x0 = bbox.left();
+  int y0 = bbox.top();
+  int w = bbox.width();
+  int h = bbox.height();
+  int x1 = x0 + w - 1;
+  int y1 = y0 + h - 1;
+  Q_ASSERT_X(w >= 2*bw && h >= 2*bw, "recolorRectEdges", "too small");
+  Q_ASSERT_X(x0>=0 && y0>=0 && x1<wid && y1<hei, "recolorRectEdges", "too big");
+  for (int y = 1; y <= bw; y++) 
+    for (int x = 0; x < w - y; x++) 
+      recolorPix(x + x0, y + y0 - 1, 1., depth);
+  for (int y = 1; y <= bw; y++) 
+    for (int x = 0; x < w - y; x++) 
+      recolorPix(x1 - x, y1 + 1 - y, 1., -depth);
+  for (int x = 1; x <= bw; x++)
+    for (int y = bw; y < h - x; y++) 
+      recolorPix(x + x0 - 1, y + y0, 1., depth);
+  for (int x = 1; x <= bw; x++)
+    for (int y = bw; y < h - x; y++) 
+      recolorPix(x1 - x + 1, y1 - y, 1., -depth);
+}
+  
+void GrayImage::recolorCircle(QPoint const &center,
+                              int radius, float mul, int add,
+                              int r1, int depth) {
+  int rad2 = radius * radius;
+  int r12 = r1 * r1;
+  int cx = center.x();
+  int cy = center.y();
+  Q_ASSERT_X(cx-r1>=0 && cy-r1>=0 && cx+r1<wid && cy+r1<hei && radius<=r1,
+             "recolorCircle", "too big");
+  for (int y = -r1; y <= r1; y++) {
+    int y2 = y * y;
+    // int bdx=int(sqrt(rad2-y2));
+    int bdx1 = int(sqrt(r12 - y2));
+    for (int x = -bdx1; x <= bdx1; x++) {
+      int x2 = x * x;
+      int r2 = x2 + y2;
+      if (r2 <= rad2)
+        recolorPix(cx + x, cy + y, mul, add);
+      else
+        recolorPix(cx + x, cy + y, 1., -depth * (y + x) / sqrt(r2));
+    }
+  }
+}  

@@ -227,7 +227,7 @@ with open("../src/bricks/brickdefs.h", "w") as fd:
 #ifndef _brickdefs_h
 #define _brickdefs_h
 
-#include "data.h"
+#include "BrickData.h"
 
 SBrickData gl_sbd{
 ''')
@@ -237,7 +237,7 @@ SBrickData gl_sbd{
         if int(m)!=n:
             raise Exception("Inconsistent block numbering");
         rgb = [str(int(255.999*float(x))) for x in rgb.split(",")]
-        fd.write(f"  {START} {r}, {START}{','.join(rgb)}{END}, {START} // {m}")
+        fd.write(f"  {START} {r}, qRgb({','.join(rgb)}), {START} // {m}")
         for line in blocks[n+1][1:]:
             fd.write(f'\n    "{line}",');
         fd.write(f" {END} {END},\n");

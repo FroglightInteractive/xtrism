@@ -3,12 +3,12 @@
 #include <math.h>
 
 #include "ScreenPit.h"
-#include "Recolour.h"
+#include "RGBRecolor.h"
 #include "BBox.h"
 #include <QPaintEvent>
 #include <QPainter>
 
-ScreenPit::ScreenPit(VisPit &vp, RGBMap const &sbg, QWidget *parent):
+ScreenPit::ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent):
   QWidget(parent), sharedbg(sbg), vispit(vp) {
   wid = vp.cellsize() * vp.width();
   hei = vp.cellsize() * vp.height();
@@ -20,17 +20,18 @@ ScreenPit::~ScreenPit() {
 }
 
 void ScreenPit::generate() {
-  RGBMap clipped(sharedbg, pos().x(), pos().y(), width(), height());
+  Rainbow clipped = sharedbg.cropped(geometry());
   int W = vispit.width();
   int dx = vispit.cellsize();
-  BBox bb(bw, bw, bw+1, hei);
+  BBox bb(bw, bw, bw+1, hei+bw);
   for (int x = 0; x < W * dx; x++) {
     double phase = (x + dx/2) * 3.141592 / dx;
-    recolour_rectangle(&clipped, bb, .5 + .15 * cos(phase), 0);
+    clipped.image().recolorRect(bb, .5 + .15 * cos(phase), 0);
     bb.shift(1, 0);
   }
-  recolour_rect_edges(&clipped, BBox(bw, bw, wid-bw, hei-bw), bw, -64);
-  mybg = QPixmap::fromImage(clipped);
+  clipped.image().recolorRectEdges(BBox(QPoint(), size()), bw, -64);
+  mybg = QPixmap::fromImage(clipped.create().toQImage());
+  topleft = pos();
 }
 
 void ScreenPit::paintEvent(QPaintEvent *e) {

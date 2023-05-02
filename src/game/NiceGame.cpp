@@ -25,8 +25,8 @@ extern void setlastscore(int sc, int li, double ppb, QString name, int bs);
 #include "../options/Player.h"
 #include "GameKeys.h"
 #include "MetaKeys.h"
-#include "../bricks/data.h"
-#include "../bricks/bsprites.h"
+#include "BrickData.h"
+#include "BrickSprites.h"
 #include "../basics/dbx.h"
 
 #include "../sound/Sounds.h"
@@ -158,7 +158,6 @@ void NiceGame::start() {
   nextbox[0]->clear();
   if (nextbox[1])
     nextbox[1]->clear();
-  logpit->clear();
   vispit->clear();
   statboard->setdata(SCORE, 0);
   statboard->setdata(LINES, lines = 0);

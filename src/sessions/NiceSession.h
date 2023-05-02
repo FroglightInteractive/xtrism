@@ -3,8 +3,8 @@
 #ifndef _NiceSession_H
 #define _NiceSession_H
 
-#include "RGBMap.h"
-
+#include "RGBImage.h"
+#include "Rainbow.h"
 #include <QWidget>
 
 class NiceSession: public QWidget {
@@ -24,7 +24,7 @@ public:
   virtual ~NiceSession();
   void paintEvent(QPaintEvent *) override;
   void exec();
-  RGBMap const &background() const;
+  Rainbow const &background() const;
   void keyPressEvent(QKeyEvent*) override;
   void keyReleaseEvent(QKeyEvent*) override;
 private:
@@ -33,7 +33,7 @@ private:
   //  void start();
   //  void gquit(class Game *g, bool quitable);
 private:
-  RGBMap bg_;
+  Rainbow bg_;
   QPixmap bg;
   QWidget *mm;
   class NiceGame *g1, *g2;

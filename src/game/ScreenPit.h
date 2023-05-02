@@ -5,11 +5,11 @@
 
 #include <QWidget>
 #include "VisPit.h"
-#include "../bytemap/RGBMap.h"
+#include "Rainbow.h"
 
 class ScreenPit: public QWidget {
 public:
-  ScreenPit(VisPit &vp, RGBMap const &sbg, QWidget *parent=0);
+  ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent=0);
   /* In the GBArgs argument, the width and height members need not
      be specified; they are re-calculated from the VisPit's data. */
   ~ScreenPit();
@@ -19,7 +19,7 @@ private:
   void redrawcell(QPainter *p, int x, int y, QPixmap const *tsp) const;
   void generate();
 private:
-  RGBMap const &sharedbg;
+  Rainbow const &sharedbg;
   VisPit &vispit;
   QPixmap mybg;
   QPoint topleft;

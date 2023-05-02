@@ -4,8 +4,7 @@
 #include <QPainter>
 #include <QFileInfo>
 #include "Globals.h"
-#include "RGBMap.h"
-#include "MarbleBG.h"
+#include "RGBImage.h"
 
 MarbledButton::MarbledButton(QWidget *parent):
   QWidget(parent) {
@@ -41,9 +40,7 @@ void MarbledButton::generate() {
   float right = w ? (pos().x()+width()) / psize.width() : 1;
   float top = w ? pos().y() / psize.height() : 0; 
   float bottom = w ? (pos().y()+height()) / psize.height() : 1;
-  RGBMap img(width(), height());
-  marblebg(width(), height(), 2,
-           left, top, right, bottom,
-           img, 0, 0);
-  bg = QPixmap::fromImage(img);
+  RGBImage img(RGBImage::colorized(size(), 2,
+                                   QRectF(left, top, right-left, bottom-top)));
+               bg = QPixmap::fromImage(img.toQImage());
 }

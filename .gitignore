@@ -3,3 +3,4 @@ xtrism.pri
 xtrism
 cache
 build
+build-debug

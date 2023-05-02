@@ -1,27 +1,27 @@
 // StatBoard.C
 
 #include "StatBoard.h"
-#include "Recolour.h"
+#include "RGBRecolor.h"
 #include <QFontMetrics>
 #include "BBox.h"
 #include <QPainter>
 #include <QDebug>
 
-constexpr int INTERL = 2;
+constexpr int INTERL = 0;
 constexpr int EDGEMARG = 10;
 constexpr int CENTREMARG = 12;
 constexpr int TBMARG = 10;
 
 StatBoard::StatBoard(int nlines, int labelw, int dataw,
-                     RGBMap const &sbg, QWidget *parent):
+                     Rainbow const &sbg, QWidget *parent):
   QWidget(parent), sharedbg(sbg) {
   QFontMetrics fm(font());
   dy = fm.height() + INTERL;
-  y0 = TBMARG; // + fm.ascent();
+  y0 = TBMARG - dy/3; // + fm.ascent();
   dxl = EDGEMARG;
   dxd = EDGEMARG;
   int wid = labelw + dataw + 2*EDGEMARG + CENTREMARG;
-  int hei = nlines*dy + 2*TBMARG;
+  int hei = nlines*dy + 2*TBMARG - dy/3;
   resize(wid, hei);
 }
 
@@ -49,12 +49,13 @@ void StatBoard::setdata(int i, double val, bool update) {
 
 void StatBoard::generate() {
   qDebug() << "StatBoard::generate" << x() << y() << width() << height();
-  RGBMap clipped(sharedbg, x(), y(), width(), height());
+  Rainbow clipped = sharedbg.cropped(geometry());
   int bw = 1 + width() / 75 + 1;
   BBox bb(bw, bw, width() - 2*bw, height() - 2*bw);
-  recolour_rectangle(&clipped, bb, .75, 0);
-  recolour_rect_edges(&clipped, bb, bw, -64);
-  mybg = QPixmap::fromImage(clipped);
+  clipped.image().recolorRect(bb, .75, 0);
+  clipped.image().recolorRectEdges(bb, bw, -64);
+  mybg = QPixmap::fromImage(clipped.create().toQImage());
+  topleft = pos();
 }
 
 void StatBoard::paintEvent(QPaintEvent *) {
