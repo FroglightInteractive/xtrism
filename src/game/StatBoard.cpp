@@ -5,10 +5,11 @@
 #include <QFontMetrics>
 #include "BBox.h"
 #include <QPainter>
+#include <QDebug>
 
 constexpr int INTERL = 2;
 constexpr int EDGEMARG = 10;
-constexpr int CENTREMARG = 10;
+constexpr int CENTREMARG = 12;
 constexpr int TBMARG = 10;
 
 StatBoard::StatBoard(int nlines, int labelw, int dataw,
@@ -16,11 +17,11 @@ StatBoard::StatBoard(int nlines, int labelw, int dataw,
   QWidget(parent), sharedbg(sbg) {
   QFontMetrics fm(font());
   dy = fm.height() + INTERL;
-  y0 = TBMARG + fm.ascent();
+  y0 = TBMARG; // + fm.ascent();
   dxl = EDGEMARG;
   dxd = EDGEMARG;
   int wid = labelw + dataw + 2*EDGEMARG + CENTREMARG;
-  int hei = nlines*dy - INTERL + 2*TBMARG;
+  int hei = nlines*dy + 2*TBMARG;
   resize(wid, hei);
 }
 
@@ -47,6 +48,7 @@ void StatBoard::setdata(int i, double val, bool update) {
 }
 
 void StatBoard::generate() {
+  qDebug() << "StatBoard::generate" << x() << y() << width() << height();
   RGBMap clipped(sharedbg, x(), y(), width(), height());
   int bw = 1 + width() / 75 + 1;
   BBox bb(bw, bw, width() - 2*bw, height() - 2*bw);
@@ -64,7 +66,7 @@ void StatBoard::paintEvent(QPaintEvent *) {
   p.setPen(QPen(QColor(255,255,255)));
   int w = width();
   for (int i=0; i<labels.size(); i++)
-    p.drawText(QRectF(QPoint(dxl, y0 + dy*i), QSize(w - dxl,dy)),
+    p.drawText(QRectF(QPoint(dxl, y0 + dy*i), QSize(w - dxl, dy)),
                Qt::AlignLeft | Qt::AlignVCenter, labels[i]);
   p.setPen(QPen(QColor(255,255,0)));
   for (int i=0; i<labels.size(); i++)

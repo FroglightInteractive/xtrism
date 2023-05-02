@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-#include "../basics/Throw.h"
 
 BrickCell::BrickCell(unsigned int w, unsigned int h,
                      unsigned int depth): ByteMap(w, h ? h : w) {
@@ -165,7 +164,7 @@ inline unsigned int BrickCell::random(unsigned int w, unsigned int n,
   int b
     = int(.37 * w + .37 * n + .25 * nw + .01 * 128 + 89.6 * rand() / RAND_MAX
           - 44.8);
-  return max(min(b, 255), 0);
+  return b<0 ? 0 : b>255 ? 255 : b;
 }
 
 void BrickCell::drawstripes(unsigned int depth) {

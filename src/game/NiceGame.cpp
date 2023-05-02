@@ -5,10 +5,11 @@
 const int CHLEV_MAXLINES = 9; // don't allow change level if > this # of lines
 const int CHLEV_MAXLEV = 292; // superhuman speed: delay < 1 ms
 
-extern void setlastscore(int sc, int li, double ppb, char const *name, int bs);
+#include <QString>
 
-#include <string>
+extern void setlastscore(int sc, int li, double ppb, QString name, int bs);
 
+#include "Team.h"
 #include "NiceGame.h"
 #include "PlPlayer.h"
 #include "LogPit.h"
@@ -22,13 +23,13 @@ extern void setlastscore(int sc, int li, double ppb, char const *name, int bs);
 #include "NiceSession.h"
 #include "../bricks/Probability.h"
 #include "../options/Player.h"
-#include "../options/GlobalOpts.h"
+#include "GameKeys.h"
+#include "MetaKeys.h"
 #include "../bricks/data.h"
 #include "../bricks/bsprites.h"
 #include "../basics/dbx.h"
 
 #include "../sound/Sounds.h"
-#include "../env/TBusy.h"
 
 const int SOLOWIDTH = 10;
 const int SOLOHEIGHT = 22;
@@ -39,19 +40,21 @@ const int TEAMHEIGHT = 22;
 const int TEAMX0 = 6;
 const int TEAMX1 = 12;
 
-NiceGame::NiceGame(NiceSession *s, int pos0,
+NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
                    Player const *p1, Player const *p2,
-                   GlobalOpts const &g,
+                   MetaKeys const *mk1, MetaKeys const *mk2,
                    SBrickData const &sbd0,
                    BrickSprites const &bs0, BrickSprites const &bs1,
                    int bset0):
-  session(s), global(g),
+  session(s),
   sbd(sbd0), bs(bs0), bs2(bs1), bset(bset0), 
   pudding(0), puddreq(0), landreq(0),
   nplrs(0),
   pos(pos0), team(p2!=0) {
   player[0] = p1;
   player[1] = p2;
+  mkeys[0] = mk1;
+  mkeys[1] = mk2;
   playing = pause = false;
   dbx(1, "NiceGame %p", this);
   int lw = QFontMetrics(s->font()).horizontalAdvance("Pts/Blk:");
@@ -77,14 +80,17 @@ NiceGame::NiceGame(NiceSession *s, int pos0,
   score = new Score();
 
   
-  QSize size = QSize(s->width() / (pos?2:1), s->height());
-  QPoint topleft(pos>0 ? size.width() : 0, 0);
+  QSize size = QSize(s->width() / (pos==Sides::Side::Solo?1:2), s->height());
+  QPoint topleft(pos==Sides::Side::Right ? size.width() : 0, 0);
   QRect bbox(topleft, size);
+  qDebug() << "nicegame" << bbox;
   screenpit->move(bbox.center()
            - QPoint(screenpit->width()/2, screenpit->height()/2)
            - QPoint(0, size.height()/20));
   statboard->move(screenpit->x()/2 - statboard->width()/2,
-                  screenpit->y()/2 - statboard->width()/2);
+                  screenpit->y()); // - statboard->height()/2);
+  qDebug() << "  screenpit" << screenpit->geometry();
+  qDebug() << "  statboard" << statboard->geometry();
 
   if (team) {
     nextbox[0]->move(screenpit->x() - nextbox[0]->width() - size.width()/10,
@@ -95,13 +101,18 @@ NiceGame::NiceGame(NiceSession *s, int pos0,
                      - nextbox[1]->height());
 
   } else {
-    nextbox[0]->move(screenpit->x() - nextbox[0]->width() - size.width()/10,
-                     screenpit->y() + screenpit->height()
-                     - nextbox[0]->height());
-    nextbox[0]->move(screenpit->x() + screenpit->width() + size.width()/10,
-                     screenpit->y() + screenpit->height()
-                     - nextbox[0]->height());
+    if (p1->nextpos()<0) 
+      nextbox[0]->move(screenpit->x() - nextbox[0]->width() - size.width()/10,
+                       screenpit->y() + screenpit->height()
+                       - nextbox[0]->height());
+    else
+      nextbox[0]->move(screenpit->x() + screenpit->width() + size.width()/10,
+                       screenpit->y() + screenpit->height()
+                       - nextbox[0]->height());
   }
+  qDebug() << "  nextbox[0]" << nextbox[0]->geometry();
+  if (nextbox[1])
+    qDebug() << "  nextbox[1]" << nextbox[1]->geometry();
   timerid = -1;
 }
 
@@ -122,8 +133,7 @@ NiceGame::~NiceGame() {
 }
 
 void NiceGame::terminate(bool natural) {
-  setlastscore(score->pts(), lines, score->ppb(), player[0]->name().c_str(),
-               bset);
+  setlastscore(score->pts(), lines, score->ppb(), player[0]->name(), bset);
   playing = false;
   if (timerid>=0)
     killTimer(timerid);
@@ -152,16 +162,22 @@ void NiceGame::start() {
   vispit->clear();
   statboard->setdata(SCORE, 0);
   statboard->setdata(LINES, lines = 0);
-  statboard->setdata(LEVEL, player[0]->level(bset)); // should look at team lvl
+  statboard->setdata(LEVEL, player[0]->startLevel(bset)); // should look at team lvl
   statboard->setdata(RANK, "-");
   statboard->setdata(PTSBLK, "-");
 
   nplrs = team ? 2 : 1;
   for (int i = 0; i < nplrs; i++)
-    plplayers[i] = new PlPlayer(this, team ? (-1 + 2 * i) : pos,
+    plplayers[i] = new PlPlayer(this,
+                                team
+                                ? (i ? Sides::Side::Right : Sides::Side::Left)
+                                : pos,
                                 *player[i],
-                                sbd, global,
-                                player[i]->level(bset), probabilities(bset),
+                                sbd, *mkeys[i],
+                                team
+                                ? Team(*player[0], *player[1]).startLevel(bset)
+                                : player[i]->startLevel(bset), // TEAM?
+                                probabilities(bset),
                                 team ? (i ? TEAMX1 : TEAMX0) : SOLOX0);
   for (int i = 0; i < nplrs; i++)
     plplayers[i]->connect(nextbox[i], logpit, team ? plplayers[1 - i] : 0);
@@ -172,8 +188,6 @@ void NiceGame::start() {
 
 
 void NiceGame::addscore(double sc, PlPlayer *) {
-  tbusy = true;
-  // tthrow(plp!=plplayers[0], "NiceGame::addscore: Unexpected PlPlayer");
   (*score) += sc;
   dbx(1, "NiceGame::addscore %g", sc);
   statboard->setdata(SCORE, score->pts());

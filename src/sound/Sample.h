@@ -8,7 +8,7 @@
 
 class Sample {
 public:
-  Sample(char const *fn);
+  Sample(QString fn);
   void play();
 private:
   QString cmd;

@@ -1,6 +1,5 @@
 // Globals.H
 
-#include "../options/PlayerList.h"
 #include <QString>
 
 class MainWindow *mainwindow();
@@ -13,13 +12,7 @@ class SPlayer &splayer();
 QString datadir();
 QString cachedir();
 
-class GlobalOpts &globalopts();
-class PlayerList &players();
-
-int brickset();
-void setbrickset(int);
-PlayerList::PlayerIt player(bool right);
-void setplayer(bool right, PlayerList::PlayerIt player);
+class Options &options();
 
 void global_init(int argc, char **argv, class QApplication *);
 void global_destroy();

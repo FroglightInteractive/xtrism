@@ -7,63 +7,50 @@
 
 #include "KbdBuffer.h"
 
-/////////////////////////////////////////////////////////////////////////////
-KeyCodes::KeyCodes(TKeyCode const *kcs) {
-  for (int i = 0; i < KeyNumber(KN_Max); i++)
-    data[i] = kcs[i];
+KeyCodes::KeyCodes(GameKeys const &gk, MetaKeys const &mk):
+  gk(gk), mk(mk) {
+  rebuild();
 }
 
-KeyCodes::KeyCodes(vector<TKeyCode> const &kcs) {
-  for (int i = 0; i < KeyNumber(KN_Max); i++)
-    data[i] = kcs[i];
+void KeyCodes::setuser(GameKeys const &gk1) {
+  gk = gk1;
+  rebuild();
 }
 
-KeyCodes::KeyCodes(TKeyCode const *user, TKeyCode const *global) {
-  setuser(user);
-  setglobal(global);
+void KeyCodes::setglobal(MetaKeys const &mk1) {
+  mk = mk1;
+  rebuild();
 }
 
-KeyCodes::KeyCodes(vector<TKeyCode> const &user,
-                   vector<TKeyCode> const &global) {
-  setuser(user);
-  setglobal(global);
+void KeyCodes::rebuild() {
+  clear();
+  (*this)[gk[GameKeys::Key::Left]] = KN_Left;
+  (*this)[gk[GameKeys::Key::Right]] = KN_Right;
+  (*this)[gk[GameKeys::Key::CW]] = KN_RotCW;
+  (*this)[gk[GameKeys::Key::CCW]] = KN_RotCCW;
+  (*this)[gk[GameKeys::Key::Drop]] = KN_Drop;
+  (*this)[gk[GameKeys::Key::Zap]] = KN_Zap;
+
+  (*this)[mk[MetaKeys::Key::Pause]] = KN_Pause;
+  (*this)[mk[MetaKeys::Key::LevDown]] = KN_LevDn;
+  (*this)[mk[MetaKeys::Key::LevUp]] = KN_LevUp;
+  (*this)[mk[MetaKeys::Key::Quit]] = KN_Quit;
 }
 
-KeyCodes::KeyCodes(TKeyCode const *user,
-                   vector<TKeyCode> const &global) {
-  setuser(user);
-  setglobal(global);
-}
-
-void KeyCodes::setuser(TKeyCode const *user) {
-  for (int i = KN_First; i < KN_MaxUser; i++)
-    data[i] = user ? user[i] : -1;
-}
-
-void KeyCodes::setuser(vector<TKeyCode> const &user) {
-  for (int i = KN_First; i < KN_MaxUser; i++)
-    data[i] = user[i];
-}
-
-void KeyCodes::setglobal(TKeyCode const *global) {
-  for (int i = KN_FirstGlobal; i < KN_Max; i++)
-    data[i] = global[i - KN_FirstGlobal];
-}
-
-void KeyCodes::setglobal(vector<TKeyCode> const &global) {
-  for (int i = KN_FirstGlobal; i < KN_Max; i++)
-    data[i] = global[i - KN_FirstGlobal];
-}
 
 /////////////////////////////////////////////////////////////////////////////
-bool KbdBuffer::enter(TKeyCode kc, bool in_not_out) {
-  KeyNumber n(KN_None);
-  int i;
-  for (i = KN_First; i < KN_Max; i++)
-    if (kc == kcs[KeyNumber(i)])
-      n = KeyNumber(i);
-  if (n == KN_None)
+KbdBuffer::KbdBuffer(GameKeys const &gk, MetaKeys const &mk):
+    kcs(gk, mk),  // rp(KB_BUFSIZE), wp(KB_BUFSIZE),
+    state(BufferState(0)), last(KN_None) {
+  }
+
+
+bool KbdBuffer::enter(int kc, bool in_not_out) {
+  auto it = kcs.find(kc);
+  if (it==kcs.end())
     return false;
+
+  KeyNumber n = *it;
 
   if (in_not_out) {
     state = BufferState(state | (1 << n));

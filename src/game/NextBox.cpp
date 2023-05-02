@@ -13,6 +13,8 @@ NextBox::NextBox(SBrickData const &sbd0, BrickSprites const &bs0,
   // GBox(p, QSize((sbd0.maxlines() + 1) * bs0.size())),
   sbd(sbd0), bs(bs0), sharedbg(sbg),
   bno(-1), rot(0) {
+  int w = (sbd0.maxlines() + 1) * bs0.size();
+  resize(w, w);
 }
 
 NextBox::~NextBox() {

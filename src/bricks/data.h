@@ -33,6 +33,7 @@
 
 class BDLines: public QStringList {
 public:
+  BDLines(QStringList const &l): QStringList(l) {}
   inline bool safecell(int x, int y) const;
   unsigned int countcells() const;
 };
@@ -45,6 +46,7 @@ public:
     ROT_4x4_TWO=2,
   };
 public:
+  BrickData();
   BrickData(BDLines const &lines, int rot, RotStyle rotsty);
   ~BrickData();
   bool safecell(int x, int y) const {
@@ -68,18 +70,14 @@ public:
   }
 private:
   unsigned int cells_;
-  unsigned char *xx, *yy;
+  QVector<unsigned char> xx, yy;
 };
 
-class RBrickData {
+class RBrickData: public QVector<BrickData> {
 public:
-  RBrickData(QTextStream *src, int t=-1);
+  RBrickData();
+  RBrickData(int rotstyle, RGB rgb, QStringList lines);
   ~RBrickData();
-  const BrickData &operator[](unsigned int r) const {
-    if (r >= rots)
-      throw "RBrickData: illegal rotation";
-    return *(bd[r]);
-  }
   RGB const &colour() const {
     return colour_;
   }
@@ -88,33 +86,22 @@ public:
   }
   void print() const;
   unsigned int height() const {
-    return bd[0]->height();
+    return (*this)[0].height();
   }
 private:
-  unsigned int rots;
-  BrickData *bd[BD_MAXROTS];
   RGB colour_;
   BrickData::RotStyle rotsty;
 };
 
-class SBrickData {
+class SBrickData: public QVector<RBrickData> {
 public:
-  SBrickData(QString const &filename);
-  ~SBrickData();
-  const RBrickData &operator[](int n) const {
-    return *(rbd[n]);
-  }
+  SBrickData(std::initializer_list<RBrickData> const &src):
+    QVector<RBrickData>(src) { }
   const BrickData &brick(int n, int rot) const {
-    return (*(rbd[n]))[rot];
-  }
-  int number() const {
-    return n;
+    return (*this)[n][rot];
   }
   void print() const;
   unsigned int maxlines() const;
-private:
-  int n;
-  RBrickData **rbd;
 };
 
 #endif

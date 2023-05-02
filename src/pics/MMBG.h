@@ -3,11 +3,14 @@
 #ifndef _MMBG_H
 #define _MMBG_H
 
-#include "../env/TImage.h"
+#include <QPixmap>
 
-class MMBG: public TImage {
+class MMBG {
 public:
-  MMBG(class TEnv const &env, QString filename=QString());
+  MMBG(QSize siz, QString filename=QString());
+  QPixmap const &toPixmap() const;
+private:
+  QPixmap pm;
 };
 
 #endif

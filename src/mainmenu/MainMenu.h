@@ -4,14 +4,15 @@
 
 class MainMenu: public QWidget {
 public:
-  MainMenu(class MainWindow *mw);
+  MainMenu();
   ~MainMenu();
   void paintEvent(QPaintEvent *) override;
-public:
-  class TextButton *playbuttons[4], *textbut;
+  void setLastScore(QString);
 private:
+  QList<class PlayButton *> playbuttons;
+  class TextButton *textbut;
   class MMBG *backg;
-  class BoxMarblers *bms;
-  class InputField *inpf;
-  class PlayerSelector *selectors[2];
+  //  class BoxMarblers *bms;
+  //  class InputField *inpf;
+  //  class PlayerSelector *selectors[2];
 };

@@ -1,6 +1,7 @@
 // Recolour.C
 
 #include "Recolour.h"
+#include "../bytemap/WideRGB.h"
 #include "../bytemap/RGBMap.h"
 #include "../basics/BBox.h"
 #include <math.h>
@@ -8,37 +9,33 @@
 inline void recolour(RGBMap *dst, RGBMap const *src,
                      int dst_x, int dst_y, int src_x, int src_y,
                      float mul, int add) {
-  TCmap const &tcm(src->tenv().cmap());
-  TRGB rgb(tcm(src->getpix(src_x, src_y)));
+  WideRGB rgb(src->cc(src_x, src_y));
   rgb.recolour(mul, add);
-  dst->putpix(dst_x, dst_y, tcm(rgb));
+  dst->c(dst_x, dst_y) = rgb.toRGB();
 }
 
 inline void recolour(RGBMap *dst, RGBMap const *src,
                      int dst_x, int dst_y, int src_x, int src_y,
                      int add) {
-  TCmap const &tcm(src->tenv().cmap());
-  TRGB rgb(tcm(src->getpix(src_x, src_y)));
+  WideRGB rgb(src->cc(src_x, src_y));
   rgb += add;
-  dst->putpix(dst_x, dst_y, tcm(rgb));
+  dst->c(dst_x, dst_y) = rgb.toRGB();
 }
 
 inline void recolour(RGBMap *img,
                      int x, int y,
                      float mul, int add) {
-  TCmap const &tcm(img->tenv().cmap());
-  TRGB rgb(tcm(img->getpix(x, y)));
+  WideRGB rgb(img->cc(x, y));
   rgb.recolour(mul, add);
-  img->putpix(x, y, tcm(rgb));
+  img->c(x, y) = rgb.toRGB();
 }
 
 inline void recolour(RGBMap *img,
                      int x, int y,
                      int add) {
-  TCmap const &tcm(img->tenv().cmap());
-  TRGB rgb(tcm(img->getpix(x, y)));
+  WideRGB rgb(img->cc(x, y));
   rgb += add;
-  img->putpix(x, y, tcm(rgb));
+  img->c(x, y) = rgb.toRGB();
 }
 
 void recolour_rectangle(RGBMap *img, BBox const &bbox,

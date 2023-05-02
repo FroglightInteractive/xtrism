@@ -3,7 +3,6 @@
 #include "MidPtDisp.h"
 #include <math.h>
 #include <stdlib.h>
-#include "../basics/Throw.h"
 #include "../basics/dbx.h"
 
 /* ------------------------------- normalrnd ------------------------------ */
@@ -19,14 +18,17 @@ static float fudge[] = {
 };
 static int nfu = sizeof(fudge) / sizeof(float);
 inline float getfudge(int s) {
-  if (s < 0) throw "FOUT!";
+  if (s < 0)
+    throw "FOUT!";
   return sqrt(fudge[s < nfu ? s : nfu - 1]);
 }
 
 MidPtDisp::MidPtDisp(unsigned int pow, unsigned int seed) {
   srandom(seed);
-  tthrow(pow > 12, "MidPtDisp: won't do > 4096x4096");
-  tthrow(pow < 4, "MidPtDisp: won't do < 16x16");
+  if (pow > 12)
+    throw "MidPtDisp: won't do > 4096x4096";
+  if (pow < 4)
+    throw "MidPtDisp: won't do < 16x16";
   logsize = pow;
   size = 1 << pow;
   sm = size - 1;

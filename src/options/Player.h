@@ -3,48 +3,28 @@
 #ifndef _Player_H
 #define _Player_H
 
-#include <string>
-#include <vector>
-#include <iostream>
-using namespace std;
-
-#include "../basics/KeyCode.h"
-
-istream &operator>>(istream &is, class Player &pl);
-ostream &operator<<(ostream &os, class Player const &pl);
+#include <QJsonObject>
+#include "GameKeys.h"
 
 class Player {
 public:
-  Player(): id_(0) {
-  }
-  Player(istream &is): id_(0) {
-    is >> *this;
-  }
-
-  int id() const {
-    return id_;
-  }
-  string const &name() const {
-    return name_;
-  }
-  vector<TKeyCode> const &keys(int where /* in {-1,0,1} */) const;
-  short level(unsigned int idx) const;
-  int nextpos() const {
-    return next_left ? -1 : 1;
-  }
-  bool dwxpos() const {
-    return dw_xpos;
-  }
-  Player &operator=(Player const &p);
-protected:
+  Player();
+  int id() const;
+  QString name() const;
+  GameKeys keys(Sides::Side) const;
+  int startLevel(int bs) const;
+  int nextpos() const;
+  bool dwxpos() const;
+public:
+  static Player fromJson(QJsonObject const &);
+  QJsonObject toJson() const;
+private:
   int id_;
-  string name_;
-  vector<TKeyCode> keys_alone, keys_left, keys_right;
-  bool next_left;
-  bool dw_xpos;
-  vector<short> level_;
-  friend istream &operator>>(istream &is, Player &pl);
-  friend ostream &operator<<(ostream &os, Player const &pl);
+  QString name_;
+  QMap<Sides::Side, GameKeys> keys_;
+  QList<int> levels_;
+  int nextpos_;
+  bool dwxpos_;
 };
 
 #endif

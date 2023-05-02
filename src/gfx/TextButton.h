@@ -8,7 +8,7 @@
 
 class TextButton: public MarbledButton {
 public:
-  TextButton(QString cachedir, QWidget *parent=0);
+  TextButton(QWidget *parent=0);
   virtual ~TextButton();
   void paintEvent(QPaintEvent *) override;
   void setText(QString);

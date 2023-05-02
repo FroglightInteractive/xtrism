@@ -3,16 +3,22 @@
 #include "NiceSession.h"
 #include "../globals/Globals.h"
 #include "../game/NiceGame.h"
-
+#include "Options.h"
 #include "../sound/Sounds.h"
 #include "MainWindow.h"
 #include <QFileInfo>
+#include "brickcell.h"
+#include "MarbleBG.h"
+#include "Probability.h"
+#include <QEventLoop>
+#include <QPainter>
+#include <QKeyEvent>
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
   QWidget(mw), bg_(mw->width(), mw->height()) {
   resize(mw->size());
   move(0, 0);
-  QString fn = QString("%1/gamebg-%2-%3x%4.jpg").arg(mw->cachedir).arg(id)
+  QString fn = QString("%1/gamebg-%2-%3x%4.jpg").arg(cachedir()).arg(id)
     .arg(width()).arg(height());
   if (QFileInfo(fn).exists()) {
     bg_.load(fn);
@@ -26,21 +32,22 @@ NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
     marblebg(width(), height(), 0,
              l,t,r,b,
              bg_, 0, 0,
-             bc);
-    rgb.save(fn);
+             &bc);
+    bg_.save(fn);
   }
   bg = QPixmap::fromImage(bg_);
+  mm = playbutton ? playbutton->parentWidget() : 0;
 }
 
 NiceSession::NiceSession(QString id,
                          Player const &p1, int bset,
                          MainWindow *mw, QWidget *playbutton):
   NiceSession(id, mw, playbutton) {
-  dbx(1, "NiceSession: Solo");
-  g1 = new NiceGame(this, 0,
-                    &p1, 0, globalopts(),
+  g1 = new NiceGame(this, Sides::Side::Solo,
+                    &p1, 0,
+                    &options().metakeys(Sides::Side::Solo), 0,
                     sbd(), bs(), bs(),
-                    bset, probabilities(bset));
+                    bset);
   g2 = 0;
 }
 
@@ -49,9 +56,10 @@ NiceSession::NiceSession(QString id,
                          int bset,
                          MainWindow *mw, QWidget *playbutton):
   NiceSession(id, mw, playbutton) {
-  dbx(1, "NiceSession: Team");
-  g1 = new NiceGame(this, 0,
-                    &p1, &p2, globalopts(),
+  g1 = new NiceGame(this, Sides::Side::Solo,
+                    &p1, &p2, 
+                    &options().metakeys(Sides::Side::Left),
+                    &options().metakeys(Sides::Side::Right),
                     sbd(), bs(), bs2(),
                     bset);
   g2 = 0;
@@ -62,13 +70,14 @@ NiceSession::NiceSession(QString id,
                          int bset1, int bset2,
                          MainWindow *mw, QWidget *playbutton):
   NiceSession(id, mw, playbutton) {
-  dbx(1, "NiceSession: Apart");
-  g1 = new NiceGame(this, -1,
-                    &p1, 0, globalopts(),
+  g1 = new NiceGame(this, Sides::Side::Left,
+                    &p1, 0, 
+                    &options().metakeys(Sides::Side::Left), 0,
                     sbd(), bs(), bs(),
                     bset1);
-  g2 = new NiceGame(this, 1,
-                    &p2, 0, globalopts(),
+  g2 = new NiceGame(this, Sides::Side::Right,
+                    &p2, 0,
+                    &options().metakeys(Sides::Side::Right), 0,
                     sbd(), bs(), bs(),
                     bset2);
 }
@@ -79,7 +88,10 @@ NiceSession::~NiceSession() {
 }
 
 void NiceSession::exec() {
-  takeFocus();
+  if (mm)
+    mm->hide();
+  show();
+  setFocus();
   QEventLoop *el = new QEventLoop(this);
   connect(g1, &NiceGame::quit,
           el, [this, el]() {
@@ -97,21 +109,18 @@ void NiceSession::exec() {
     g2->start();
   el->exec();
   delete el;
-  return;
+  hide();
+  if (mm)
+    mm->show();
 }
 
 void NiceSession::paintEvent(QPaintEvent *) {
   QPainter p(this);
-  p.drawPixmap(bg);
+  p.drawPixmap(0, 0, bg);
 }
 
-void NiceSession::keyPressEvent(QKeyEvent *e) {
-}
 
-void NiceSession::keyReleaseEvent(QKeyEvent *e) {
-}
-
-RGBMap const &NiceSession::background() {
+RGBMap const &NiceSession::background() const {
   return bg_;
 }
 

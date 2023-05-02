@@ -1,9 +1,13 @@
-ALL: PREP
-	+make -C build
+release: prep-release
+	+cmake --build build --config Release
 
-PREP:
-	mkdir -p build
-	tools/updatesources.sh
-	( cd build; qmake ../src/xtrism.pro )
+prep-release:
+	+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release  
 
-clean:; rm -rf build
+debug: prep-debug
+	+cmake --build build-debug --config Debug
+
+prep-debug:
+	+cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug 
+
+clean:; rm -rf build build-debug

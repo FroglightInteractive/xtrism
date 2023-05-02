@@ -3,6 +3,7 @@
 #ifndef _CellMatrix_H
 #define _CellMatrix_H
 
+#include <QVector>
 
 class CellMatrix {
 public:
@@ -32,7 +33,7 @@ protected:
     return data[y];
   }
 private:
-  unsigned int *data;
+  QVector<unsigned int> data;
   unsigned int hei;
 };
 

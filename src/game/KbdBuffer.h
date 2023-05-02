@@ -3,9 +3,8 @@
 #ifndef _KbdBuffer_H
 #define _KbdBuffer_H
 
-#include <vector>
-#include "../basics/KeyCode.h"
-using namespace std;
+#include "GameKeys.h"
+#include "MetaKeys.h"
 
 enum KeyNumber {
   KN_None=-1,
@@ -68,56 +67,24 @@ enum BufferState {
   BS_Quit=1 << KN_Quit,
 };
 
-class KeyCodes {
+class KeyCodes: public QMap<int, KeyNumber> {
 public:
-  KeyCodes(TKeyCode const *kcs);
-  KeyCodes(vector<TKeyCode> const &kcs);
-  KeyCodes(TKeyCode const *user, TKeyCode const *global);
-  KeyCodes(vector<TKeyCode> const &user, vector<TKeyCode> const &global);
-  KeyCodes(TKeyCode const *user, vector<TKeyCode> const &global);
-  TKeyCode operator[](KeyNumber k) {
-    return data[k];
-  }
-  void setuser(TKeyCode const *user);
-  void setuser(vector<TKeyCode> const &user);
-  void setglobal(TKeyCode const *global);
-  void setglobal(vector<TKeyCode> const &global);
+  KeyCodes(GameKeys const &gk, MetaKeys const &mk);
+  void setuser(GameKeys const &user);
+  void setglobal(MetaKeys const &global);
 private:
-  TKeyCode data[KeyNumber(KN_Max)];
+  void rebuild();
+private:
+  GameKeys gk;
+  MetaKeys mk;
 };
-
-/* #define KB_BUFSIZE 40
-
-   class LimitedInt {
-   public:
-    LimitedInt(int value,int limit): val(value), lim(limit) {}
-    LimitedInt(int limit): val(0), lim(limit) {}
-    LimitedInt &inc() { val++; if (val==lim) val=0; return *this; }
-    bool operator==(const LimitedInt &other) const { return val==other.val; }
-    operator int() { return val; }
-   private:
-    int val;
-    int lim;
-   };
- */
 
 #include <list>
 
 class KbdBuffer {
 public:
-  KbdBuffer(TKeyCode const *usr, TKeyCode const *glb):
-    kcs(usr, glb),  // rp(KB_BUFSIZE), wp(KB_BUFSIZE),
-    state(BufferState(0)), last(KN_None) {
-  }
-  KbdBuffer(vector<TKeyCode> const &usr, vector<TKeyCode> const &glb):
-    kcs(usr, glb),  // rp(KB_BUFSIZE), wp(KB_BUFSIZE),
-    state(BufferState(0)), last(KN_None) {
-  }
-  KbdBuffer(TKeyCode const *user, vector<TKeyCode> const &glb):
-    kcs(user, glb),   // rp(KB_BUFSIZE), wp(KB_BUFSIZE),
-    state(BufferState(0)), last(KN_None) {
-  }
-  bool enter(TKeyCode kc, bool in_not_out);
+  KbdBuffer(GameKeys const &gk, MetaKeys const &mk);
+  bool enter(int kc, bool in_not_out);
   // enter() returns 0 if not entered because code is unknown
   BufferCode read();
   void putback(BufferCode b);
@@ -126,7 +93,7 @@ private:
   /* LimitedInt rp;
      LimitedInt wp; */
   BufferState state;
-  list<BufferCode> data;
+  std::list<BufferCode> data;
 
   void enter(BufferCode b);
   void ithreekey(KeyNumber nw);

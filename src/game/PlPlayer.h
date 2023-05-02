@@ -5,12 +5,13 @@
 
 #include "KbdBuffer.h"
 #include "Kronos.h"
+#include "Sides.h"
 
 class PlPlayer {
 public:
-  PlPlayer(class NiceGame *g, int pos,
+  PlPlayer(class NiceGame *g, Sides::Side pos,
            class Player const &p,
-           class SBrickData const &sbd, class GlobalOpts const &glopts,
+           class SBrickData const &sbd, class MetaKeys const &mk,
            int lvl, class Probability const &prob,
            int x0, int y0=0, int rot0=0, int dy=1);
   virtual ~PlPlayer();

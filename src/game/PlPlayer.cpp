@@ -23,27 +23,27 @@
 
 #include "../bricks/Probability.h"
 #include "../options/Player.h"
-#include "../options/GlobalOpts.h"
+
 #include "../basics/dbx.h"
 #include "../sound/Sounds.h"
 
 const int AUTOREP_IVAL = 50;
 const int AUTOREP_DELAY = 500;
 
-PlPlayer::PlPlayer(NiceGame *g, int pos,
+PlPlayer::PlPlayer(NiceGame *g, Sides::Side pos,
                    Player const &p,
-                   SBrickData const &sbd, GlobalOpts const &glopts,
+                   SBrickData const &sbd, MetaKeys const &mk,
                    int lvl, Probability const &prob,
                    int x0, int y0, int rot0, int dy):
   game(g), player(p), state(PlPlayer::INIT),
   levup_autorep(0), levdn_autorep(0) {
   kronos = new Kronos(lvl);
-  if (pos == 0 && !p.dwxpos())
+  if (pos==Sides::Side::Solo && !p.dwxpos())
     x0--;
   fallbrick = new FallBrick(sbd, x0, y0, rot0, dy);
   brickenv = 0;
   referee = new Referee(*kronos);
-  kbdbuffer = new KbdBuffer(player.keys(pos), glopts.keys(pos));
+  kbdbuffer = new KbdBuffer(player.keys(pos), mk);
   wishlist = new WishList(*fallbrick, *kronos);
   fortuna = new Fortuna(prob);
   nextbox = 0;

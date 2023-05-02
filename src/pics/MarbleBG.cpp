@@ -1,11 +1,9 @@
 // MarbleBG.C
 
-#include "../env/TImage.h"
 #include "../bytemap/ByteMap.h"
 #include "../bricks/brickcell.h"
-#include "../env/TEnv.h"
-#include "../basics/Throw.h"
 #include "../basics/dbx.h"
+#include "RGBMap.h"
 
 #include <math.h>
 #ifndef PI
@@ -42,19 +40,21 @@ void marblebg(unsigned int w, unsigned int h, unsigned int bw,
   top -= Y0;
   dbx(1, "marblebg: tl=(%g,%g) wh=(%g,%g)", left, top, width, height);
   dbx(1, "          offset=(%i,%i)", offset_x, offset_y);
-  TCmap const &cm = img.tenv().cmap();
   for (unsigned int y = 0; y < h; y++)
     for (unsigned int x = 0; x < w; x++) {
       float phi = atan2(left + width * x / w, -top - height * y / h);
       phi -= PI / 6;
-      if (phi < -PI) phi += 2 * PI;
-      float green = max(cosf(phi * DECAY), 0.f);
+      if (phi < -PI)
+        phi += 2 * PI;
+      float green = std::max(cosf(phi * DECAY), 0.f);
       phi -= 2 * PI / 3;
-      if (phi < -PI) phi += 2 * PI;
-      float red = max(cosf(phi * DECAY), 0.f);
+      if (phi < -PI)
+        phi += 2 * PI;
+      float red = std::max(cosf(phi * DECAY), 0.f);
       phi -= 2 * PI / 3;
-      if (phi < -PI) phi += 2 * PI;
-      float blue = max(cosf(phi * DECAY), 0.f);
+      if (phi < -PI)
+        phi += 2 * PI;
+      float blue = std::max(cosf(phi * DECAY), 0.f);
       float grey = bytemap->cc(x, y) * dGREY + GREY0;
       img.rset(x + offset_x, y + offset_y,
                grey * red, grey * green, grey * blue);

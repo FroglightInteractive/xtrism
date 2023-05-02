@@ -125,8 +125,8 @@ void MMPict::drawit(int top, int bottom) {
   int th = tb_cloud->height();
   int tw = tb_cloud->width();
 
-  int b2 = min(hori, bottom);
-  int t2 = max(hori, top);
+  int b2 = std::min(hori, bottom);
+  int t2 = std::max(hori, top);
 
   for (int y = top; y < b2; y++) { // doing sky
     float eta = float(y) / hei;
@@ -154,9 +154,9 @@ void MMPict::drawit(int top, int bottom) {
                          + (*tb_cloud)(tx2, ty2) * ftx) * fty)
                     + CLOUD0;
       cloud *= c_e_0;     // damp cloudyness near horizon
-      cloud = max(cloud, 0.f);
+      cloud = std::max(cloud, 0.f);
       cloud += c_e_3;     // add haze
-      cloud = max(cloud, 0.f);
+      cloud = std::max(cloud, 0.f);
 /*          float a=cos(xi*5), b=cos(zeta*5);
             cloud+=300*exp(-a*a*100);
             cloud+=300*exp(-b*b*100); */// for grid
@@ -169,13 +169,13 @@ void MMPict::drawit(int top, int bottom) {
   for (int y = t2; y < bottom; y++) { // doing grass
     float a = float(y) / hei - HORISCR;
     float xp = exp(-a / HAZE1a_g);
-    float haze = max(HAZE1_g * xp + HAZE0_g, 0.f);
+    float haze = std::max(HAZE1_g * xp + HAZE0_g, 0.f);
     float c_e_0 = CLOUD1_g * (1 - CLOUD1b_g * xp);
     float grey = GREY0_g;
     for (int x = 0; x < wid; x++) {
       float zeta = ::zetag(float(x) / wid - .5, a);
       float fty = th * zeta * dZETA_g;
-      int ty = int(floor(fty));
+      int ty = int(std::floor(fty));
       fty -= ty;
       int ty2 = (ty + 1) & (th - 1);
       ty &= (th - 1);
@@ -193,7 +193,7 @@ void MMPict::drawit(int top, int bottom) {
       cloud += ROUGHg * cos(cloud * ROUGHFREQg);
       cloud *= c_e_0;     // damp cloudyness near horizon
       cloud += CLOUD2_g * cos(xi * CLOUD2f_g);
-      cloud = max(cloud, 0.f);
+      cloud = std::max(cloud, 0.f);
       float red = cloud * dREDg + RED0g + haze * hREDg;
       float green = cloud * dGREENg + GREEN0g + haze * hGREENg;
       float blue = cloud * dBLUEg + BLUE0g + haze * hBLUEg;

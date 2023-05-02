@@ -4,158 +4,53 @@
 
 #include "../globals/Globals.h"
 #include "../pics/MMBG.h"
-#include "../env/TImageFile.h"
-#include "../basics/Filename.h"
 #include "../basics/minmax.h"
 #include "../pics/MarbleBG.h"
 #include "PlayButton.h"
-#include "PlayerSelector.h"
 
 #include "../basics/dbx.h"
-#include "../pics/BoxMarbler.h"
-#include "../popups/ListBox.h"
-#include "../popups/InputField.h"
+#include "MainWindow.h"
+#include <QPainter>
+#include "Globals.h"
 
-class ShadedTButton: public TextButton {
-public:
-  ShadedTButton(GBParent *p, const QSize &area, char const *txt,
-                class TImage &bg0, bool bgok0):
-    TextButton(p, area, txt, tf()), bg(bg0), bgok(bgok0) {
-  }
-  virtual void redraw(BBox const &bb);
-private:
-  class TImage &bg;
-  bool bgok;
-};
+MainMenu::MainMenu(): QWidget(mainwindow()) {
+  backg = 0;
+  resize(mainwindow()->size());
+  qDebug() << "mm" << mainwindow()->size() << size();
+  QSize pbarea(mainwindow()->actualfactor() * 3, mainwindow()->actualfactor() * 2);
+  playbuttons << new SoloButton("Solo Play", Options::PPos::Left, this);
+  playbuttons << new TeamButton("Team Play", this);
+  playbuttons << new ApartButton("Separate Play", this);
+  playbuttons << new SoloButton("Solo Play", Options::PPos::Right, this);
+  int space = width() - 4*pbarea.width();
+  for (int k=0; k<4; k++)
+    playbuttons[k]->setGeometry(QRect(QPoint(space*(k+1)/5 + pbarea.width()*k,
+                                             height()-1.85*pbarea.height()),
+                                      pbarea));
 
-void ShadedTButton::redraw(BBox const &bb) {
-  if (!bgok) {
-    BBox const &mybb = bbox();
-    int wid = bg.width(), hei = bg.height();
-    marblebg(width(), height(), 2, // should be env.size dep.
-             float(mybb.left()) / wid, float(mybb.top()) / hei,
-             float(mybb.right()) / wid, float(mybb.bottom()) / hei,
-             bg, mybb.left(), mybb.top());
-    bgok = true;
-    bg.partput(bb, bb.topleft());  // we can't be transp. the 1st time
-  }
-  TextButton::redraw(bb);
-}
+      
+  textbut = new TextButton(this);
+  textbut->setGeometry(QRect(QPoint(width()*1/8, height()*1/10),
+                             QSize(width()*3/4, height()/24)));
+  textbut->setText("X T R I S M");
 
-MainMenu::MainMenu(): TopBox(tenv()) {
-  TImageFile timf(tenv(), (cachedir() + "mmbg").addpart(tenv().id()));
-  backg = new MMBG(tenv(), timf.readable() ? &timf : 0);
-  QSize pbarea(tenv().actualfactor() * 3, tenv().actualfactor() * 2);
-  playbuttons[0] = new SoloButton(this, pbarea, false,
-                                  "Solo Play", *backg, timf.readable());
-  playbuttons[1] = new TeamButton(this, pbarea,
-                                  "Team Play", *backg, timf.readable());
-  playbuttons[2] = new ApartButton(this, pbarea,
-                                   "Separate Play", *backg, timf.readable());
-  playbuttons[3] = new SoloButton(this, pbarea, true,
-                                  "Solo Play", *backg, timf.readable());
-
-  textbut = new ShadedTButton(this, QSize(int(tenv().width() * .75),
-                                         tenv().height() / 24),
-                              "X T R I S M", *backg, timf.readable());
-
-  bms
-    = new BoxMarblers(tenv(), 128, 64, max(tenv().width(), tenv().height()));
-
-  for (int k = 0; k < 2; k++)
-    selectors[k] = new PlayerSelector(this, QSize(tenv().actualfactor() * 3,
-                                                 tenv().actualfactor()),
-                                      k > 0,
-                                      *backg, timf.readable(),
-                                      bms->find(TRGB(160, 160, 80)));
-
-  dbx(-20070110, "Mainmenu: post title");
-  newchild(playbuttons[0],
-           GBPos(this, 1), GBPos(this, 5),
-           GBPos(playbuttons[1], 1), GBPos(this, 1));
-  newchild(playbuttons[1],
-           GBPos(playbuttons[0], 1), GBPos(this, 5),
-           GBPos(playbuttons[2], 1), GBPos(this, 1));
-  newchild(playbuttons[2],
-           GBPos(playbuttons[1], 1), GBPos(this, 5),
-           GBPos(playbuttons[3], 1), GBPos(this, 1));
-  newchild(playbuttons[3],
-           GBPos(playbuttons[2], 1), GBPos(this, 5),
-           GBPos(this, 1), GBPos(this, 1));
-  newchild(textbut,
-           GBPos(playbuttons[0], 1), GBPos(this, 1), GBPos(playbuttons[3], 1),
-           GBPos(this, 10));
-
-  dbx(-20070110, "Mainmenu: mid children");
-
-  newchild(selectors[0],
-           GBPos(this, 1), GBPos(this, 2),
-           GBPos(this, 4), GBPos(this, 10));
-  newchild(selectors[1],
-           GBPos(this, 4), GBPos(this, 2),
-           GBPos(this, 1), GBPos(this, 10));
-
-  dbx(-20070110, "Mainmenu: post children");
-
-#if 0
-  // + larie
-  // Box3D *boxje=new Box3D(this,QSize(tenv().width()/4,tenv().height()/5),
-  // bms->find(TRGB(160,160,80)));
-  ListBox *boxje = new ListBox(this, QSize(tenv().width() / 4,
-                                          ListBox::heightneeded(6, tf())),
-                               tf(), tfyellow(),
-                               bms->find(TRGB(160, 160, 80)));
-  boxje->add("Item One");
-  boxje->add("Item Two");
-  boxje->add("Item Three");
-  boxje->add("Item Four");
-  boxje->add("Item Five");
-  boxje->add("Item Six");
-  boxje->add("Item Seven");
-  boxje->add("Item Eight");
-  boxje->add("Item Nine");
-  boxje->add("Item Ten");
-  boxje->add("Item Eleven");
-  boxje->add("Item Twelve");
-  boxje->add("Item Thirteen");
-  boxje->add("Item Fourteen");
-  boxje->add("Item Fifteen");
-  boxje->add("Item Sixteen");
-  // inpf=new InputField(this,QSize(tenv().width()/4-8,tenv().height()/10),
-  // "Hello world",tf(),poll,tenv());
-  newchild(boxje, GBPos(this, 1), GBPos(this, 1), GBPos(this, 1),
-           GBPos(this, 5));
-  // newchild(inpf,GBPos(this,1),GBPos(this,4),GBPos(this,1),GBPos(this,1));
-  // - larie
-#endif
-
-  placechildren();
-  dbx(-20070110, "Mainmenu:  children placed");
-
-  if (!timf.readable()) {
-    draw();
-    timf.write(backg);
-  }
-  offerselect();
+  playbuttons[0]->select();
 }
 
 MainMenu::~MainMenu() {
   dbx(1, "~MainMenu()");
   delete backg;
-  delete textbut;
-  delete playbuttons[0];
-  delete playbuttons[1];
-  delete playbuttons[2];
-  delete playbuttons[3];
-
-  // + larie
-  // delete bms;
-  // delete boxje;
-  // delete inpf;
-  // - larie
 }
 
-void MainMenu::redraw(const BBox &bb) {
-  backg->partput(bb, bb.topleft()); // use fact that my topleft=(0,0)
-  TopBox::redraw(bb);
+void MainMenu::paintEvent(QPaintEvent *) {
+  qDebug() << "mm" << size();
+  QPainter p(this);
+  if (!backg)
+    backg = new MMBG(mainwindow()->size(),
+                     cachedir() + "/mmbg-" + mainwindow()->id() + ".jpg");
+  p.drawPixmap(0, 0, backg->toPixmap());
+}
+
+void MainMenu::setLastScore(QString s) {
+  textbut->setText(s);
 }

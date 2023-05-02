@@ -1,13 +1,15 @@
 // Probability.cpp
 
 #include "Probability.h"
+#include <QMap>
+#include "MapIterator.h"
 
 Probability::Probability(QMap<int, float> probs) {
   float norm = 0;
-  for (auto const &el: probs.items()) {
-    norm += el.second();
+  for (auto el: maprange(probs)) {
+    norm += el.value();
     thrs << norm;
-    res << el.first();
+    res << el.key();
   }
   for (int k=0; k<thrs.size(); k++)
     thrs[k] /= norm;
@@ -24,7 +26,7 @@ int Probability::select(float x) const {
 Probability const &probabilities(int bset) {
   static QList<Probability> probs{
   // brickset 0
-   {{0, .174},
+    QMap<int,float>{{0, .174},
     {1, .092},
     {2, .154},
     {3, .133},
@@ -33,7 +35,7 @@ Probability const &probabilities(int bset) {
     {6, .133}},
 
   // brickset 1
-   {{ 0, .261    },
+   QMap<int,float>{{ 0, .261    },
     { 1, .138    },
     { 2, .231    },
     { 3, .1995   },
@@ -52,7 +54,7 @@ Probability const &probabilities(int bset) {
     {16, .015   }},
 
   // brickset 2
-   {{ 0, .261  },
+   QMap<int,float>{{ 0, .261  },
     { 1, .138  },
     { 2, .231  },
     { 3, .1995 },
@@ -81,7 +83,7 @@ Probability const &probabilities(int bset) {
     {33, .008  }},
 
   // brickset 3
-   {{  0, .261   },
+   QMap<int,float>{{  0, .261   },
     {  1, .138   },
     {  2, .231   },
     {  3, .1995  },
@@ -114,7 +116,7 @@ Probability const &probabilities(int bset) {
     { 30, .014   },
     { 31, .015   },
     { 32, .015   },
-    { 33, .008   }};
+    { 33, .008   }}
   };
     
   if (bset<0 || bset>=probs.size())

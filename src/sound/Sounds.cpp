@@ -2,7 +2,6 @@
 
 #include "Sounds.h"
 #include "Sample.h"
-#include "../basics/Filename.h"
 #include "../basics/dbx.h"
 #include "SPlayer.h"
 #include <iostream>
@@ -11,19 +10,20 @@ class Sounds *sounds = 0;
 
 const float stdampl = .3;
 
-Sounds::Sounds(Filename const &dir) {
+Sounds::Sounds() {
+  QString dir = "/home/wagenaar/progs/xtrism/xtrism/data/sounds/";
   sounds = this;
   speedup_ = turn_ = drop_ = applause_ = shoosh_ = explode_ = warn_ = 0;
   splayer = 0;
   splayer = new SPlayer();
 
-  speedup_ = new Sample((dir + "speedup.wav").name());
-  turn_ = new Sample((dir + "turn.wav").name());
-  drop_ = new Sample((dir + "drop.wav").name());
-  applause_ = new Sample((dir + "applause.wav").name());
-  shoosh_ = new Sample((dir + "shoosh.wav").name());
-  explode_ = new Sample((dir + "explode.wav").name());
-  warn_ = new Sample((dir + "warning.wav").name());
+  speedup_ = new Sample(dir + "speedup.wav");
+  turn_ = new Sample(dir + "turn.wav");
+  drop_ = new Sample(dir + "drop.wav");
+  applause_ = new Sample(dir + "applause.wav");
+  shoosh_ = new Sample(dir + "shoosh.wav");
+  explode_ = new Sample(dir + "explode.wav");
+  warn_ = new Sample(dir + "warning.wav");
 }
 
 Sounds::~Sounds() {

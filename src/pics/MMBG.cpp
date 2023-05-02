@@ -2,23 +2,25 @@
 
 #include "MMBG.h"
 #include "MMPict.h"
-#include "../env/TEnv.h"
-#include "../bytemap/RGBImage.h"
+#include "MainWindow.h"
 #include <QFileInfo>
 #include <QDebug>
+#include "RGBMap.h"
 
-MMBG::MMBG(TEnv const &env, QString filename):
-  TImage(env, env.width(), env.height()) {
+MMBG::MMBG(QSize size, QString filename) {
   if (QFileInfo(filename).exists()) {
-    load(filename);
-    return;
+    pm.load(filename);
+  } else {
+    // we'll have to build it from scratch...
+    qDebug() << "Making main menu background (this may take a while)\n";
+    MMPict mmp(size.width(), size.height());
+    pm = QPixmap::fromImage(*mmp.rgbmap());
+    if (!filename.isEmpty())
+      mmp.rgbmap()->save(filename);
   }
-
-  // we'll have to build it from scratch...
-  qDebug() << "Making main menu background (this may take a while)\n";
-  MMPict mmp(width(), height());
-  *this = *mmp.rgbmap();
-  
-  if (!filename.isEmpty())
-    write(filename);
 }
+
+QPixmap const &MMBG::toPixmap() const {
+  return pm;
+}
+

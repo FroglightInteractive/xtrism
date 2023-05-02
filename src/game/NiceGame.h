@@ -6,12 +6,14 @@
 
 #include <QObject>
 #include "GameTime.h"
+#include "Sides.h"
 
 class NiceGame: public QObject {
+  Q_OBJECT;
 public:
-  NiceGame(class NiceSession *s, int pos0,
+  NiceGame(class NiceSession *s, Sides::Side pos0,
            class Player const *p1, class Player const *p2,
-           class GlobalOpts const &g,
+           class MetaKeys const *mk1, class MetaKeys const *mk2,
            class SBrickData const &sbd0,
            class BrickSprites const &bs0,
            class BrickSprites const &bs1,
@@ -49,15 +51,13 @@ private:
   class Player const *player[2];
   class NextBox *nextbox[2];
   int lines;
-  int pos;
+  Sides::Side pos;
   bool team;
   bool lastpoll;
   class PlPlayer *pauseowner;
 private:
   // from Game
   class NiceSession *session;
-
-  class GlobalOpts const &global;
   class SBrickData const &sbd;
   class BrickSprites const &bs;
   class BrickSprites const &bs2;
@@ -77,6 +77,7 @@ private:
   int pudlns;
   class PlPlayer *puddreq, *landreq;   // may be 0, not my resp
   class PlPlayer *plplayers[2];
+  class MetaKeys const *mkeys[2];
   int nplrs;
   int timerid;
 };

@@ -3,7 +3,7 @@
 #include "Sample.h"
 #include <unistd.h>
 
-Sample::Sample(char const *fn) {
+Sample::Sample(QString fn) {
   cmd = "aplay ";
   cmd += fn;
   cmd += " &";

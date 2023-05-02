@@ -10,14 +10,14 @@
 
 class MainWindow: public QWidget {
 public:
-  MainWindow(TReso const &reso, QDir cachedir);
+  MainWindow(TReso const &reso);
   ~MainWindow();
 public:
+  QString id() const;
   int actualfactor() const;
-  QDir cachedir() const;
 private:
   int actfactor;
-  QDir cachedir_;
+  int wid, hei;
 };
 
 #endif

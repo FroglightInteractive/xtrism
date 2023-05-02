@@ -1,21 +1,15 @@
 // main.C
 
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
+#include "MainMenu.h"
 
-#include "../globals/Globals.h"
-#include "../mainmenu/MainMenu.h"
-#include <exception>
+#include "MainWindow.h"
+#include "Globals.h"
 #include <QApplication>
 #include "../gfx/TextButton.h"
-#include <QDir>
 
 MainMenu *mmp;
 
-void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
+void setlastscore(int sc, int li, double ppb, QString name, int bs) {
   QString buf = QString("%1: %2 in %3 lines (%4 ppb); bset %5")
     .arg(name).arg(sc).arg(li).arg(ppb, 0, 'f', 1).arg(bs + 1);
   QDateTime dt(QDateTime::currentDateTime());
@@ -28,22 +22,24 @@ void setlastscore(int sc, int li, double ppb, char const *name, int bs) {
     f.write(buf.toUtf8());
     f.write("\n");
   }
-  mmp->textbut->setText(buf);
+  mmp->setLastScore(buf);
 }
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);
+  app.setApplicationName("trism");
   int r = 0;
   qDebug() << "start of main";
   try {
     global_init(argc, argv, &app);
-    mmp = new MainMenu(mainwindow());
+    mmp = new MainMenu();
+    mmp->show();
     app.exec();
     delete mmp;
     global_destroy();
-  } catch (QString &s) {
+  } catch (QString const &s) {
     qDebug() << "exc:main.string: " << s;
-  } catch (char *s) {
+  } catch (char const *s) {
     qDebug() << "exc:main.char*: " << s;
   } catch (...) {
     qDebug() << "exc:main....: unknown expection";

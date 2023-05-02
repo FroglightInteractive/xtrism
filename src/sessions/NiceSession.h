@@ -3,6 +3,10 @@
 #ifndef _NiceSession_H
 #define _NiceSession_H
 
+#include "RGBMap.h"
+
+#include <QWidget>
+
 class NiceSession: public QWidget {
 public:
   NiceSession(QString id,
@@ -31,6 +35,7 @@ private:
 private:
   RGBMap bg_;
   QPixmap bg;
+  QWidget *mm;
   class NiceGame *g1, *g2;
 };
 

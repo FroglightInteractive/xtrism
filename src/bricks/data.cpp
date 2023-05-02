@@ -34,7 +34,7 @@ inline int rotx(int x, int y, int rot, BrickData::RotStyle rotsty) {
     rot &= 3;
     return (rot == 0) ? x : (rot == 3) ? y : (rot == 2) ? (2 - x) : (2 - y);
   }
-  athrow("BrickData: rotx: illegal rotation style");
+  throw "BrickData: rotx: illegal rotation style";
 }
 
 inline int roty(int x, int y, int rot, BrickData::RotStyle rotsty) {
@@ -50,7 +50,7 @@ inline int roty(int x, int y, int rot, BrickData::RotStyle rotsty) {
     rot &= 3;
     return (rot == 0) ? y : (rot == 3) ? (2 - x) : (rot == 2) ? (2 - y) : x;
   }
-  athrow("BrickData: roty: illegal rotation style");
+  throw "BrickData: roty: illegal rotation style";
 }
 
 /* --------------------------- BrickData::BrickData ----------------------- */
@@ -59,10 +59,14 @@ inline int roty(int x, int y, int rot, BrickData::RotStyle rotsty) {
  * rot is the angle to rotate by: 0/1/2/3. (1=90 deg clockwise)
  * rotsty is the rotation style
  */
+BrickData::BrickData(): CellMatrix(BD_MAXSIZE) {
+  cells_ = 0;
+}
+
 BrickData::BrickData(BDLines const &lines, int rot, RotStyle rotsty):
-  CellMatrix(BD_MAXSIZE), cells_(lines.countcells()), xx(0), yy(0) {
-  xx = new unsigned char[cells_];
-  yy = new unsigned char[cells_];
+  CellMatrix(BD_MAXSIZE), cells_(lines.countcells()) {
+  xx.resize(cells_);
+  yy.resize(cells_);
   int n = (rotsty == ROT_4x4_TWO && (rot & 2)) ? cells_ - 1 : 0;
   int dn = n ? -1 : 1;
   for (unsigned int y = 0; y < height(); y++)
@@ -78,8 +82,6 @@ BrickData::BrickData(BDLines const &lines, int rot, RotStyle rotsty):
 }
 
 BrickData::~BrickData() {
-  delete[] yy;
-  delete[] xx;
 }
 
 /* -------------------------- BrickData::print ---------------------------- */
@@ -100,91 +102,50 @@ void BrickData::print() const {
 
 // ============================ RBrickData ===================================
 
-RBrickData::RBrickData(QTextStream *src, int t): bd(0) {
-  QString buf = src->readLine().split("-")[0].trimmed();
-  while (buf.isEmpty())
-    buf = src->readLine().split("-")[0].trimmed();
-  QStringList bits = buf.split(" ");
-  if (bits.size()<2)
-    throw("RBrickData: Bad brick data");
-  if (bits[0].toInt() != t)
-    throw("RBrickData: Bad brick number");
+RBrickData::RBrickData() {
+  rotsty = BrickData::ROT_4x4;
+}
 
-  rots = 4;
-  QStringList cbits = bits[2].split(",");
-  colour_ = RGB(255.999*cbits[0].toFloat(),
-                255.999*cbits[1].toFloat(),
-                255.999*cbits[2].toFloat());
-  switch (bits[1].toInt()) {
-    case 0:
-      rotsty = BrickData::ROT_4x4;
-      break;
-    case 2:
-      rotsty = BrickData::ROT_4x4_TWO;
-      break;
-    case 3:
-      rotsty = BrickData::ROT_3x3;
-      break;
-    default:
-      throw "RBrickData: Illegal rotation style";
-    }
+RBrickData::RBrickData(int rotstyle, RGB rgb, QStringList lines) {
+  if (rotstyle==0)
+    rotsty = BrickData::ROT_4x4;
+  else if (rotstyle==2)
+    rotsty = BrickData::ROT_4x4_TWO;
+  else if (rotstyle==3)
+    rotsty = BrickData::ROT_3x3;
+  else
+    throw "Illegal rotstyle";
 
-  BDLines lines;
-  for (unsigned int y = 0; y < BD_MAXSIZE; y++)
-    lines << src->readLine();
-
-  for (unsigned int rot = 0; rot < rots; rot++)
-    bd[rot] = new BrickData(lines, rot, rotsty);
+  colour_ = rgb;
+  BDLines bdl(lines);
+  for (unsigned int rot = 0; rot<4; rot++)
+    *this << BrickData(bdl, rot, rotsty);
 }
 
 RBrickData::~RBrickData() {
-  for (unsigned int i = 0; i < rots; i++)
-    if (bd[i])
-      delete bd[i];
 }
 
 void RBrickData::print() const {
-  printf("Type = %i; Colour = %s\n", rotsty, colour_.c_str());
-  for (unsigned int r = 0; r < rots; r++) {
-    bd[r]->print();
+  printf("Type = %i; Colour = %i %i %i\n", rotsty, colour_.r, colour_.g, colour_.b);
+  for (unsigned int r = 0; r < 4; r++) {
+    (*this)[r].print();
     printf("\n");
   }
 }
 
 // ========================= SBrickData ======================================
 
-SBrickData::SBrickData(QString const &filename): rbd(0) {
-  QFile f(filename);
-  if (!f.open())
-    throw QString("SBrickData: Couldn't open “" + filename + "”");
-  QTextStream ts(&f);
-  QString txt = ts.readLine().split("-")[0].trimmed();
-  bool ok;
-  n = txt.toInt(&ok);
-  if (n<=0 || !bok)
-    throw "SBrickData: Couldn't determine number of bricks";
-  rbd = new RBrickData *[n];
-  for (int i = 0; i < n; i++)
-    rbd[i] = new RBrickData(&ts, i);
-}
-
-SBrickData::~SBrickData() {
-  for (int i = 0; i < n; i++)
-    delete rbd[i];
-  delete[] rbd;
-}
-
 void SBrickData::print() const {
-  printf("Brickset containing %i bricks\n", n);
-  for (int i = 0; i < n; i++) {
+  printf("Brickset containing %i bricks\n", int(size()));
+  for (int i = 0; i < size(); i++) {
     printf("brick # %i:\n", i);
-    rbd[i]->print();
+    (*this)[i].print();
   }
 }
 
 unsigned int SBrickData::maxlines() const {
   unsigned int mx = 0;
-  for (int i = 0; i < n; i++)
-    mx = max(mx, rbd[i]->height());
+  for (int i = 0; i < size(); i++)
+    mx = std::max(mx, (*this)[i].height());
   return mx;
 }

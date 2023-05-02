@@ -7,7 +7,7 @@
 
 class Sounds {
 public:
-  Sounds(QString const &dir);
+  Sounds(); // QString const &dir);
   ~Sounds();
   void speedup(float posn=0) const;
   void turn(float posn=0) const;

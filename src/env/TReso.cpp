@@ -1,12 +1,13 @@
 // TReso.C
 
 #include "TReso.h"
-
+#include <QDebug>
 
 int TReso::best(int sw, int sh) const {
   int f = minfact, af;
   int w = x * f, h = y * f;
 
+  qDebug() << "TRESOBEST" << minfact << maxfact;
 // sw=sw<?640;
 
   if (w > sw || h > sh)
@@ -17,5 +18,6 @@ int TReso::best(int sw, int sh) const {
     w += x;
     h += y;
   } while (f <= maxfact && w <= sw && h <= sh);
+  qDebug() << "TRESOBEST +>" << af;
   return af;
 }

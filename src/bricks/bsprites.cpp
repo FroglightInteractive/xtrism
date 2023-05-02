@@ -10,18 +10,15 @@
 #include "brickcell.h"
 #include "../bytemap/WideRGB.h"
 #include "../bytemap/ByteImage.h"
-#include "../bytemap/RGBImage.h"
+#include "RGBMap.h"
 
 #include <stdio.h>
 
 //////////////////////////////// BrickSprites ////////////////////////////////
 BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
                            int size, int style) {
-  dbx(1, "BrickSprites::BrickSprites");
-
   // reading images (if nec. creating them)
-  dbx(2, "BS: going to read images. create=%i", create);
-  unsigned int nn = sbd.number();
+  unsigned int nn = sbd.size();
   for (unsigned int bno = 0; bno < nn; bno++) {
     RBrickData const &rbd = sbd[bno];
     WideRGB rgb0 = rbd.colour();
@@ -33,12 +30,13 @@ BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
     rgb0.g -= 100;
     rgb0.b -= 100;
     BrickCell *base = 0;
-    for (unsigned int rot = 0; rot < BD_MAXROT; rot++) {
+    for (unsigned int rot = 0; rot < BD_MAXROTS; rot++) {
       BrickCell *rotd = 0;
-      for (unsigned int cel = 0; cel < BD_MAXCEL; cel++) {
-        QString fn = QString("%1/brick-%2-%3--%4-%5-%6.png")
-          .arg(cachedir).arg(size).arg(style)
-          .arg(bno).arg(rot).arg(cel);
+      for (unsigned int cel = 0; cel < BD_MAXCELLS; cel++) {
+        QString fn = QString("%1/brick-%2-%3-%4_%5-%6.png")
+          .arg(cachedir)
+          .arg(bno).arg(rot).arg(cel)
+          .arg(size).arg(style);
         if (QFileInfo(fn).exists()) {
           cells << QPixmap(fn);
         } else {
@@ -50,7 +48,7 @@ BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
           if (rot && !rotd)
             rotd = new BrickCell(*base, rot);
           BrickCell *cell = docreate(cel, rotd ? rotd : base, size, rbd, rot);
-          RGBImage tim(size, size);
+          RGBMap tim(size, size);
           byteimage(tim, *cell, rgb0, rgb1);
           delete cell;
           tim.save(fn);
@@ -61,14 +59,13 @@ BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
     }
     delete base;
   }
-  dbx(2, "BS: done");
 }
 
 BrickSprites::~BrickSprites() {
 }
 
 int BrickSprites::size() const {
-  return cells[0]->width();
+  return cells[0].width();
 }
 
 BrickCell *BrickSprites::docreate(int cel,
@@ -106,6 +103,6 @@ BrickCell *BrickSprites::docreate(int cel,
                  bd.safecell(x, y - 1), bd.safecell(x - 1, y - 1),
                  bd.safecell(x - 1, y), bd.safecell(x - 1, y + 1),
                  bd.safecell(x, y + 1), bd.safecell(x + 1, y + 1));
-  bc->drawborders(max(size / 10, 1), sur);
+  bc->drawborders(std::max(size / 10, 1), sur);
   return bc;
 }

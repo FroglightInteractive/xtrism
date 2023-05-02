@@ -41,9 +41,6 @@ public:
             unsigned int w, unsigned int h=0):
     ByteMap(other, x, y, w, h ? h : w) {
   }
-  BrickCell(class TDecompress &src, unsigned int w, unsigned int h=0):
-    ByteMap(w, h ? h : w, src) {
-  }
   void drawborders(unsigned int borderwidth, const BCSurround &sur,
                    int depth=100);
   void drawstripes(unsigned int depth=50);
@@ -69,8 +66,6 @@ private:
   inline void a_line_ne_sw(unsigned int x, unsigned int y,
                            unsigned int w, int o);
   // (x,y) = nw corner (!)
-
-  friend class BCImage;
 };
 
 #endif

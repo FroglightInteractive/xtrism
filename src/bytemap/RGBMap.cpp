@@ -32,9 +32,14 @@ RGBMap::~RGBMap() {
 }
 
 RGBMap::RGBMap(RGBMap const &oth, unsigned int x, unsigned int y,
-               unsigned int w, unsigned int h): RGBMap(w, h) {
-  for (unsigned int a = 0; a < hei; a++)
-    memcpy(line(a), oth.cline(y + a) + x, wid * sizeof(RGB));
+               unsigned int w, unsigned int h):
+  RGBMap(w, h) {
+  if (x>=oth.width() || y>=oth.height())
+    return;
+  unsigned int w1 = std::min(wid, oth.width() - x);
+  unsigned int h1 = std::min(hei, oth.height() - y);
+  for (unsigned int a = 0; a < h1; a++)
+    memcpy(line(a), oth.cline(y + a) + x, w1 * sizeof(RGB));
 }
 
 RGBMap::RGBMap(RGBMap const &oth, int rot): RGBMap(oth.wid, oth.hei) {
