@@ -32,7 +32,7 @@ static int gl_inited = false;
 
 void global_init(int argc, char **argv, class QApplication *app) {
   int minf = 20;
-  int maxf = 60;
+  int maxf = 300;
   //if (argc > 2 && strcmp(argv[1], "-size") == 0)
   //  minf = maxf = atoi(argv[2]);
   dbx(1, "global_init()");
@@ -42,7 +42,7 @@ void global_init(int argc, char **argv, class QApplication *app) {
     throw "global_init(): double initialization";
   gl_inited = true;
 
-  gl_mainwindowp = new MainWindow(TReso(16, 12, minf, maxf, false));
+  gl_mainwindowp = new MainWindow(TReso(16, 12, minf, maxf, true));
   qDebug() << "mw" << gl_mainwindowp->size();
 
   gl_soundsp = new Sounds(); //datadir() + "sound");

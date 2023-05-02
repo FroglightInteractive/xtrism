@@ -7,6 +7,7 @@
 #include "BBox.h"
 #include <QPaintEvent>
 #include <QPainter>
+#include <QTime>
 
 ScreenPit::ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent):
   QWidget(parent), sharedbg(sbg), vispit(vp) {
@@ -54,9 +55,11 @@ void ScreenPit::paintEvent(QPaintEvent *e) {
         redrawcell(&p, x, y, vispit.cell(i, j));
     }
   }
+  //qDebug() << "render done" << QTime::currentTime().msec();
 }
 
 void ScreenPit::poll() {
+  //qDebug() << "sp poll" << QTime::currentTime().msec();
   for (int j = 0; j < vispit.height(); j++) {
     if (vispit.changedline(j)) {
       vispit.resetchanged();

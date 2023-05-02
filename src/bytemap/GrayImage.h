@@ -76,7 +76,7 @@ public:
       add(p, o);
   }
 protected:
-  unsigned char *dat;
+  mutable unsigned char *dat;
   unsigned int wid;
   unsigned int hei;
   unsigned int bpl;

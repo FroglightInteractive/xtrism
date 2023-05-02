@@ -67,7 +67,7 @@ public:
     return QSize(wid, hei);
   }
 protected:
-  uint *dat;
+  mutable uint *dat;
   unsigned int wid;
   unsigned int hei;
   unsigned int wpl;

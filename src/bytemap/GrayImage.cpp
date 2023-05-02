@@ -27,6 +27,7 @@ GrayImage::GrayImage(unsigned int w, unsigned int h, unsigned char ini):
 GrayImage::GrayImage(GrayImage const &oth) {
   store = oth.store;
   store.detach();
+  oth.dat = oth.store.bits(); // needed?
   dat = store.bits();
   wid = store.width();
   hei = store.height();
@@ -44,6 +45,7 @@ GrayImage::GrayImage(GrayImage &&oth) {
 GrayImage &GrayImage::operator=(GrayImage const &oth) {
   store = oth.store;
   store.detach();
+  oth.dat = oth.store.bits(); // needed?
   dat = store.bits();
   wid = store.width();
   hei = store.height();

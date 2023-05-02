@@ -6,7 +6,7 @@
 #include "../pics/MMBG.h"
 #include "../basics/minmax.h"
 #include "PlayButton.h"
-
+#include <QKeyEvent>
 #include "../basics/dbx.h"
 #include "MainWindow.h"
 #include <QPainter>
@@ -52,4 +52,45 @@ void MainMenu::paintEvent(QPaintEvent *) {
 
 void MainMenu::setLastScore(QString s) {
   textbut->setText(s);
+}
+
+int MainMenu::currentPlayButton() const {
+  for (int k=0; k<playbuttons.size(); ++k)
+    if (playbuttons[k]->isSelected())
+      return k;
+  return 0; // fallback
+}
+
+void MainMenu::keyPressEvent(QKeyEvent *e) {
+  switch (e->key()) {
+  case Qt::Key_1:
+    options().setCurrentBrickset(Options::PPos::Left, 0);
+    options().setCurrentBrickset(Options::PPos::Right, 0);
+    break;
+  case Qt::Key_2:
+    options().setCurrentBrickset(Options::PPos::Left, 1);
+    options().setCurrentBrickset(Options::PPos::Right, 1);
+    break;
+  case Qt::Key_3:
+    options().setCurrentBrickset(Options::PPos::Left, 2);
+    options().setCurrentBrickset(Options::PPos::Right, 2);
+    break;
+  case Qt::Key_4:
+    options().setCurrentBrickset(Options::PPos::Left, 3);
+    options().setCurrentBrickset(Options::PPos::Right, 3);
+    break;
+  case Qt::Key_Space:
+  case Qt::Key_Enter:
+  case Qt::Key_Return:
+    playbuttons[currentPlayButton()]->play();
+    break;
+  case Qt::Key_Right:
+    playbuttons[(currentPlayButton()+1)%playbuttons.size()]
+      ->select();
+    break;
+  case Qt::Key_Left:
+    playbuttons[(currentPlayButton()+playbuttons.size()-1)%playbuttons.size()]
+      ->select();
+    break;
+  }
 }

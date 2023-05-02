@@ -8,6 +8,9 @@ public:
   ~MainMenu();
   void paintEvent(QPaintEvent *) override;
   void setLastScore(QString);
+  void keyPressEvent(QKeyEvent *) override;
+private:
+  int currentPlayButton() const;
 private:
   QList<class PlayButton *> playbuttons;
   class TextButton *textbut;

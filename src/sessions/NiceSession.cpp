@@ -110,8 +110,10 @@ void NiceSession::exec() {
   el->exec();
   delete el;
   hide();
-  if (mm)
+  if (mm) {
     mm->show();
+    mm->setFocus();
+  }
 }
 
 void NiceSession::paintEvent(QPaintEvent *) {
@@ -127,15 +129,15 @@ Rainbow const &NiceSession::background() const {
 void NiceSession::keyPressEvent(QKeyEvent *e) {
   // if (e->isAutoRepeat())
   //  return;
-  g1->key(e->key(), true);
+  g1->key(e->nativeScanCode(), true);
   if (g2)
-    g2->key(e->key(), true);
+    g2->key(e->nativeScanCode(), true);
 }
 
 void NiceSession::keyReleaseEvent(QKeyEvent *e) {
   // if (e->isAutoRepeat())
   //  return;
-  g1->key(e->key(), false);
+  g1->key(e->nativeScanCode(), false);
   if (g2)
-    g2->key(e->key(), false);
+    g2->key(e->nativeScanCode(), false);
 }

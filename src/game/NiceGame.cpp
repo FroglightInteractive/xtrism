@@ -212,6 +212,7 @@ void NiceGame::bricklanded(FBPos const &pos, PlPlayer *plp) {
 }
 
 void NiceGame::timerEvent(QTimerEvent *) {
+  //  qDebug() << "time" << QTime::currentTime().msec();
   if (pudding && pudtime.ivalgone()) {
     int i = GameTime::MID_PUD;
     pudtime.adjust(i);

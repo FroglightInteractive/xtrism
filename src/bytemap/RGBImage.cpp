@@ -26,6 +26,7 @@ RGBImage::RGBImage(unsigned int w, unsigned int h, uint ini):
 RGBImage::RGBImage(RGBImage const &oth) {
   store = oth.store;
   store.detach();
+  oth.dat = (uint*)oth.store.bits(); // needed?
   dat = (uint*)store.bits();
   wid = store.width();
   hei = store.height();
@@ -43,6 +44,7 @@ RGBImage::RGBImage(RGBImage &&oth) {
 RGBImage &RGBImage::operator=(RGBImage const &oth) {
   store = oth.store;
   store.detach();
+  oth.dat = (uint*)oth.store.bits(); // needed?
   dat = (uint*)store.bits();
   wid = store.width();
   hei = store.height();

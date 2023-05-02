@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
     global_init(argc, argv, &app);
     mmp = new MainMenu();
     mmp->show();
+    mmp->setFocus();
     app.exec();
     delete mmp;
     global_destroy();

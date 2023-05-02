@@ -347,5 +347,6 @@ void PlPlayer::setstate(State s) {
 }
 
 void PlPlayer::key(int code, bool in_not_out) {
+  qDebug() << "plplayer key" << code << in_not_out;
   kbdbuffer->enter(code, in_not_out);
 }
