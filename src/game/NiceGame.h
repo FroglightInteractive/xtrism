@@ -46,7 +46,7 @@ public:
   void key(int code, bool in_not_out);
 private:
   enum StatLines {
-    SCORE=0, LINES, LEVEL, RANK, PTSBLK, NLINES,
+    SCORE=0, LINES, LEVEL, /*RANK,*/ PTSBLK, NLINES,
   };
   class Player const *player[2];
   class NextBox *nextbox[2];

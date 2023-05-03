@@ -64,12 +64,13 @@ void ScreenPit::generate() {
 }
 
 void ScreenPit::paintEvent(QPaintEvent *e) {
+  if (xworld)
+    return;
   BBox bbox(e->rect());
   QPainter p(this);
   if (pos()!=topleft || mybg.size()!=size())
     generate();
-  if (!xworld)
-    p.drawPixmap(QPoint(0,0), mybg);
+  p.drawPixmap(QPoint(0,0), mybg);
   
   int dx = vispit.cellsize();
   int dy = dx;
@@ -125,6 +126,7 @@ void ScreenPit::redrawxworld() {
       }
     }
   }
+  vispit.resetchanged();
 }
 
 void ScreenPit::redrawcell(QPainter *p, int x, int y, QPixmap const *tsp) const {
