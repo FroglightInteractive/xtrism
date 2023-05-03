@@ -88,7 +88,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   screenpit->move(bbox.center()
                   - QPoint(screenpit->width()/2, screenpit->height()/2)
                   + QPoint(0, yspace/8));
-  statboard->move(topleft.x()/2 + screenpit->x()/2 - statboard->width()/2,
+  statboard->move((topleft.x()+screenpit->x())/2 - statboard->width()/2,
                   screenpit->y() - statboard->height()/2);
   qDebug() << "  screenpit" << screenpit->geometry();
   qDebug() << "  statboard" << statboard->geometry();
