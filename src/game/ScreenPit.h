@@ -31,8 +31,9 @@ private:
   class XWorld *xworld;
   XWorld::ID bgpixmap;
   QMap<QPixmap const *, XWorld::ID> brickpixmaps;
-BrickSprites const &bs0;
-BrickSprites const &bs1;
+  BrickSprites const &bs0;
+  BrickSprites const &bs1;
+  void redrawxworld();
 };
 
 #endif

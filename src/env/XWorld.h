@@ -19,6 +19,7 @@ public:
   bool active() const;
   ID storePixmap(RGBImage &);
   void renderPixmap(ID id, int x, int y);
+  void renderPixmap(ID id, int x, int y, QRect src);
 private:
   class XWorldPrivate *d;
   QMap<ID, QSize> sizes;

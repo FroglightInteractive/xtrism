@@ -69,3 +69,11 @@ void XWorld::renderPixmap(XWorld::ID id, int x, int y) {
             0, 0, size.width(), size.height(),
             x, y);
 }
+
+void XWorld::renderPixmap(XWorld::ID id, int x, int y, QRect src) {
+  Q_ASSERT_X(sizes.contains(id), "renderPixmap", "Unknown pixmap");
+  QSize size = sizes[id];
+  XCopyArea(d->display, (Pixmap)id, d->window, d->gc,
+            src.x(), src.y(), src.width(), src.height(),
+            x, y);
+}

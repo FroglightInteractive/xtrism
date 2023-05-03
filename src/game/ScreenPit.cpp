@@ -39,7 +39,8 @@ void ScreenPit::generate() {
   mybg = QPixmap::fromImage(bg1.toQImage());
   topleft = pos();
 
-  xworld = new XWorld(qApp, this);
+  if (!xworld)
+    xworld = new XWorld(qApp, this);
   if (!xworld->active()) {
     qDebug() << "xworld not active";
     delete xworld;
@@ -47,6 +48,7 @@ void ScreenPit::generate() {
     return;
   }
   
+  qDebug() << "xworld active";
   bgpixmap = xworld->storePixmap(bg1);
   for (int bno=0; bno<34; bno++) {
     for (int rot=0; rot<4; rot++) {
@@ -66,9 +68,7 @@ void ScreenPit::paintEvent(QPaintEvent *e) {
   QPainter p(this);
   if (pos()!=topleft || mybg.size()!=size())
     generate();
-  if (xworld)
-    xworld->renderPixmap(bgpixmap, 0, 0);
-  else
+  if (!xworld)
     p.drawPixmap(QPoint(0,0), mybg);
   
   int dx = vispit.cellsize();
@@ -80,24 +80,49 @@ void ScreenPit::paintEvent(QPaintEvent *e) {
     for (int i = 0; i < vispit.width(); i++) {
       int x = x0 + dx * i;
       BBox bb(x, y, x + dx, y + dy);
-      if (xworld) {
-        xworld->renderPixmap(brickpixmaps[vispit.cell(i, j)], x, y);
-      } else {
-        if (bb.intersect(bbox)) 
-          redrawcell(&p, x, y, vispit.cell(i, j));
-      }
+      if (bb.intersect(bbox)) 
+        redrawcell(&p, x, y, vispit.cell(i, j));
     }
   }
-  //qDebug() << "render done" << QTime::currentTime().msec();
 }
 
 void ScreenPit::poll() {
-  //qDebug() << "sp poll" << QTime::currentTime().msec();
+  if (pos()!=topleft || mybg.size()!=size())
+    generate();
+  if (xworld) {
+    redrawxworld();
+  } else {
+    for (int j = 0; j < vispit.height(); j++) {
+      if (vispit.changedline(j)) {
+        vispit.resetchanged();
+        update();
+        return;
+      }
+    }
+  }
+}
+
+void ScreenPit::redrawxworld() {
+  int x00 = x();
+  int y00 = y();
+  int dx = vispit.cellsize();
+  int dy = dx;
+  int x0 = bw;
+  int y0 = bw;
   for (int j = 0; j < vispit.height(); j++) {
     if (vispit.changedline(j)) {
-      vispit.resetchanged();
-      update();
-      return;
+      int y = y0 + dy * j;
+      for (int i = 0; i < vispit.width(); i++) {
+        if (vispit.changed(i, j)) {
+          int x = x0 + dx * i;
+          QPixmap const *tsp = vispit.cell(i, j);
+          if (tsp) {
+            xworld->renderPixmap(brickpixmaps[tsp], x+x00, y+y00);
+          } else {
+            xworld->renderPixmap(bgpixmap, x+x00, y+y00, QRect(x, y, dx, dy));
+          }
+        }
+      }
     }
   }
 }
