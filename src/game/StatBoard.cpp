@@ -7,21 +7,16 @@
 #include <QPainter>
 #include <QDebug>
 
-constexpr int INTERL = 0;
-constexpr int EDGEMARG = 10;
-constexpr int CENTREMARG = 12;
-constexpr int TBMARG = 10;
-
 StatBoard::StatBoard(int nlines, int labelw, int dataw,
                      Rainbow const &sbg, QWidget *parent):
   QWidget(parent), sharedbg(sbg) {
   QFontMetrics fm(font());
-  dy = fm.height() + INTERL;
-  y0 = TBMARG - dy/3; // + fm.ascent();
-  dxl = EDGEMARG;
-  dxd = EDGEMARG;
-  int wid = labelw + dataw + 2*EDGEMARG + CENTREMARG;
-  int hei = nlines*dy + 2*TBMARG - dy/3;
+  dy = fm.height();
+  y0 = dy/3; // + fm.ascent();
+  dxl = dy/2;
+  dxd = dy*6/9;
+  int wid = labelw + dataw + 3*dy;
+  int hei = nlines*dy + dy;
   resize(wid, hei);
 }
 

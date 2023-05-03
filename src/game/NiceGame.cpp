@@ -84,29 +84,31 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   QPoint topleft(pos==Sides::Side::Right ? size.width() : 0, 0);
   QRect bbox(topleft, size);
   qDebug() << "nicegame" << bbox;
+  int yspace = size.height() - screenpit->height();
   screenpit->move(bbox.center()
-           - QPoint(screenpit->width()/2, screenpit->height()/2)
-           - QPoint(0, size.height()/20));
+                  - QPoint(screenpit->width()/2, screenpit->height()/2)
+                  + QPoint(0, yspace/8));
   statboard->move(screenpit->x()/2 - statboard->width()/2,
-                  screenpit->y()); // - statboard->height()/2);
+                  screenpit->y() - statboard->height()/2);
   qDebug() << "  screenpit" << screenpit->geometry();
   qDebug() << "  statboard" << statboard->geometry();
 
+  int dx = size.width()/20;
   if (team) {
-    nextbox[0]->move(screenpit->x() - nextbox[0]->width() - size.width()/10,
+    nextbox[0]->move(screenpit->x() - nextbox[0]->width() - dx,
                      screenpit->y() + screenpit->height()
                      - nextbox[0]->height());
-    nextbox[1]->move(screenpit->x() + screenpit->width() + size.width()/10,
+    nextbox[1]->move(screenpit->x() + screenpit->width() + dx,
                      screenpit->y() + screenpit->height()
                      - nextbox[1]->height());
 
   } else {
     if (p1->nextpos()<0) 
-      nextbox[0]->move(screenpit->x() - nextbox[0]->width() - size.width()/10,
+      nextbox[0]->move(screenpit->x() - nextbox[0]->width() - dx,
                        screenpit->y() + screenpit->height()
                        - nextbox[0]->height());
     else
-      nextbox[0]->move(screenpit->x() + screenpit->width() + size.width()/10,
+      nextbox[0]->move(screenpit->x() + screenpit->width() + dx,
                        screenpit->y() + screenpit->height()
                        - nextbox[0]->height());
   }
