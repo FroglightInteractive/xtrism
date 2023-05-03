@@ -66,7 +66,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   vispit = new VisPit(team ? TEAMWIDTH : SOLOWIDTH,
                       team ? TEAMHEIGHT : SOLOHEIGHT,
                       sbd0, bs0, bs1);
-  screenpit = new ScreenPit(*vispit, s->background(), s);
+  screenpit = new ScreenPit(*vispit, s->background(), s, bs0, bs1);
   nextbox[0] = new NextBox(sbd0, bs0, s->background(), s);
   nextbox[1] = team ? new NextBox(sbd0, bs1, s->background(), s) : 0;
 

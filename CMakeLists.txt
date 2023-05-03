@@ -35,6 +35,7 @@ include(src/CMakeLists.txt)
 # Libraries to link to - Qt must be mentioned
 target_link_libraries(xtrism Qt6::Widgets)
 target_link_libraries(xtrism Qt6::Multimedia)
+target_link_libraries(xtrism X11)
 
 # Include paths - Qt must be mentioned
 target_include_directories(xtrism PUBLIC "${PROJECT_BINARY_DIR}")
