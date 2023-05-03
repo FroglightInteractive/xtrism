@@ -73,7 +73,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   statboard->setlabel(SCORE, "Score:", false);
   statboard->setlabel(LINES, "Lines:", false);
   statboard->setlabel(LEVEL, "Level:", false);
-  statboard->setlabel(RANK, "Rank:", false);
+  //  statboard->setlabel(RANK, "Rank:", false);
   statboard->setlabel(PTSBLK, "Pts/Blk:", false);
 
   ranker = new Ranker(); // incomplete...
@@ -88,7 +88,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   screenpit->move(bbox.center()
                   - QPoint(screenpit->width()/2, screenpit->height()/2)
                   + QPoint(0, yspace/8));
-  statboard->move(screenpit->x()/2 - statboard->width()/2,
+  statboard->move((topleft.x()+screenpit->x())/2 - statboard->width()/2,
                   screenpit->y() - statboard->height()/2);
   qDebug() << "  screenpit" << screenpit->geometry();
   qDebug() << "  statboard" << statboard->geometry();
@@ -164,7 +164,7 @@ void NiceGame::start() {
   statboard->setdata(SCORE, 0);
   statboard->setdata(LINES, lines = 0);
   statboard->setdata(LEVEL, player[0]->startLevel(bset)); // should look at team lvl
-  statboard->setdata(RANK, "-");
+  //  statboard->setdata(RANK, "-");
   statboard->setdata(PTSBLK, "-");
 
   nplrs = team ? 2 : 1;
