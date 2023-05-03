@@ -96,7 +96,7 @@ void WishList::clearflags() {
 }
 
 void WishList::warn() {
-  sounds->warn();
+  Sounds::instance()->warn();
   // make a warning sound...
 }
 

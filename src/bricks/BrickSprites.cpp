@@ -8,10 +8,8 @@
 #include "BrickData.h"
 #include "BrickSprites.h"
 #include "BrickCell.h"
-
 #include "RGBImage.h"
 
-#include <stdio.h>
 
 //////////////////////////////// BrickSprites ////////////////////////////////
 BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
@@ -38,9 +36,8 @@ BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
           .arg(bno).arg(rot).arg(cel)
           .arg(size).arg(style);
         if (QFileInfo(fn).exists()) {
-          RGBImage *img = new RGBImage(RGBImage::fromFile(fn));
-          images << img;
-          cells << QPixmap::fromImage(img->toQImage());
+          RGBImage img(RGBImage::fromFile(fn));
+          cells << QPixmap::fromImage(img.toQImage());
         } else {
           if (!base.width()) {
             base = BrickCell(size * rbd.height());
@@ -50,10 +47,9 @@ BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,
           if (rot && !rotd.width())
             rotd = BrickCell(base.rotated(rot));
           BrickCell cell = docreate(cel, rot?rotd:base, size, rbd, rot);
-          RGBImage *img = new RGBImage(RGBImage::colorized(cell, rgb0, rgb1));
-          img->save(fn);
-          images << img;
-          cells << QPixmap::fromImage(img->toQImage());
+          RGBImage img(RGBImage::colorized(cell, rgb0, rgb1));
+          img.save(fn);
+          cells << QPixmap::fromImage(img.toQImage());
         }
       }
     }

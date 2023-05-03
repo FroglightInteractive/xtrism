@@ -27,7 +27,7 @@ MainWindow::MainWindow(int maxf) {
   //  QFont fnt("Benguiat Bk BT");
   //  QFont fnt("Albertus Medium");
   QFont fnt("Charter");
-  fnt.setPixelSize(0.27*wid/16);
+  fnt.setPixelSize(0.27*hei/12);
   fnt.setWeight(QFont::Bold);
   setFont(fnt);
 
@@ -36,6 +36,8 @@ MainWindow::MainWindow(int maxf) {
     showFullScreen();
   else 
     show();
+
+  qDebug() << "mainwindow" << wid << hei << size();
 
   xw = new XWorld(qApp, this);
   if (!xw->isActive()) {
@@ -46,10 +48,15 @@ MainWindow::MainWindow(int maxf) {
   for (int striped=0; striped<2; striped++)
     bspr[striped] =  new BrickSprites(SBrickData::instance(),
                                       Paths::cachedir(),
-                                      wid/40, striped);
+                                      hei/30, striped);
 
   if (xw) {
     // import bricksprites into xworld
+    for (int bno=0; bno<34; bno++) 
+      for (int rot=0; rot<4; rot++) 
+        for (int cel=0; cel<4; cel++) 
+          for (int striped=0; striped<2; striped++)
+            xw->storePixmap(&bspr[striped]->cell(bno, rot, cel));
   }
 }
 
@@ -68,4 +75,8 @@ QString MainWindow::id() const {
 
 BrickSprites const *MainWindow::brickSprites(bool striped) {
   return bspr[striped ? 1 : 0];
+}
+
+XWorld *MainWindow::xworld() {
+  return xw;
 }

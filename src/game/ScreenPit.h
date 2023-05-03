@@ -12,7 +12,8 @@
 class ScreenPit: public QWidget {
 public:
   ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent,
-            BrickSprites const &bs0, BrickSprites const &bs1);
+            BrickSprites const &bs0, BrickSprites const &bs1,
+            class XWorld *xworld);
   /* In the GBArgs argument, the width and height members need not
      be specified; they are re-calculated from the VisPit's data. */
   ~ScreenPit();
@@ -29,8 +30,6 @@ private:
   int wid, hei, bw;
 private:
   class XWorld *xworld;
-  XWorld::ID bgpixmap;
-  QMap<QPixmap const *, XWorld::ID> brickpixmaps;
   BrickSprites const &bs0;
   BrickSprites const &bs1;
   void redrawxworld();

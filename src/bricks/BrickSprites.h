@@ -7,7 +7,6 @@
 #include <QPixmap>
 #include <QDir>
 #include <QList>
-#include "RGBImage.h"
 
 class BrickSprites {
 public:
@@ -15,9 +14,7 @@ public:
                QString cachedir,
                int size, int style=0);
   ~BrickSprites();
-  RGBImage *cellimage(int bno, int rot, int cel) const {
-    return images[cel + BD_MAXCELLS * (rot + BD_MAXROTS * bno)];
-  }
+
   QPixmap const &cell(int bno, int rot, int cel) const {
     return cells[cel + BD_MAXCELLS * (rot + BD_MAXROTS * bno)];
   }
@@ -29,6 +26,5 @@ private:
 private:
   int n;
   QList<QPixmap> cells;
-  QList<RGBImage *> images;
 };
 #endif

@@ -11,17 +11,19 @@
 #include "XWorld.h"
 
 ScreenPit::ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent,
-                     BrickSprites const &bs0, BrickSprites const &bs1):
-  QWidget(parent), sharedbg(sbg), vispit(vp), bs0(bs0), bs1(bs1) {
+                     BrickSprites const &bs0, BrickSprites const &bs1,
+                     XWorld *xworld):
+  QWidget(parent), sharedbg(sbg), vispit(vp), bs0(bs0), bs1(bs1),
+  xworld(xworld) {
   wid = vp.cellsize() * vp.width();
   hei = vp.cellsize() * vp.height();
   bw = wid/100 + 1;
   resize(wid + 2*bw, hei + 2*bw);
-  xworld = 0;
 }
 
 ScreenPit::~ScreenPit() {
-  delete xworld;
+  if (xworld)
+    xworld->dropPixmap(&mybg);
 }
 
 void ScreenPit::generate() {
@@ -35,32 +37,11 @@ void ScreenPit::generate() {
     bb.shift(1, 0);
   }
   clipped.image().recolorRectEdges(BBox(QPoint(), size()), bw, -64);
-  RGBImage bg1 = clipped.create();
-  mybg = QPixmap::fromImage(bg1.toQImage());
+  mybg = QPixmap::fromImage(clipped.create().toQImage());
   topleft = pos();
 
-  if (!xworld) // THIS WILL BE IMPROVED
-    xworld = new XWorld(qApp, this);
-  if (!xworld->isActive()) {
-    qDebug() << "xworld not active";
-    delete xworld;
-    xworld = 0;
-    return;
-  }
-  
   qDebug() << "xworld active";
-  bgpixmap = xworld->storePixmap(bg1);
-  for (int bno=0; bno<34; bno++) {
-    for (int rot=0; rot<4; rot++) {
-      for (int cel=0; cel<4; cel++) {
-        brickpixmaps[&bs0.cell(bno, rot, cel)] =
-          xworld->storePixmap(*bs0.cellimage(bno, rot, cel));
-        if (&bs1.cell(bno, rot, cel) != &bs0.cell(bno, rot, cel))
-          brickpixmaps[&bs1.cell(bno, rot, cel)] 
-            = xworld->storePixmap(*bs1.cellimage(bno, rot, cel));
-      }
-    }
-  }
+  xworld->storePixmap(&mybg);
 }
 
 void ScreenPit::paintEvent(QPaintEvent *e) {
@@ -122,9 +103,9 @@ void ScreenPit::redrawxworld() {
           int x = x0 + dx * i;
           QPixmap const *tsp = vispit.cell(i, j);
           if (tsp) 
-            xworld->renderPixmap(brickpixmaps[tsp], x+x00, y+y00);
+            xworld->renderPixmap(tsp, x+x00, y+y00);
           else 
-            xworld->renderPixmap(bgpixmap, x+x00, y+y00, QRect(x, y, dx, dy));
+            xworld->renderPixmap(&mybg, x+x00, y+y00, QRect(x, y, dx, dy));
         }
       }
     }

@@ -3,6 +3,11 @@
 #include "SPlayer.h"
 #include <iostream>
 
+SPlayer *SPlayer::instance() {
+  static SPlayer spl;
+  return &spl;
+}
+
 SPlayer::SPlayer() {
   enabled = true;
 }

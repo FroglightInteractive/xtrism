@@ -22,7 +22,7 @@ void Kronos::updlevel(int lines) {
   if (lines > virtuallines) {
     setlevel(lines);
     if (inispd)
-      sounds->speedup();
+      Sounds::instance()->speedup();
     inispd = false;
   }
 }

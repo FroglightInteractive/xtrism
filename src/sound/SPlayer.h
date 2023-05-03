@@ -8,6 +8,7 @@
 
 class SPlayer {
 public:
+  static SPlayer *instance();
   SPlayer();
   ~SPlayer();
   void play(Sample *s, float frqrat, float amp, float posn);

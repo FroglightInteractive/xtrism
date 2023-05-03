@@ -34,7 +34,7 @@ bool FallBrick::tryshoosh(int dir) {
     nx += dir;
   if (bec == BEC_OK) {
     pos.x = nx;
-    sounds->shoosh();
+    Sounds::instance()->shoosh();
     return true;
   }   // true if moved OK, false if wall in the way
   return false;
@@ -107,7 +107,7 @@ FBHResult FallBrick::rotate(int dir) {
       pos.x += mv[i].x;
       pos.y += mv[i].y;
       res.moved = 1;
-      sounds->turn();
+      Sounds::instance()->turn();
       return res;
     }
   }

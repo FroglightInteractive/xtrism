@@ -264,7 +264,7 @@ bool PlPlayer::globalkey(BufferCode &bc) { // !!!!!
 }
 
 void PlPlayer::land(bool dropped=0) { // !!!!!
-  sounds->drop();
+  Sounds::instance()->drop();
   dbx(1, "PlPlayer(%p)::land", this);
   setstate(DELLAND);
   referee->brickprepare(fallbrick->position().y, dropped);

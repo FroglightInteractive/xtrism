@@ -13,6 +13,7 @@
 #include <QKeyEvent>
 #include "Paths.h"
 #include "BrickData.h"
+#include "SPlayer.h"
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
   QWidget(mw) {
@@ -50,7 +51,7 @@ NiceSession::NiceSession(QString id,
                     &p1, 0,
                     &Options::instance().metakeys(Sides::Side::Solo), 0,
                     SBrickData::instance(), mw->brickSprites(), 0,
-                    bset);
+                    bset, mw->xworld());
   g2 = 0;
 }
 
@@ -65,7 +66,7 @@ NiceSession::NiceSession(QString id,
                     &Options::instance().metakeys(Sides::Side::Right),
                     SBrickData::instance(),
                     mw->brickSprites(), mw->brickSprites(true),
-                    bset);
+                    bset, mw->xworld());
   g2 = 0;
 }
 
@@ -78,12 +79,12 @@ NiceSession::NiceSession(QString id,
                     &p1, 0, 
                     &Options::instance().metakeys(Sides::Side::Left), 0,
                     SBrickData::instance(), mw->brickSprites(), 0,
-                    bset1);
+                    bset1, mw->xworld());
   g2 = new NiceGame(this, Sides::Side::Right,
                     &p2, 0,
                     &Options::instance().metakeys(Sides::Side::Right), 0,
                     SBrickData::instance(), mw->brickSprites(), 0,
-                    bset2);
+                    bset2, mw->xworld());
 }
 
 NiceSession::~NiceSession() {
@@ -136,6 +137,11 @@ void NiceSession::keyPressEvent(QKeyEvent *e) {
   g1->key(e->nativeScanCode(), true);
   if (g2)
     g2->key(e->nativeScanCode(), true);
+  switch (e->key()) {
+  case Qt::Key_Q:
+    SPlayer::instance()->toggleSounds();
+    break;
+  }
 }
 
 void NiceSession::keyReleaseEvent(QKeyEvent *e) {

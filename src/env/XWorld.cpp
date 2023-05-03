@@ -42,12 +42,13 @@ XWorld::~XWorld() {
   delete d;
 }
 
-XWorld::ID XWorld::storePixmap(RGBImage &img) {
+void XWorld::storePixmap(QPixmap const *pm) {
+  QImage img(pm->toImage());
   XImage *ximg = XCreateImage(d->display, d->visual, d->depth,
                               ZPixmap, 0,
-                              (char*)img.data(),
+                              (char*)img.bits(),
                               img.width(), img.height(),
-                              32, img.bytesperline());
+                              32, img.bytesPerLine());
   Q_ASSERT_X(ximg, "storePixmap", "XImage creation failed");
   ID pixmap = (ID)XCreatePixmap(d->display, d->window,
                                 img.width(), img.height(),
@@ -58,24 +59,34 @@ XWorld::ID XWorld::storePixmap(RGBImage &img) {
             img.width(), img.height());
   // not XDestroyImage(ximg); this would clobber my RGBImage
   XFree(ximg); // is this OK?
+  pixmaps[pm] = pixmap;
   sizes[pixmap] = img.size();
-  return pixmap;
 }
 
-void XWorld::renderPixmap(XWorld::ID id, int x, int y) {
-  Q_ASSERT_X(sizes.contains(id), "renderPixmap", "Unknown pixmap");
+void XWorld::renderPixmap(QPixmap const *pm, int x, int y) {
+  Q_ASSERT_X(pixmaps.contains(pm), "renderPixmap", "Unknown pixmap");
+  ID id = pixmaps[pm];
   QSize size = sizes[id];
   XCopyArea(d->display, (Pixmap)id, d->window, d->gc,
             0, 0, size.width(), size.height(),
             x, y);
 }
 
-void XWorld::renderPixmap(XWorld::ID id, int x, int y, QRect src) {
-  Q_ASSERT_X(sizes.contains(id), "renderPixmap", "Unknown pixmap");
+void XWorld::renderPixmap(QPixmap const *pm, int x, int y, QRect src) {
+  Q_ASSERT_X(pixmaps.contains(pm), "renderPixmap", "Unknown pixmap");
+  ID id = pixmaps[pm];
   QSize size = sizes[id];
   XCopyArea(d->display, (Pixmap)id, d->window, d->gc,
             src.x(), src.y(), src.width(), src.height(),
             x, y);
+}
+
+void XWorld::dropPixmap(QPixmap const *pm) {
+  Q_ASSERT_X(pixmaps.contains(pm), "dropPixmap", "Unknown pixmap");
+  ID id = pixmaps[pm];
+  XFreePixmap(d->display, (Pixmap)id);
+  pixmaps.remove(pm);
+  sizes.remove(id);
 }
 
 void XWorld::flush() {

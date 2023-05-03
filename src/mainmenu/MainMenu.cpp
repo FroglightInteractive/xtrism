@@ -10,6 +10,7 @@
 #include "MainWindow.h"
 #include <QPainter>
 #include "Paths.h"
+#include "SPlayer.h"
 
 MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   backg = 0;
@@ -18,8 +19,8 @@ MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   playbuttons << new TeamButton("Team Play", mw, this);
   playbuttons << new ApartButton("Separate Play", mw, this);
   playbuttons << new SoloButton("Solo Play", Options::PPos::Right, mw, this);
-  int pbw = playbuttons[0]->width();
-  int pbh = playbuttons[0]->height();
+  int pbw = width()/6;
+  int pbh = height()/6;
   int space = width() - 4*pbw;
   for (int k=0; k<4; k++)
     playbuttons[k]->setGeometry(QRect(QPoint(space*(k+1)/5 + pbw*k,
@@ -69,6 +70,9 @@ int MainMenu::currentPlayButton() const {
 
 void MainMenu::keyPressEvent(QKeyEvent *e) {
   switch (e->key()) {
+  case Qt::Key_Q:
+    SPlayer::instance()->toggleSounds();
+    break;
   case Qt::Key_1:
     Options::instance().setCurrentBrickset(Options::PPos::Left, 0);
     Options::instance().setCurrentBrickset(Options::PPos::Right, 0);

@@ -45,7 +45,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
                    MetaKeys const *mk1, MetaKeys const *mk2,
                    SBrickData const &sbd0,
                    BrickSprites const *bs0, BrickSprites const *bs1,
-                   int bset0):
+                   int bset0, XWorld *xworld):
   session(s),
   sbd(sbd0), bs(bs0), bs2(bs1), bset(bset0), 
   pudding(0), puddreq(0), landreq(0),
@@ -68,7 +68,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   vispit = new VisPit(team ? TEAMWIDTH : SOLOWIDTH,
                       team ? TEAMHEIGHT : SOLOHEIGHT,
                       sbd0, *bs0, *bs1);
-  screenpit = new ScreenPit(*vispit, s->background(), s, *bs0, *bs1);
+  screenpit = new ScreenPit(*vispit, s->background(), s, *bs0, *bs1, xworld);
   nextbox[0] = new NextBox(sbd0, *bs0, s->background(), s);
   nextbox[1] = team ? new NextBox(sbd0, *bs1, s->background(), s) : 0;
 
@@ -225,7 +225,7 @@ void NiceGame::timerEvent(QTimerEvent *) {
     if (y >= 0) {
       logpit->collapseline(y, pudding);
       vispit->pudding(y, pudding);
-      sounds->explode();
+      Sounds::instance()->explode();
       lines++;
       for (int j = 0; j < nplrs; j++) {
         plplayers[j]->updlevel(lines);

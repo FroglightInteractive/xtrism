@@ -7,6 +7,7 @@
 
 class Sounds {
 public:
+  static Sounds *instance();
   Sounds(); // QString const &dir);
   ~Sounds();
   void speedup(float posn=0) const;
@@ -16,15 +17,9 @@ public:
   void shoosh(float posn=0) const;
   void explode(float posn=0, float ampl=1) const;
   void warn(float posn=0) const;
-  class SPlayer *player() {
-    return splayer;
-  }                                             // only used by Globals.C!
 private:
   Sample *speedup_, *turn_, *drop_, *applause_;
   Sample *shoosh_, *explode_, *warn_;
-  class SPlayer *splayer;
 };
-
-extern class Sounds *sounds;
 
 #endif

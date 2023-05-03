@@ -16,7 +16,7 @@ public:
            class MetaKeys const *mk1, class MetaKeys const *mk2,
            class SBrickData const &sbd0,
            class BrickSprites const *bs0, class BrickSprites const *bs1,
-           int bset);
+           int bset, class XWorld *xworld);
   virtual ~NiceGame();
   void start();
   void terminate(bool natural);
