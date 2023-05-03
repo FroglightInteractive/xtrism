@@ -39,9 +39,9 @@ void ScreenPit::generate() {
   mybg = QPixmap::fromImage(bg1.toQImage());
   topleft = pos();
 
-  if (!xworld)
+  if (!xworld) // THIS WILL BE IMPROVED
     xworld = new XWorld(qApp, this);
-  if (!xworld->active()) {
+  if (!xworld->isActive()) {
     qDebug() << "xworld not active";
     delete xworld;
     xworld = 0;
@@ -64,8 +64,10 @@ void ScreenPit::generate() {
 }
 
 void ScreenPit::paintEvent(QPaintEvent *e) {
+  // this does not get called if xworld is active, except when another
+  // window has obscured us or some such
   if (xworld)
-    return;
+    qDebug() << "paintevent with xworld";
   BBox bbox(e->rect());
   QPainter p(this);
   if (pos()!=topleft || mybg.size()!=size())
@@ -110,22 +112,25 @@ void ScreenPit::redrawxworld() {
   int dy = dx;
   int x0 = bw;
   int y0 = bw;
+  int cnt = 0;
   for (int j = 0; j < vispit.height(); j++) {
     if (vispit.changedline(j)) {
       int y = y0 + dy * j;
       for (int i = 0; i < vispit.width(); i++) {
         if (vispit.changed(i, j)) {
+          cnt ++;
           int x = x0 + dx * i;
           QPixmap const *tsp = vispit.cell(i, j);
-          if (tsp) {
+          if (tsp) 
             xworld->renderPixmap(brickpixmaps[tsp], x+x00, y+y00);
-          } else {
+          else 
             xworld->renderPixmap(bgpixmap, x+x00, y+y00, QRect(x, y, dx, dy));
-          }
         }
       }
     }
   }
+  if (cnt)
+    xworld->flush();
   vispit.resetchanged();
 }
 

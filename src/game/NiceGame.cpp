@@ -44,13 +44,15 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
                    Player const *p1, Player const *p2,
                    MetaKeys const *mk1, MetaKeys const *mk2,
                    SBrickData const &sbd0,
-                   BrickSprites const &bs0, BrickSprites const &bs1,
+                   BrickSprites const *bs0, BrickSprites const *bs1,
                    int bset0):
   session(s),
   sbd(sbd0), bs(bs0), bs2(bs1), bset(bset0), 
   pudding(0), puddreq(0), landreq(0),
   nplrs(0),
   pos(pos0), team(p2!=0) {
+  if (bs2==0)
+    bs2 = bs;
   player[0] = p1;
   player[1] = p2;
   mkeys[0] = mk1;
@@ -65,10 +67,10 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
                       team ? TEAMHEIGHT : SOLOHEIGHT, sbd);
   vispit = new VisPit(team ? TEAMWIDTH : SOLOWIDTH,
                       team ? TEAMHEIGHT : SOLOHEIGHT,
-                      sbd0, bs0, bs1);
-  screenpit = new ScreenPit(*vispit, s->background(), s, bs0, bs1);
-  nextbox[0] = new NextBox(sbd0, bs0, s->background(), s);
-  nextbox[1] = team ? new NextBox(sbd0, bs1, s->background(), s) : 0;
+                      sbd0, *bs0, *bs1);
+  screenpit = new ScreenPit(*vispit, s->background(), s, *bs0, *bs1);
+  nextbox[0] = new NextBox(sbd0, *bs0, s->background(), s);
+  nextbox[1] = team ? new NextBox(sbd0, *bs1, s->background(), s) : 0;
 
   statboard->setlabel(SCORE, "Score:", false);
   statboard->setlabel(LINES, "Lines:", false);

@@ -28,7 +28,7 @@ public:
   GC gc;
 };
 
-bool XWorld::active() const {
+bool XWorld::isActive() const {
   return d->display && d->visual && d->window && d->gc;
 }
 
@@ -76,4 +76,8 @@ void XWorld::renderPixmap(XWorld::ID id, int x, int y, QRect src) {
   XCopyArea(d->display, (Pixmap)id, d->window, d->gc,
             src.x(), src.y(), src.width(), src.height(),
             x, y);
+}
+
+void XWorld::flush() {
+  XFlush(d->display);
 }

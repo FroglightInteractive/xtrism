@@ -1,10 +1,9 @@
 // NiceSession.C
 
 #include "NiceSession.h"
-#include "../globals/Globals.h"
-#include "../game/NiceGame.h"
+#include "NiceGame.h"
 #include "Options.h"
-#include "../sound/Sounds.h"
+#include "Sounds.h"
 #include "MainWindow.h"
 #include <QFileInfo>
 #include "BrickCell.h"
@@ -12,14 +11,18 @@
 #include <QEventLoop>
 #include <QPainter>
 #include <QKeyEvent>
+#include "Paths.h"
+#include "BrickData.h"
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
   QWidget(mw) {
   resize(mw->size());
   move(0, 0);
-  QString fn0 = QString("%1/gamebg0-%2-%3x%4.jpg").arg(cachedir()).arg(id)
+  QString fn0 = QString("%1/gamebg0-%2-%3x%4.jpg")
+    .arg(Paths::cachedir()).arg(id)
     .arg(width()).arg(height());
-  QString fn = QString("%1/gamebg-%2-%3x%4.jpg").arg(cachedir()).arg(id)
+  QString fn = QString("%1/gamebg-%2-%3x%4.jpg")
+    .arg(Paths::cachedir()).arg(id)
     .arg(width()).arg(height());
   QRect src = playbutton->geometry();
   QSize base = mw->size();
@@ -45,8 +48,8 @@ NiceSession::NiceSession(QString id,
   NiceSession(id, mw, playbutton) {
   g1 = new NiceGame(this, Sides::Side::Solo,
                     &p1, 0,
-                    &options().metakeys(Sides::Side::Solo), 0,
-                    sbd(), bs(), bs(),
+                    &Options::instance().metakeys(Sides::Side::Solo), 0,
+                    SBrickData::instance(), mw->brickSprites(), 0,
                     bset);
   g2 = 0;
 }
@@ -58,9 +61,10 @@ NiceSession::NiceSession(QString id,
   NiceSession(id, mw, playbutton) {
   g1 = new NiceGame(this, Sides::Side::Solo,
                     &p1, &p2, 
-                    &options().metakeys(Sides::Side::Left),
-                    &options().metakeys(Sides::Side::Right),
-                    sbd(), bs(), bs2(),
+                    &Options::instance().metakeys(Sides::Side::Left),
+                    &Options::instance().metakeys(Sides::Side::Right),
+                    SBrickData::instance(),
+                    mw->brickSprites(), mw->brickSprites(true),
                     bset);
   g2 = 0;
 }
@@ -72,13 +76,13 @@ NiceSession::NiceSession(QString id,
   NiceSession(id, mw, playbutton) {
   g1 = new NiceGame(this, Sides::Side::Left,
                     &p1, 0, 
-                    &options().metakeys(Sides::Side::Left), 0,
-                    sbd(), bs(), bs(),
+                    &Options::instance().metakeys(Sides::Side::Left), 0,
+                    SBrickData::instance(), mw->brickSprites(), 0,
                     bset1);
   g2 = new NiceGame(this, Sides::Side::Right,
                     &p2, 0,
-                    &options().metakeys(Sides::Side::Right), 0,
-                    sbd(), bs(), bs(),
+                    &Options::instance().metakeys(Sides::Side::Right), 0,
+                    SBrickData::instance(), mw->brickSprites(), 0,
                     bset2);
 }
 

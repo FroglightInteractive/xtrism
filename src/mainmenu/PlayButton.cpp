@@ -1,31 +1,22 @@
 // PlayButton.C
 
 #include "PlayButton.h"
+#include "NiceSession.h"
 
-#include "../basics/dbx.h"
-#include "../sessions/NiceSession.h"
-#include "../globals/Globals.h"
-
-static QMap<QWidget *, QSet<PlayButton*>> playbuttons;
-
-PlayButton::PlayButton(QString text, QWidget *parent):
-  TextButton(parent), par(parent) {
+PlayButton::PlayButton(QString text, MainWindow *mw, QWidget *parent):
+  TextButton(parent), mw(mw) {
   sel = false;
   basetext = text;
   setText(basetext);
-  playbuttons[par].insert(this);
 }
 
 PlayButton::~PlayButton() {
-  playbuttons[par].remove(this);
 }
 
 void PlayButton::select() {
-  for (auto pb: playbuttons[par])
-    if (pb!=this)
-      pb->deselect();
   sel = true;
   setText("[" + basetext + "]");
+  emit selected(this);
 }
 
 void PlayButton::deselect() {
@@ -45,43 +36,43 @@ void PlayButton::mousePressEvent(QMouseEvent *) {
 }
 
 SoloButton::SoloButton(QString text, Options::PPos pos,
-                       QWidget *parent):
-  PlayButton(text, parent), pos(pos) {
+                       MainWindow *mw, QWidget *parent):
+  PlayButton(text, mw, parent), pos(pos) {
 }
 
 void SoloButton::play() {
   NiceSession session(pos==Options::PPos::Left ? "1" : "4",
-                      options().currentPlayer(pos),
-                      options().currentBrickset(pos),
-                      mainwindow(), this);
+                      Options::instance().currentPlayer(pos),
+                      Options::instance().currentBrickset(pos),
+                      mw, this);
   session.exec();
 }
 
 TeamButton::TeamButton(QString text,
-                       QWidget *parent):
-  PlayButton(text, parent) {
+                       MainWindow *mw, QWidget *parent):
+  PlayButton(text, mw, parent) {
 }
 
 void TeamButton::play() {
   NiceSession session("2",
-                      options().currentPlayer(Options::PPos::Left),
-                      options().currentPlayer(Options::PPos::Right),
-                      options().currentBrickset(Options::PPos::Left),
-                      mainwindow(), this);
+                      Options::instance().currentPlayer(Options::PPos::Left),
+                      Options::instance().currentPlayer(Options::PPos::Right),
+                      Options::instance().currentBrickset(Options::PPos::Left),
+                      mw, this);
   session.exec();
 }
 
 ApartButton::ApartButton(QString text,
-                         QWidget *parent):
-  PlayButton(text, parent) {
+                         MainWindow *mw, QWidget *parent):
+  PlayButton(text, mw, parent) {
 }
 
 void ApartButton::play() {
   NiceSession session("3",
-                      options().currentPlayer(Options::PPos::Left),
-                      options().currentPlayer(Options::PPos::Right),
-                      options().currentBrickset(Options::PPos::Left),
-                      options().currentBrickset(Options::PPos::Right),
-                      mainwindow(), this);
+                      Options::instance().currentPlayer(Options::PPos::Left),
+                      Options::instance().currentPlayer(Options::PPos::Right),
+                      Options::instance().currentBrickset(Options::PPos::Left),
+                      Options::instance().currentBrickset(Options::PPos::Right),
+                      mw, this);
   session.exec();
 }

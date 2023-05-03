@@ -3,8 +3,8 @@
 #include "MarbledButton.h"
 #include <QPainter>
 #include <QFileInfo>
-#include "Globals.h"
 #include "RGBImage.h"
+#include "Paths.h"
 
 MarbledButton::MarbledButton(QWidget *parent):
   QWidget(parent) {
@@ -21,7 +21,7 @@ void MarbledButton::paintEvent(QPaintEvent *) {
     QString id = QString("marblebg-%1x%2+%3+%4-%5x%6")
       .arg(width()).arg(height()).arg(pos().x()).arg(pos().y())
       .arg(psize.width()).arg(psize.height());
-    QString fn = QString("%1/%2.jpg").arg(cachedir()).arg(id);
+    QString fn = QString("%1/%2.jpg").arg(Paths::cachedir()).arg(id);
     if (QFileInfo(fn).exists()) {
       bg.load(fn);
     } else {

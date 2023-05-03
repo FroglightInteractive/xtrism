@@ -150,3 +150,9 @@ unsigned int SBrickData::maxlines() const {
     mx = std::max(mx, (*this)[i].height());
   return mx;
 }
+
+#include "brickdefs.h"
+
+SBrickData const &SBrickData::instance() {
+  return gl_sbd;
+}

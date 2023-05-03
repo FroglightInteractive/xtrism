@@ -178,7 +178,6 @@ FBVResult FallBrick::godown() {
     res.landed = 1;
     break;
   }
-  qDebug() << "fallbrick" << res.moved << res.landed;
   return res;
 }
 

@@ -4,41 +4,68 @@
 #include <QApplication>
 #include <QFont>
 #include <QScreen>
+#include "minmax.h"
+#include "Paths.h"
+#include "XWorld.h"
+#include "BrickData.h"
+#include "BrickSprites.h"
 
-MainWindow::MainWindow(TReso const &reso) {
+MainWindow::MainWindow(int maxf) {
   Q_ASSERT(qApp);
+
+  constexpr int x = 16;
+  constexpr int y = 9;
   QSize screensize = qApp->primaryScreen()->size();
-  bool full = reso.fullscreen();
-  actfactor = reso.best(screensize.width(), screensize.height());
-  
+  wid = screensize.width();
+  hei = screensize.height();
+  if (maxf>0) {
+    int factor = std::min(maxf, std::min(wid/x, hei/y));
+    wid = factor*x;
+    hei = factor*y;
+  }
+
+  //  QFont fnt("Benguiat Bk BT");
   //  QFont fnt("Albertus Medium");
   QFont fnt("Charter");
-  fnt.setPixelSize(actfactor*0.27);
+  fnt.setPixelSize(0.27*wid/16);
   fnt.setWeight(QFont::Bold);
   setFont(fnt);
 
-  wid = full ? screensize.width() : reso.actx(actfactor);
-  hei = full ? screensize.height() : reso.acty(actfactor);
-
   resize(wid, hei);
-  if (full) {
+  if (maxf<0) 
     showFullScreen();
-    // setWindowState(widget->windowState() | Qt::WindowFullScreen);
-  } else {
-    move((screensize.width() - wid) / 2, (screensize.height() - hei) / 2);
+  else 
     show();
+
+  xw = new XWorld(qApp, this);
+  if (!xw->isActive()) {
+    delete xw;
+    xw = 0;
   }
 
-  qDebug() << "mainwindow" << wid << hei << actfactor;
+  for (int striped=0; striped<2; striped++)
+    bspr[striped] =  new BrickSprites(SBrickData::instance(),
+                                      Paths::cachedir(),
+                                      wid/40, striped);
+
+  if (xw) {
+    // import bricksprites into xworld
+  }
 }
+
 
 MainWindow::~MainWindow() {
+  delete xw;
+  delete bspr[0];
+  delete bspr[1];
 }
+
 
 QString MainWindow::id() const {
-  return QString("%1x%2-%3").arg(wid).arg(hei).arg(actfactor);
+  return QString("%1x%2").arg(wid).arg(hei);
 }
 
-int MainWindow::actualfactor() const {
-  return actfactor;
+
+BrickSprites const *MainWindow::brickSprites(bool striped) {
+  return bspr[striped ? 1 : 0];
 }

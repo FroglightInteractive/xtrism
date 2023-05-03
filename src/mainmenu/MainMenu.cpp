@@ -2,7 +2,6 @@
 
 #include "MainMenu.h"
 
-#include "../globals/Globals.h"
 #include "../pics/MMBG.h"
 #include "../basics/minmax.h"
 #include "PlayButton.h"
@@ -10,23 +9,30 @@
 #include "../basics/dbx.h"
 #include "MainWindow.h"
 #include <QPainter>
-#include "Globals.h"
+#include "Paths.h"
 
-MainMenu::MainMenu(): QWidget(mainwindow()) {
+MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   backg = 0;
-  resize(mainwindow()->size());
-  qDebug() << "mm" << mainwindow()->size() << size();
-  QSize pbarea(mainwindow()->actualfactor() * 3, mainwindow()->actualfactor() * 2);
-  playbuttons << new SoloButton("Solo Play", Options::PPos::Left, this);
-  playbuttons << new TeamButton("Team Play", this);
-  playbuttons << new ApartButton("Separate Play", this);
-  playbuttons << new SoloButton("Solo Play", Options::PPos::Right, this);
-  int space = width() - 4*pbarea.width();
+  resize(mw->size());
+  playbuttons << new SoloButton("Solo Play", Options::PPos::Left, mw, this);
+  playbuttons << new TeamButton("Team Play", mw, this);
+  playbuttons << new ApartButton("Separate Play", mw, this);
+  playbuttons << new SoloButton("Solo Play", Options::PPos::Right, mw, this);
+  int pbw = playbuttons[0]->width();
+  int pbh = playbuttons[0]->height();
+  int space = width() - 4*pbw;
   for (int k=0; k<4; k++)
-    playbuttons[k]->setGeometry(QRect(QPoint(space*(k+1)/5 + pbarea.width()*k,
-                                             height()-1.85*pbarea.height()),
-                                      pbarea));
-
+    playbuttons[k]->setGeometry(QRect(QPoint(space*(k+1)/5 + pbw*k,
+                                             height()-1.85*pbh),
+                                      QSize(pbw, pbh)));
+  for (int k=0; k<4; k++)
+    connect(playbuttons[k], &PlayButton::selected,
+            this, [this](QWidget *pb) {
+              for (int k=0; k<4; k++)
+                if (playbuttons[k]!=pb)
+                  playbuttons[k]->deselect();
+            });
+  
       
   textbut = new TextButton(this);
   textbut->setGeometry(QRect(QPoint(width()*1/8, height()*1/10),
@@ -45,8 +51,8 @@ void MainMenu::paintEvent(QPaintEvent *) {
   qDebug() << "mm" << size();
   QPainter p(this);
   if (!backg)
-    backg = new MMBG(mainwindow()->size(),
-                     cachedir() + "/mmbg-" + mainwindow()->id() + ".jpg");
+    backg = new MMBG(mw->size(),
+                     Paths::cachedir() + "/mmbg-" + mw->id() + ".jpg");
   p.drawPixmap(0, 0, backg->toPixmap());
 }
 
@@ -64,20 +70,20 @@ int MainMenu::currentPlayButton() const {
 void MainMenu::keyPressEvent(QKeyEvent *e) {
   switch (e->key()) {
   case Qt::Key_1:
-    options().setCurrentBrickset(Options::PPos::Left, 0);
-    options().setCurrentBrickset(Options::PPos::Right, 0);
+    Options::instance().setCurrentBrickset(Options::PPos::Left, 0);
+    Options::instance().setCurrentBrickset(Options::PPos::Right, 0);
     break;
   case Qt::Key_2:
-    options().setCurrentBrickset(Options::PPos::Left, 1);
-    options().setCurrentBrickset(Options::PPos::Right, 1);
+    Options::instance().setCurrentBrickset(Options::PPos::Left, 1);
+    Options::instance().setCurrentBrickset(Options::PPos::Right, 1);
     break;
   case Qt::Key_3:
-    options().setCurrentBrickset(Options::PPos::Left, 2);
-    options().setCurrentBrickset(Options::PPos::Right, 2);
+    Options::instance().setCurrentBrickset(Options::PPos::Left, 2);
+    Options::instance().setCurrentBrickset(Options::PPos::Right, 2);
     break;
   case Qt::Key_4:
-    options().setCurrentBrickset(Options::PPos::Left, 3);
-    options().setCurrentBrickset(Options::PPos::Right, 3);
+    Options::instance().setCurrentBrickset(Options::PPos::Left, 3);
+    Options::instance().setCurrentBrickset(Options::PPos::Right, 3);
     break;
   case Qt::Key_Space:
   case Qt::Key_Enter:

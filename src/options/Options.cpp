@@ -7,10 +7,15 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include "MapIterator.h"
-#include "Globals.h"
+#include "Paths.h"
+
+Options &Options::instance() {
+  static Options opts;
+  return opts;
+}
 
 Options::Options() {
-  QDir localdata(datadir());
+  QDir localdata(Paths::datadir());
   QFile fd(localdata.filePath("options.json"));
   if (fd.open(QFile::ReadOnly)) {
     QJsonObject json(QJsonDocument::fromJson(fd.readAll()).object());
@@ -69,7 +74,7 @@ void Options::save() {
     jcb << QJsonValue(it.value());
   json["curbs"] = jcb;
   
-  QDir localdata(datadir());
+  QDir localdata(Paths::datadir());
   QFile fd(localdata.filePath("options.json"));
   if (fd.open(QFile::WriteOnly)) {
     fd.write(QJsonDocument(json).toJson());

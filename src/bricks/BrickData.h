@@ -95,6 +95,7 @@ private:
 
 class SBrickData: public QVector<RBrickData> {
 public:
+  static SBrickData const &instance();
   SBrickData(std::initializer_list<RBrickData> const &src):
     QVector<RBrickData>(src) { }
   const BrickData &brick(int n, int rot) const {

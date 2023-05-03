@@ -15,8 +15,7 @@ public:
            class Player const *p1, class Player const *p2,
            class MetaKeys const *mk1, class MetaKeys const *mk2,
            class SBrickData const &sbd0,
-           class BrickSprites const &bs0,
-           class BrickSprites const &bs1,
+           class BrickSprites const *bs0, class BrickSprites const *bs1,
            int bset);
   virtual ~NiceGame();
   void start();
@@ -59,8 +58,8 @@ private:
   // from Game
   class NiceSession *session;
   class SBrickData const &sbd;
-  class BrickSprites const &bs;
-  class BrickSprites const &bs2;
+  class BrickSprites const *bs;
+  class BrickSprites const *bs2;
   int bset;
   bool playing;
   bool pause;

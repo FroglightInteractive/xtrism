@@ -5,19 +5,19 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include "TReso.h"
 #include <QDir>
 
 class MainWindow: public QWidget {
 public:
-  MainWindow(TReso const &reso);
+  MainWindow(int maxf=-1); // -1 for full screen, or positive for limit
   ~MainWindow();
-public:
+  class BrickSprites const *brickSprites(bool striped=false);
   QString id() const;
-  int actualfactor() const;
+  class XWorld *xworld();
 private:
-  int actfactor;
   int wid, hei;
+  BrickSprites *bspr[2];
+  XWorld *xw;
 };
 
 #endif

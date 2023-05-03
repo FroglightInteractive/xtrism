@@ -4,7 +4,7 @@
 
 class MainMenu: public QWidget {
 public:
-  MainMenu();
+  MainMenu(class MainWindow *parent);
   ~MainMenu();
   void paintEvent(QPaintEvent *) override;
   void setLastScore(QString);
@@ -12,6 +12,7 @@ public:
 private:
   int currentPlayButton() const;
 private:
+  MainWindow *mw;
   QList<class PlayButton *> playbuttons;
   class TextButton *textbut;
   class MMBG *backg;

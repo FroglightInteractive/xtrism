@@ -16,10 +16,11 @@ public:
 public:
   XWorld(QApplication *app, QWidget *widget);
   ~XWorld();
-  bool active() const;
+  bool isActive() const;
   ID storePixmap(RGBImage &);
   void renderPixmap(ID id, int x, int y);
   void renderPixmap(ID id, int x, int y, QRect src);
+  void flush();
 private:
   class XWorldPrivate *d;
   QMap<ID, QSize> sizes;
