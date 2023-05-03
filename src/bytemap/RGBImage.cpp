@@ -5,7 +5,7 @@
 #include "minmax.h"
 
 RGBImage::RGBImage(unsigned int w, unsigned int h):
-  store(w, h, QImage::Format_ARGB32) {
+  store(w, h, QImage::Format_RGB32) {
   dat = (uint*)store.bits();
   wid = store.width();
   hei = store.height();
@@ -13,7 +13,7 @@ RGBImage::RGBImage(unsigned int w, unsigned int h):
 }
 
 RGBImage::RGBImage(unsigned int w, unsigned int h, uint ini):
-  store(w, h, QImage::Format_ARGB32) {
+  store(w, h, QImage::Format_RGB32) {
   store.fill(ini);
   dat = (uint*)store.bits();
   wid = store.width();
@@ -64,7 +64,7 @@ RGBImage &RGBImage::operator=(RGBImage &&oth) {
 
 RGBImage RGBImage::fromQImage(QImage const &img) {
   RGBImage out(0,0);
-  out.store = img.convertToFormat(QImage::Format_ARGB32);
+  out.store = img.convertToFormat(QImage::Format_RGB32);
   out.store.detach();
   out.dat = (uint*)out.store.bits();
   out.wid = out.store.width();
@@ -76,7 +76,7 @@ RGBImage RGBImage::fromQImage(QImage const &img) {
 RGBImage RGBImage::fromFile(QString filename) {
   RGBImage out(0,0);
   out.store.load(filename);
-  out.store.convertTo(QImage::Format_ARGB32);
+  out.store.convertTo(QImage::Format_RGB32);
   out.dat = (uint*)out.store.bits();
   out.wid = out.store.width();
   out.hei = out.store.height();

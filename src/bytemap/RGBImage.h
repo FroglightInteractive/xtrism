@@ -63,6 +63,7 @@ public:
   unsigned int height() const {
     return hei;
   }
+  unsigned int bytesperline() const { return wpl*4; }
   QSize size() const {
     return QSize(wid, hei);
   }
