@@ -2,7 +2,6 @@
 
 #include "Kronos.h"
 #include "GameTime.h"
-#include "../basics/Infty.h"
 #include "../basics/dbx.h"
 #include "../sound/Sounds.h"
 

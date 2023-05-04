@@ -1,7 +1,6 @@
 // NextBox.C
 
 #include "NextBox.h"
-#include "../basics/Infty.h"
 #include "BrickData.h"
 #include "BrickSprites.h"
 #include <QPainter>

@@ -1,12 +1,11 @@
 // Ranker.C
 
 #include "Ranker.h"
-#include "../basics/Infty.h"
 
 // The highest high-score is stored first in the vector `scores'.
 
 Ranker::Ranker(/* class ScorerID const &sid, class Guinness const *book */) {
-  scores.push_back(INFTY);
+  scores.push_back(100000000);
   labels.push_back("Impossible");
 
   scores.push_back(0);

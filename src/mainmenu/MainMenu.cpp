@@ -2,11 +2,11 @@
 
 #include "MainMenu.h"
 
-#include "../pics/MMBG.h"
-#include "../basics/minmax.h"
+#include "MMBG.h"
+#include "minmax.h"
 #include "PlayButton.h"
 #include <QKeyEvent>
-#include "../basics/dbx.h"
+#include "dbx.h"
 #include "MainWindow.h"
 #include <QPainter>
 #include "Paths.h"

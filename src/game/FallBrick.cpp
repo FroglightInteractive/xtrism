@@ -2,7 +2,6 @@
 
 #include "FallBrick.h"
 #include "BrickEnv.h"
-#include "../basics/Infty.h"
 #include "../basics/dbx.h"
 #include <QDebug>
 #include "../sound/Sounds.h"

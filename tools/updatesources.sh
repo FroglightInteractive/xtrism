@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SUBDIRS="basics  bytemap  env  game  globals  mainmenu  options  poll    sessions bricks      gfx   main  pics     popups sound"
+SUBDIRS="basics game mainmenu options bricks gfx main sound"
 
 cd `dirname $0`
 cd ..
