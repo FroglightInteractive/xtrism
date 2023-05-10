@@ -9,6 +9,7 @@
 #include "XWorld.h"
 #include "BrickData.h"
 #include "BrickSprites.h"
+#include <QDebug>
 
 MainWindow::MainWindow(int maxf) {
   Q_ASSERT(qApp);

@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QTime>
 #include "XWorld.h"
+#include <QDebug>
 
 ScreenPit::ScreenPit(VisPit &vp, Rainbow const &sbg, QWidget *parent,
                      BrickSprites const &bs0, BrickSprites const &bs1,

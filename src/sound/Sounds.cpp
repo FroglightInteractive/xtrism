@@ -14,16 +14,16 @@ Sounds *Sounds::instance() {
 const float stdampl = .3;
 
 Sounds::Sounds() {
-  QString dir = "/home/wagenaar/progs/xtrism/xtrism/data/sound/";
+  QString dir = ":/";
   speedup_ = turn_ = drop_ = applause_ = shoosh_ = explode_ = warn_ = 0;
  
-  speedup_ = new Sample(dir + "speedup.wav");
-  turn_ = new Sample(dir + "turn.wav");
-  drop_ = new Sample(dir + "drop.wav");
-  applause_ = new Sample(dir + "applause.wav");
-  shoosh_ = new Sample(dir + "shoosh.wav");
-  explode_ = new Sample(dir + "explode.wav");
-  warn_ = new Sample(dir + "warning.wav");
+  speedup_ = new Sample(dir + "speedup.raw");
+  turn_ = new Sample(dir + "turn.raw");
+  drop_ = new Sample(dir + "drop.raw");
+  applause_ = new Sample(dir + "applause.raw");
+  shoosh_ = new Sample(dir + "shoosh.raw");
+  explode_ = new Sample(dir + "explode.raw");
+  warn_ = new Sample(dir + "warning.raw");
 }
 
 Sounds::~Sounds() {

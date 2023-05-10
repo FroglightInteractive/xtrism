@@ -21,7 +21,7 @@ Options::Options() {
     QJsonObject json(QJsonDocument::fromJson(fd.readAll()).object());
     for (auto it: maprange(Sides::names()))
       mk[it.key()]
-        = MetaKeys::fromJson(json["metakeys"][it.value()].toObject());
+        = MetaKeys::fromJson(json["metakeys"].toObject()[it.value()].toObject());
     for (auto j: json["players"].toArray()) {
       Player p(Player::fromJson(j.toObject()));
       players[p.id()] = p;

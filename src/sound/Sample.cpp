@@ -1,15 +1,20 @@
 // Sample.cpp
 
 #include "Sample.h"
-#include <unistd.h>
+#include <QFile>
+#include <cstring>
+#include <QFileInfo>
+#include <QDebug>
 
 Sample::Sample(QString fn) {
-  cmd = "aplay ";
-  cmd += fn;
-  cmd += " &";
-}
+  QFileInfo fi(fn);
+  Q_ASSERT_X(fi.exists(), "Sample", "Failure to open sound file");
+  int size = fi.size();
+  resize(size / 2);
+  qDebug() << "sample" << fn << fi.exists() << size;
 
-void Sample::play() {
-  system(cmd.toLocal8Bit().data());
+  QFile fd(fn);
+  fd.open(QFile::ReadOnly);
+  fd.read((char*)(data()), size);
 }
   

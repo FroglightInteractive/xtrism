@@ -9,7 +9,7 @@
 #include "BrickSprites.h"
 #include "BrickCell.h"
 #include "RGBImage.h"
-
+#include <QDebug>
 
 //////////////////////////////// BrickSprites ////////////////////////////////
 BrickSprites::BrickSprites(const SBrickData &sbd, QString cachedir,

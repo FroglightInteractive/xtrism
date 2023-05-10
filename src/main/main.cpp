@@ -5,6 +5,10 @@
 #include <QApplication>
 #include "TextButton.h"
 #include "Paths.h"
+#include "Sounds.h"
+#include "SPlayer.h"
+#include <QDateTime>
+#include <QDebug>
 
 MainMenu *mmp = 0;
 void setlastscore(int sc, int li, double ppb, QString name, int bs) {
@@ -28,6 +32,8 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
   app.setApplicationName("trism");
   qDebug() << "start of main";
+  SPlayer::instance();
+  Sounds::instance();
 
   QDir(Paths::datadir()).mkpath(".");
   QDir(Paths::cachedir()).mkpath(".");

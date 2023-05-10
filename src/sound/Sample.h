@@ -5,13 +5,11 @@
 #define SAMPLE_H
 
 #include <QString>
+#include <QVector>
 
-class Sample {
+class Sample: public QVector<short> {
 public:
   Sample(QString fn);
-  void play();
-private:
-  QString cmd;
 };
 
 #endif

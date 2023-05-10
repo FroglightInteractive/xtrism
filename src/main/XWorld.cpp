@@ -3,12 +3,20 @@
 #include "XWorld.h"
 #include <X11/Xlib.h>
 
+#if QT_VERSION < 0x060000
+#include <QX11Info>
+#endif
+
 class XWorldPrivate {
 public:
   XWorldPrivate(QApplication *app, QWidget *widget) {
+#if QT_VERSION >= 0x060000
     QNativeInterface::QX11Application *x11
       = app->nativeInterface<QNativeInterface::QX11Application>();
     display = (Display*)x11->display();
+#else
+    display = QX11Info::display();
+#endif
     screen = XDefaultScreen(display);
     depth = DefaultDepth(display, screen);
     visual = XDefaultVisual(display, screen);

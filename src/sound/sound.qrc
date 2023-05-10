@@ -1,0 +1,11 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+   <file alias="applause.raw">../../data/sound/applause.raw</file>
+   <file alias="drop.raw">../../data/sound/drop.raw</file>
+   <file alias="shoosh.raw">../../data/sound/shoosh.raw</file>
+   <file alias="explode.raw">../../data/sound/explode.raw</file>
+   <file alias="turn.raw">../../data/sound/turn.raw</file>
+   <file alias="speedup.raw">../../data/sound/speedup.raw</file>
+   <file alias="warning.raw">../../data/sound/warning.raw</file>
+ </qresource>
+</RCC>
