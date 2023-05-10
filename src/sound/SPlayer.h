@@ -5,7 +5,7 @@
 #define SPLAYER_H
 
 #include "Sample.h"
-#include <QIODevice>
+#include "Stereo.h"
 #include <list>
 
 struct NowPlaying {
@@ -19,28 +19,20 @@ public:
   }
 };
   
-
-class SPlayer: public QIODevice {
+class SPlayer {
 public:
   static SPlayer *instance();
+  static void setInstance(SPlayer *);
   SPlayer();
   ~SPlayer();
-  void play(Sample *s, float frqrat, float amp, float posn);
+  void play(Sample *s, float amp, float posn);
   void toggleSounds();
-  qint64 bytesAvailable() const override;
-  qint64 size() const override;
-  bool atEnd() const override;
-  bool isSequential() const override;
-  qint64 readData(char *dst, qint64 maxsize) override;
-  qint64 writeData(const char *data, qint64 len) override;
-private:
+  void render(Stereo *dst, int nscans);
+protected:
   bool enabled;
   std::list<NowPlaying> active;
-#if QT_VERSION >=0x060000
-  class QAudioSink *sink;
-#else
-  class QAudioOutput *sink;
-#endif
+protected:
+  static SPlayer *_instance;
 };
 
 #endif

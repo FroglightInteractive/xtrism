@@ -37,31 +37,31 @@ Sounds::~Sounds() {
 }
 
 void Sounds::speedup(float posn) const {
-  SPlayer::instance()->play(speedup_, 1, stdampl, posn);
+  SPlayer::instance()->play(speedup_, stdampl, posn);
 }
 
 void Sounds::turn(float posn) const {
-  SPlayer::instance()->play(turn_, 1, stdampl, posn);
+  SPlayer::instance()->play(turn_, stdampl, posn);
 }
 
 void Sounds::drop(float posn) const {
-   SPlayer::instance()->play(drop_, 1, stdampl, posn);
+   SPlayer::instance()->play(drop_, stdampl, posn);
 }
 
 void Sounds::applause(float posn) const {
-   SPlayer::instance()->play(applause_, 1, stdampl, posn);
+   SPlayer::instance()->play(applause_, stdampl, posn);
 }
 
 void Sounds::shoosh(float posn) const {
-  SPlayer::instance()->play(shoosh_, 1, stdampl, posn);
+  SPlayer::instance()->play(shoosh_, stdampl, posn);
 }
 
 void Sounds::explode(float posn, float ampl) const {
-  SPlayer::instance()->play(explode_, 1, ampl * stdampl, posn);
+  SPlayer::instance()->play(explode_, ampl * stdampl, posn);
 }
 
 void Sounds::warn(float posn) const {
-  SPlayer::instance()->play(warn_, 1, stdampl, posn);
+  SPlayer::instance()->play(warn_, stdampl, posn);
 }
 
 

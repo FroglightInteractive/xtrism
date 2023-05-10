@@ -4,13 +4,14 @@
 
 #define PAPLAY_H
 
-class PAPlay: private QThread {
+#include <QThread>
+#include "Stereo.h"
+#include <QMutex>
+#include <pulse/pulseaudio.h>
+
+class PAPlay: protected QThread {
 public:
-  struct Scan {
-    short left;
-    short right;
-  };
-  virtual Scan const *provide(int nscans);
+  virtual Stereo const *provide(int nscans);
 public:
   PAPlay(QString name);
   ~PAPlay();

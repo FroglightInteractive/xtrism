@@ -1,6 +1,7 @@
 // PAPlay.cpp
 
 #include "PAPlay.h"
+#include <QDebug>
 
 void PAPlay::_context_state_callback(pa_context *c, void *userdata) {
     PAPlay *paplay = (PAPlay*)(userdata);
@@ -25,12 +26,12 @@ void PAPlay::_context_drain_complete(pa_context *s, void *userdata) {
 
 
 void PAPlay::stream_write_callback(size_t len) {
-  Scan *data = fill(len/4);
+  Stereo const *data = provide(len/4);
   if (data) {
-    pa_stream_write(stream, (char*)(data), len, NULL, 0, PA_SEEK_RELATIVE);
+    pa_stream_write(stream, (char const*)(data), len, NULL, 0, PA_SEEK_RELATIVE);
   } else {
     pa_stream_cancel_write(stream);
-    _start_drain();
+    start_drain();
   }
 }
 
@@ -84,6 +85,12 @@ void PAPlay::context_state_callback() {
       goto fail;
     }
 
+    pa_sample_spec sample_spec {
+      .format = PA_SAMPLE_S16LE,
+      .rate = sample_rate_hz,
+      .channels = 2
+    };
+
     stream = pa_stream_new(context, 0, &sample_spec, 0);
     if (!stream) {
       qDebug() << "pa_stream_new failed"
@@ -101,31 +108,26 @@ void PAPlay::context_state_callback() {
     //pa_stream_set_buffer_attr_callback(stream, _stream_buffer_attr_callback, this);
 
     pa_buffer_attr buffer_attr;
-    pa_zero(buffer_attr);
+    memset(&buffer_attr, 0, sizeof(pa_buffer_attr));
     buffer_attr.maxlength = (uint32_t)(-1);
     buffer_attr.prebuf = (uint32_t)(-1);
-    pa_stream_flags_t flags = 0;
-    pa_sample_spec sample_spec {
-      .format = PA_SAMPLE_S16LE,
-      .rate = sample_rate_hz,
-      .channels = 2
-    };
+    pa_stream_flags_t flags = (pa_stream_flags_t)0;
 
     if (pa_frame_size(&sample_spec) != 4) {
       qDebug() << "scan size is not 4 bytes";
       goto fail;
     }
     
-    if (latency_msec > 0) {
+    if (latency_ms > 0) {
       buffer_attr.fragsize
         = buffer_attr.tlength
-        = pa_usec_to_bytes(latency_msec * PA_USEC_PER_MSEC, &sample_spec);
-      flags |= PA_STREAM_ADJUST_LATENCY;
+        = pa_usec_to_bytes(latency_ms * PA_USEC_PER_MSEC, &sample_spec);
+      flags = (pa_stream_flags_t)(flags | PA_STREAM_ADJUST_LATENCY);
     } else {
       buffer_attr.fragsize = buffer_attr.tlength = (uint32_t)(-1);
     }
 
-    if (process_time_msec > 0) 
+    if (process_time_ms > 0) 
       buffer_attr.minreq
         = pa_usec_to_bytes(process_time_ms * PA_USEC_PER_MSEC, &sample_spec);
     else
@@ -193,6 +195,7 @@ void PAPlay::setProcessTime_ms(int t) {
 }
 
 void PAPlay::run() {
+  int ret = 0;
   qDebug() << "paplay run";
   mutex.lock();
   qDebug() << "paplay run got mutex";
@@ -214,14 +217,13 @@ void PAPlay::run() {
   }
   pa_context_set_state_callback(context, _context_state_callback, this);
 
-  if (pa_context_connect(context, 0, 0, NULL) < 0) {
+  if (pa_context_connect(context, 0, pa_context_flags_t(0), NULL) < 0) {
     qDebug() << "pa_context_connect failed"
              << pa_strerror(pa_context_errno(context));
     goto quit;
   }
 
   qDebug() << "paplay enter loop";
-  int ret = 0;
   mutex.unlock();
   if (pa_mainloop_run(m, &ret) < 0) {
     qDebug() << "mainloop_run failed";
@@ -253,13 +255,13 @@ void PAPlay::quit(int ret) {
 }
 
 //////////////////////////////////////////////////////////////////////
-PAPlay::Scan const *PAPlay::provide(int nscans) {
+Stereo const *PAPlay::provide(int nscans) {
   qDebug() << "provide" << nscans;
-  static QList<Scan> buffer;
+  static QList<Stereo> buffer;
   static int phase = 0;
   if (buffer.size() != nscans)
     buffer.resize(nscans);
-  Scan *data = buffer.data();
+  Stereo *data = buffer.data();
   while (nscans>0) {
     data->left = 10000*std::sin(phase * 440 * 2*3.14 / 44100);
     data->right = 10000*std::sin(phase * 440 * 2*3.14 / 44100);
