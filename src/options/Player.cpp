@@ -41,7 +41,7 @@ bool Player::dwxpos() const {
 Player Player::fromJson(QJsonObject const &json) {
   Player p;
   p.id_ = json["id"].toInt();
-  p.name_ = json["id"].toString();
+  p.name_ = json["name"].toString();
   for (auto sit: maprange(Sides::names()))
     p.keys_[sit.key()]
       = GameKeys::fromJson(json["keys"][sit.value()].toObject());

@@ -5,21 +5,24 @@
 
 class Score {
 public:
-  Score(): score(0), bricks(0) {
+  Score(): pts(0), brks(0) {
   }
   void operator+=(double s) {
-    score += s;
-    bricks++;
+    pts += s;
+    brks ++;
   }
-  int pts() const {
-    return int(score);
+  int score() const {
+    return int(pts);
+  }
+  int bricks() const {
+    return brks;
   }
   double ppb() const {
-    return bricks ? score / bricks : 0;
+    return brks ? pts / brks : 0;
   }
 private:
-  double score;
-  int bricks;
+  double pts;
+  int brks;
 };
 
 #endif

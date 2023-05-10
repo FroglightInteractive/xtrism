@@ -2,15 +2,16 @@
 
 // Sleeper info: NiceGame requests alarms in order to pudding.
 
+#include "NiceGame.h"
+
 const int CHLEV_MAXLINES = 9; // don't allow change level if > this # of lines
 const int CHLEV_MAXLEV = 292; // superhuman speed: delay < 1 ms
 
 #include <QString>
 
-extern void setlastscore(int sc, int li, double ppb, QString name, int bs);
+extern void setlastscore(int sc, int li, int brks, QString name, int bs);
 
 #include "Team.h"
-#include "NiceGame.h"
 #include "PlPlayer.h"
 #include "LogPit.h"
 #include "Score.h"
@@ -137,7 +138,7 @@ NiceGame::~NiceGame() {
 }
 
 void NiceGame::terminate(bool natural) {
-  setlastscore(score->pts(), lines, score->ppb(), player[0]->name(), bset);
+  setlastscore(score->score(), lines, score->bricks(), player[0]->name(), bset);
   playing = false;
   if (timerid>=0)
     killTimer(timerid);
@@ -193,7 +194,7 @@ void NiceGame::start() {
 void NiceGame::addscore(double sc, PlPlayer *) {
   (*score) += sc;
   dbx(1, "NiceGame::addscore %g", sc);
-  statboard->setdata(SCORE, score->pts());
+  statboard->setdata(SCORE, score->score());
   statboard->setdata(PTSBLK, score->ppb());
 }
 

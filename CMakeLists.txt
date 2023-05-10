@@ -1,7 +1,7 @@
 # CMakeLists.txt - Part of XTrism, (C) Daniel Wagenaar 2023
 
 ######################################################################
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
 ######################################################################
 # Set the project name and version
@@ -25,6 +25,10 @@ set(CMAKE_AUTOUIC ON)
 #find_package(Qt5
 #  COMPONENTS Widgets Multimedia X11Extras
 #  REQUIRED)
+#set(Qt6Core_DIR "/home/wagenaar/Qt/6.5.0/gcc_64/lib/cmake/Qt6Core")
+#set(Qt6_DIR "/home/wagenaar/Qt/6.5.0/gcc_64/lib/cmake/Qt6")
+#set(QT_QMAKE_EXECUTABLE "/home/wagenaar/Qt/6.5.0/gcc_64/bin/qmake")
+  
 find_package(Qt6
   COMPONENTS Widgets Multimedia 
   REQUIRED)

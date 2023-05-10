@@ -11,20 +11,32 @@
 #include <QDebug>
 
 MainMenu *mmp = 0;
-void setlastscore(int sc, int li, double ppb, QString name, int bs) {
-  QString buf = QString("%1: %2 in %3 lines (%4 ppb); bset %5")
-    .arg(name).arg(sc).arg(li).arg(ppb, 0, 'f', 1).arg(bs + 1);
-  QDateTime dt(QDateTime::currentDateTime());
-  buf += dt.toString(" - MMMM d yyyy hh:mm");
+void setlastscore(int sc, int li, int brk, QString name, int bs) {
   if (sc > 0) {
+    QStringList fields{
+      QDateTime::currentDateTime().toString("yyyyMMdd.hhmmss"),
+      QString::number(bs+1),
+      QString::number(sc),
+      QString::number(li),
+      QString::number(brk),
+      name};
     QString s = Paths::datadir();
-    s += "/hisc";
+    s += "/scores";
     QFile f(s);
     f.open(QFile::Append);
-    f.write(buf.toUtf8());
+    f.write(fields.join("\t").toUtf8());
     f.write("\n");
   }
-  mmp->setLastScore(buf);
+
+  if (mmp) {
+    QString buf = QString("%1: %2 in %3 lines (%4 ppb); bset %5")
+      .arg(name)
+      .arg(sc)
+      .arg(li)
+      .arg(brk?sc*1.0/brk : 0.0, 0, 'f', 1)
+      .arg(bs + 1);  
+    mmp->setLastScore(buf);
+  }
 }
 
 
