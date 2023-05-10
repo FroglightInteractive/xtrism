@@ -2,7 +2,7 @@
 
 #include "SPlayer.h"
 #if QT_VERSION >= 0x060000
-#include <QAudioDevices>
+#include <QAudioDevice>
 #include <QMediaDevices>
 #include <QAudioSink>
 #else

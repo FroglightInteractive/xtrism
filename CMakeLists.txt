@@ -22,8 +22,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5
-  COMPONENTS Widgets Multimedia X11Extras
+#find_package(Qt5
+#  COMPONENTS Widgets Multimedia X11Extras
+#  REQUIRED)
+find_package(Qt6
+  COMPONENTS Widgets Multimedia 
   REQUIRED)
 
 ######################################################################
@@ -33,9 +36,11 @@ add_executable(xtrism src/main/main.cpp)
 include(src/CMakeLists.txt)
 
 # Libraries to link to - Qt must be mentioned
-target_link_libraries(xtrism Qt5::Widgets)
-target_link_libraries(xtrism Qt5::Multimedia)
-target_link_libraries(xtrism Qt5::X11Extras)
+#target_link_libraries(xtrism Qt5::Widgets)
+#target_link_libraries(xtrism Qt5::Multimedia)
+#target_link_libraries(xtrism Qt5::X11Extras)
+target_link_libraries(xtrism Qt6::Widgets)
+target_link_libraries(xtrism Qt6::Multimedia)
 target_link_libraries(xtrism X11)
 
 # Include paths - Qt must be mentioned
