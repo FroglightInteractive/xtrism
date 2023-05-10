@@ -12,6 +12,11 @@
 #include <QAudioFormat>
 #include <QDebug>
 #include <cstring>
+#include <QFileInfo>
+#include <QDebug>
+#include <QProcess>
+
+#define EXTERNALSOUND 1
 
 SPlayer *SPlayer::instance() {
   static SPlayer spl;
@@ -49,7 +54,10 @@ void SPlayer::toggleSounds() {
     sink = new QAudioOutput(device, format);
 #endif
     open(QIODevice::ReadOnly);
+#if EXTERNALSOUND
+#else
     sink->start(this);
+#endif
   } else {
     delete sink;
     sink = 0;
@@ -63,7 +71,17 @@ SPlayer::~SPlayer() {
 
 
 void SPlayer::play(Sample *s, float frqrat, float amp, float posn) {
+  if (!enabled)
+    return;
+#if EXTERNALSOUND
+  QString name(QFileInfo(s->name()).baseName());
+  QString root = "/home/wagenaar/progs/xtrism/xtrism/data/sound";
+  qDebug() << "play" << name;
+  QProcess::startDetached("aplay",
+                    QStringList{root + "/" + name + ".wav"});
+#else
   active.push_front(NowPlaying(s, amp, posn));
+#endif
 }
 
 qint64 SPlayer::bytesAvailable() const {

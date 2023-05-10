@@ -10,6 +10,9 @@
 class Sample: public QVector<short> {
 public:
   Sample(QString fn);
+  QString name() const { return fn; }
+private:
+  QString fn;
 };
 
 #endif

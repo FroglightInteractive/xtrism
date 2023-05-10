@@ -6,7 +6,7 @@
 #include <QFileInfo>
 #include <QDebug>
 
-Sample::Sample(QString fn) {
+Sample::Sample(QString fn): fn(fn) {
   QFileInfo fi(fn);
   Q_ASSERT_X(fi.exists(), "Sample", "Failure to open sound file");
   int size = fi.size();
