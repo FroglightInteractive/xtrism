@@ -3,20 +3,16 @@
 #ifndef _Ranker_H
 #define _Ranker_H
 
-#include <string>
-#include <vector>
-using namespace std;
+#include <QString>
+#include "Records.h"
 
 class Ranker {
 public:
-  Ranker(/* class ScorerID const &sid, class Guinness const *book */);
-  const string &operator()(int score);
-  bool newrank(int score);
+  Ranker(QString name, int bs);
+  QString getRank(int score);
 private:
-  string const *current;
-  int nextrank;
-  vector<int> scores;
-  vector<string> labels;
+  int currentidx;
+  QList<int> scores;
 };
 
 #endif

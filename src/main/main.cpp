@@ -9,6 +9,7 @@
 #include "SPlayerPA.h"
 #include <QDateTime>
 #include <QDebug>
+#include "Records.h"
 
 MainMenu *mmp = 0;
 void setlastscore(int sc, int li, int brk, QString name, int bs) {
@@ -50,6 +51,11 @@ int main(int argc, char **argv) {
 
   QDir(Paths::datadir()).mkpath(".");
   QDir(Paths::cachedir()).mkpath(".");
+
+  //  AllRecords &recs(AllRecords::instance());
+  //recs.importScores(Paths::datadir() + "/scores");
+  //recs.report();
+  //  recs.save();
   
   MainWindow mw(-1); // or put in max factor
   MainMenu mm(&mw);

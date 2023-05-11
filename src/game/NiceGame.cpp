@@ -29,6 +29,7 @@ extern void setlastscore(int sc, int li, int brks, QString name, int bs);
 #include "BrickData.h"
 #include "BrickSprites.h"
 #include "../basics/dbx.h"
+#include "Records.h"
 
 #include "../sound/Sounds.h"
 
@@ -50,7 +51,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   session(s),
   sbd(sbd0), bs(bs0), bs2(bs1), bset(bset0), 
   pudding(0), puddreq(0), landreq(0),
-  nplrs(0),
+  nplrs(0), rank_(-1),
   pos(pos0), team(p2!=0) {
   if (bs2==0)
     bs2 = bs;
@@ -59,6 +60,9 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   mkeys[0] = mk1;
   mkeys[1] = mk2;
   playing = pause = false;
+  name_ = p1->name();
+  if (team) 
+    name_ += " & " + p2->name();
   dbx(1, "NiceGame %p", this);
   int lw = QFontMetrics(s->font()).horizontalAdvance("Pts/Blk:");
   int dw = QFontMetrics(s->font()).horizontalAdvance("Heroic!");
@@ -76,10 +80,10 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   statboard->setlabel(SCORE, "Score:", false);
   statboard->setlabel(LINES, "Lines:", false);
   statboard->setlabel(LEVEL, "Level:", false);
-  //  statboard->setlabel(RANK, "Rank:", false);
+  statboard->setlabel(RANK, "Rank:", false);
   statboard->setlabel(PTSBLK, "Pts/Blk:", false);
 
-  ranker = new Ranker(); // incomplete...
+  ranker = new Ranker(name_, bset);
   score = new Score();
 
   
@@ -138,7 +142,11 @@ NiceGame::~NiceGame() {
 }
 
 void NiceGame::terminate(bool natural) {
-  setlastscore(score->score(), lines, score->bricks(), player[0]->name(), bset);
+  rank_ = AllRecords::instance().add(name_, bset,
+                                     score->score(), lines, score->bricks());
+  if (rank_>=0)
+    AllRecords::instance().save();
+  setlastscore(score->score(), lines, score->bricks(), name_, bset);
   playing = false;
   if (timerid>=0)
     killTimer(timerid);
@@ -167,7 +175,7 @@ void NiceGame::start() {
   statboard->setdata(SCORE, 0);
   statboard->setdata(LINES, lines = 0);
   statboard->setdata(LEVEL, player[0]->startLevel(bset)); // should look at team lvl
-  //  statboard->setdata(RANK, "-");
+  statboard->setdata(RANK, "-");
   statboard->setdata(PTSBLK, "-");
 
   nplrs = team ? 2 : 1;
@@ -195,6 +203,7 @@ void NiceGame::addscore(double sc, PlPlayer *) {
   (*score) += sc;
   dbx(1, "NiceGame::addscore %g", sc);
   statboard->setdata(SCORE, score->score());
+  statboard->setdata(RANK, ranker->getRank(score->score()));
   statboard->setdata(PTSBLK, score->ppb());
 }
 

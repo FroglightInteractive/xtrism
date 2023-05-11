@@ -1,33 +1,31 @@
 // Ranker.C
 
 #include "Ranker.h"
+#include "Records.h"
+#include "Sounds.h"
 
-// The highest high-score is stored first in the vector `scores'.
-
-Ranker::Ranker(/* class ScorerID const &sid, class Guinness const *book */) {
-  scores.push_back(100000000);
-  labels.push_back("Impossible");
-
-  scores.push_back(0);
-  labels.push_back("Record");
-  // Obviously, the last line should be replaced by a more ingenious
-  // algorithm reading scores from the book.
-
-  scores.push_back(0);
-  labels.push_back("-");
-  current = &labels[labels.size() - 1];
-  nextrank = labels.size() - 2;
+Ranker::Ranker(QString name, int bs) {
+  AllRecords rrr(AllRecords::instance());
+  Records const &rr(rrr[name][bs]);
+  for (Record const &r: rr)
+    scores << r.score;
+  currentidx = scores.size();
 }
 
-bool Ranker::newrank(int score) {
-  if (score > scores[nextrank]) {
-    current = &labels[nextrank--];
-    return true;
+QString Ranker::getRank(int score) {
+  while (currentidx>0 && score>scores[currentidx-1]) {
+    if (currentidx==Records::MAXKEEP)
+      Sounds::instance()->applause();
+    currentidx --;
+    if (currentidx==0)
+      Sounds::instance()->applause();
   }
-  return false;
-}
-
-const string &Ranker::operator()(int score) {
-  newrank(score);
-  return *current;
-}
+  if (currentidx==Records::MAXKEEP)
+    return "-";
+  switch (currentidx) {
+  case 0: return "1st";
+  case 1: return "2nd";
+  case 2: return "3rd";
+  default: return QString("%1th").arg(currentidx+1);
+  }
+}  

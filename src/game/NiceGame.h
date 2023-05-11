@@ -23,6 +23,8 @@ public:
   bool isplaying() {
     return playing;
   }
+  int rank() const; // only valid after game quit
+  QString recordName() const;
 public:
   void timerEvent(QTimerEvent *) override;
 signals:
@@ -45,7 +47,7 @@ public:
   void key(int code, bool in_not_out);
 private:
   enum StatLines {
-    SCORE=0, LINES, LEVEL, /*RANK,*/ PTSBLK, NLINES,
+    SCORE=0, LINES, LEVEL, RANK, PTSBLK, NLINES,
   };
   class Player const *player[2];
   class NextBox *nextbox[2];
@@ -79,6 +81,8 @@ private:
   class MetaKeys const *mkeys[2];
   int nplrs;
   int timerid;
+  QString name_;
+  int rank_;
 };
 
 #endif
