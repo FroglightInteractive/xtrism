@@ -2,6 +2,8 @@
 
 #include "PAPlay.h"
 #include <QDebug>
+#include <chrono>
+#include <thread>
 
 void PAPlay::_context_state_callback(pa_context *c, void *userdata) {
     PAPlay *paplay = (PAPlay*)(userdata);
@@ -91,7 +93,7 @@ void PAPlay::context_state_callback() {
       .channels = 2
     };
 
-    stream = pa_stream_new(context, 0, &sample_spec, 0);
+    stream = pa_stream_new(context, "paplay", &sample_spec, 0);
     if (!stream) {
       qDebug() << "pa_stream_new failed"
                << pa_strerror(pa_context_errno(context));
@@ -165,13 +167,24 @@ PAPlay::PAPlay(QString name): myname(name) {
   prestart = false;
 }
 
+PAPlay::~PAPlay() {
+  if (isRunning()) {
+    qDebug() << "PAPlay: destroyed while running";
+    stop();
+    while (isRunning()) {
+      qDebug() << "PAPlay waiting for thread to stop";
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+  }
+}
+
 void PAPlay::start() {
   mutex.lock();
   if (prestart || mainloop_api) {
     qDebug() << "already running";
   } else {
     prestart = true;
-    exec();
+    QThread::start();
   }
   mutex.unlock();
 }
@@ -246,6 +259,7 @@ void PAPlay::run() {
   }
   mainloop_api = 0;
   qDebug() << "paplay done";
+  mutex.unlock();
 }
 
 void PAPlay::quit(int ret) {

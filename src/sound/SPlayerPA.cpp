@@ -7,6 +7,7 @@
 
 SPlayerPA::SPlayerPA(): PAPlay("Trism") {
   setRate_Hz(44100);
+  setLatency_ms(20);
   start();
 }
 

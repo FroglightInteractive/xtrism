@@ -40,7 +40,7 @@ void SPlayer::render(Stereo *dst, int nscans) {
     return;
   std::memset(dst, 0, nscans*sizeof(Stereo));
   std::list<NowPlaying>::iterator nxt;
-  qDebug() << "splayer::render" << dst << nscans;
+  //qDebug() << "splayer::render" << dst << nscans;
   for (std::list<NowPlaying>::iterator it=active.begin();
        it!=active.end(); it=nxt) {
     nxt = it;
@@ -53,8 +53,8 @@ void SPlayer::render(Stereo *dst, int nscans) {
       n = m;
     short *src = (*it).sample->data() + offset;
     Stereo *dst2 = dst;
-    qDebug() << "active" << (*it).sample->data() << offset
-             << (*it).sample->size() << n;
+    //qDebug() << "active" << (*it).sample->data() << offset
+    //         << (*it).sample->size() << n;
     float lamp = (*it).amp * (1 - (*it).posn)/2;
     float ramp = (*it).amp * (1 + (*it).posn)/2;
     (*it).offset += n;

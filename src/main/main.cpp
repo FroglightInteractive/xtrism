@@ -6,7 +6,7 @@
 #include "TextButton.h"
 #include "Paths.h"
 #include "Sounds.h"
-#include "SPlayer.h"
+#include "SPlayerPA.h"
 #include <QDateTime>
 #include <QDebug>
 
@@ -44,7 +44,8 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
   app.setApplicationName("trism");
   qDebug() << "start of main";
-  SPlayer::instance();
+  SPlayerPA splayerpa;
+  SPlayer::setInstance(&splayerpa);
   Sounds::instance();
 
   QDir(Paths::datadir()).mkpath(".");

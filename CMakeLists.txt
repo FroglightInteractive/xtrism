@@ -28,7 +28,9 @@ set(CMAKE_AUTOUIC ON)
 #set(Qt6Core_DIR "/home/wagenaar/Qt/6.5.0/gcc_64/lib/cmake/Qt6Core")
 #set(Qt6_DIR "/home/wagenaar/Qt/6.5.0/gcc_64/lib/cmake/Qt6")
 #set(QT_QMAKE_EXECUTABLE "/home/wagenaar/Qt/6.5.0/gcc_64/bin/qmake")
-  
+
+find_package(PulseAudio)
+
 find_package(Qt6
   COMPONENTS Widgets Multimedia 
   REQUIRED)
@@ -46,6 +48,7 @@ include(src/CMakeLists.txt)
 target_link_libraries(xtrism Qt6::Widgets)
 target_link_libraries(xtrism Qt6::Multimedia)
 target_link_libraries(xtrism X11)
+target_link_libraries(xtrism pulse)
 
 # Include paths - Qt must be mentioned
 target_include_directories(xtrism PUBLIC "${PROJECT_BINARY_DIR}")
