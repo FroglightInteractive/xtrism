@@ -81,18 +81,32 @@ bool WishList::logkey(BufferCode b) {
     movemark.drop = true;
     return true;
 
+  case BC_iFloatDown:
+    movemark.floatdown = true;
+    return true;
+    
+  case BC_oFloatDown:
+    movemark.floatdown = false;
+    return true;
+
   default:
     return false;          // not handling any of the others
   }
 }
 
 void WishList::clearflags() {
-  movemark.left = movemark.right = movemark.zleft = movemark.zright
-                                                      = movemark.rotcw
-                                                          = movemark.rotccw
-                                                              = movemark.drop
-                                                                  = 0;
-  prot.invol_land = prot.unexp_x = 0;
+  movemark.left
+    = movemark.right
+    = movemark.zleft
+    = movemark.zright
+    = movemark.rotcw
+    = movemark.rotccw
+    = movemark.drop
+    = movemark.floatdown
+    = 0;
+  prot.invol_land
+    = prot.unexp_x
+    = 0;
 }
 
 void WishList::warn() {
@@ -162,7 +176,7 @@ WLResult WishList::poll() {
       if (!wlr.landed)
         warn();     // other must've been in the way...
     }
-  } else if (kronos.mustigodown()) {
+  } else if (kronos.mustigodown(movemark.floatdown)) {
     wlr |= fb.godown();
     if (!wlr.gonedown)
       kronos.notgonedown();

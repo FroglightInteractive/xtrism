@@ -26,6 +26,7 @@ private:
     bool left, right;
     unsigned char zleft, zright;
     bool rotcw, rotccw, drop;
+    bool floatdown;
   } movemark;
   FallBrick &fb;
   Kronos &kronos;

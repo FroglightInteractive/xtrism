@@ -27,7 +27,7 @@ public:
   }
   void reset(int ival0=0);
   void adjust(int dt);
-  bool ivalgone();
+  bool ivalgone(bool faster=false);
   void againplease();
 private:
   int last_;

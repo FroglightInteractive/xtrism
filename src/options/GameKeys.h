@@ -16,7 +16,8 @@ public:
     CW,
     CCW,
     Drop,
-    Zap
+    Zap,
+    FloatDown,
   };
   static QMap<Key, QString> const &names();
 public:

@@ -37,10 +37,18 @@ void GTimer::adjust(int dt) {
   next_ += dt;
 }
 
-bool GTimer::ivalgone() {
-  if (GameTime::now() >= next_) {
-    next_ += ival_;
-    return true;
+bool GTimer::ivalgone(bool faster) {
+  if (faster) {
+    int effnext = next_ - ival_*2/3;
+    if (GameTime::now() >= effnext) {
+      next_ = effnext + ival_;
+      return true;
+    }
+  } else {
+    if (GameTime::now() >= next_) {
+      next_ += ival_;
+      return true;
+    }
   }
   return false;
 }

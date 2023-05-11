@@ -23,7 +23,8 @@ GameKeys::GameKeys(Sides::Side s) {
       { Key::CW, "L. Alt" },
       { Key::CCW, "A" },
       { Key::Drop, "CapsLock" },
-      { Key::Zap, "R. Shift" } } },
+      { Key::Zap, "R. Shift" },
+      { Key::FloatDown, "L. Shift" } } },
     { Sides::Side::Left, {
       { Key::Left, "S" },
       { Key::Right, "D" },
@@ -45,8 +46,9 @@ GameKeys::GameKeys(Sides::Side s) {
 
 GameKeys GameKeys::fromJson(QJsonObject const &json) {
   GameKeys mk;
-  for (auto kit: maprange(GameKeys::names())) 
-    mk.keys[kit.key()] = json[kit.value()].toInt();
+  for (auto kit: maprange(GameKeys::names()))
+    if (json.contains(kit.value()))
+      mk.keys[kit.key()] = json[kit.value()].toInt();
   return mk;
 }
 

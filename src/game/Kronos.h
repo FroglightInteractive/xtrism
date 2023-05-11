@@ -13,8 +13,8 @@ public:
     return virtuallines;
   }
   void updlevel(int lines);   // after pudding
-  bool mustigodown() {
-    return godown.ivalgone();
+  bool mustigodown(bool floatdown) {
+    return godown.ivalgone(floatdown);
   }
   void notgonedown() {
     godown.againplease();
@@ -28,11 +28,11 @@ public:
   }
   int dt_godown() const {
     return godown.ival();
-  }                                                    // } Referee will
+  }                              
   int dt_used() const {
     return brick.elapsed();
-  }                                                    // } want to know
-  bool safeival() const;   // for WishList to judge drop request
+  }                              
+  bool safeival() const; 
   void markpause(bool pause, bool godown_only=0);
   int nextdown() {
     return godown.next();

@@ -30,6 +30,7 @@ void KeyCodes::rebuild() {
   (*this)[gk[GameKeys::Key::CCW]] = KN_RotCCW;
   (*this)[gk[GameKeys::Key::Drop]] = KN_Drop;
   (*this)[gk[GameKeys::Key::Zap]] = KN_Zap;
+  (*this)[gk[GameKeys::Key::FloatDown]] = KN_FloatDown;
 
   (*this)[mk[MetaKeys::Key::Pause]] = KN_Pause;
   (*this)[mk[MetaKeys::Key::LevDown]] = KN_LevDn;
@@ -103,6 +104,10 @@ bool KbdBuffer::enter(int kc, bool in_not_out) {
       }
       break;
 
+    case KN_FloatDown:
+      enter(BC_iFloatDown);
+      break;
+
     case KN_Pause:
       enter(BC_iPause);
       break;
@@ -152,6 +157,10 @@ bool KbdBuffer::enter(int kc, bool in_not_out) {
       }
       break;
 
+    case KN_FloatDown:
+      enter(BC_oFloatDown);
+      break;
+      
     case KN_Drop:
     case KN_RotCW:
     case KN_RotCCW:

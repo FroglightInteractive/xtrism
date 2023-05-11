@@ -8,17 +8,15 @@
 
 enum KeyNumber {
   KN_None=-1,
-  KN_First=0,
   KN_Left=0,
   KN_Right,
   KN_RotCW,
   KN_RotCCW,
   KN_Drop,
   KN_Zap,
-  KN_MaxUser,
+  KN_FloatDown,
 
-  KN_FirstGlobal=KN_MaxUser,
-  KN_Pause=KN_FirstGlobal,
+  KN_Pause,
   KN_LevUp,
   KN_LevDn,
   KN_Quit,
@@ -27,8 +25,7 @@ enum KeyNumber {
 
 enum BufferCode {
   BC_None=0,
-  BC_Out=16,
-  BC_iLeft=1,
+  BC_iLeft,
   BC_iRight,
   BC_iRotCW,
   BC_iRotCCW,
@@ -36,11 +33,12 @@ enum BufferCode {
   BC_iZLeft,
   BC_iZRight,
   BC_iZap,
+  BC_iFloatDown,
   BC_iPause,
   BC_iLevUp,
   BC_iLevDn,
   BC_iQuit,
-  BC_oLeft=BC_Out + 1,
+  BC_oLeft,
   BC_oRight,
   BC_oRotCW,
   BC_oRotCCW,
@@ -48,6 +46,7 @@ enum BufferCode {
   BC_oZLeft,
   BC_oZRight,
   BC_oZap,
+  BC_oFloatDown,
   BC_oPause,
   BC_oLevUp,
   BC_oLevDn,
@@ -55,16 +54,17 @@ enum BufferCode {
 };
 
 enum BufferState {
-  BS_Left=1 << KN_Left,
-  BS_Right=1 << KN_Right,
+  BS_Left=1<<KN_Left,
+  BS_Right=1<<KN_Right,
   BS_RotCW=1 < KN_RotCW,
-  BS_RotCCW=1 << KN_RotCCW,
-  BS_Drop=1 << KN_Drop,
-  BS_Zap=1 << KN_Zap,
-  BS_Pause=1 << KN_Pause,
-  BS_LevUp=1 << KN_LevUp,
-  BS_LevDn=1 << KN_LevDn,
-  BS_Quit=1 << KN_Quit,
+  BS_RotCCW=1<<KN_RotCCW,
+  BS_Drop=1<<KN_Drop,
+  BS_Zap=1<<KN_Zap,
+  BS_FloatDown = 1<<KN_FloatDown,
+  BS_Pause=1<<KN_Pause,
+  BS_LevUp=1<<KN_LevUp,
+  BS_LevDn=1<<KN_LevDn,
+  BS_Quit=1<<KN_Quit,
 };
 
 class KeyCodes: public QMap<int, KeyNumber> {
