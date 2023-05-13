@@ -84,7 +84,7 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   statboard->setlabel(PTSBLK, "Pts/Blk:", false);
 
   ranker = new Ranker(name_, bset);
-  score = new Score();
+  score_ = new Score();
 
   
   QSize size = QSize(s->width() / (pos==Sides::Side::Solo?1:2), s->height());
@@ -135,7 +135,7 @@ NiceGame::~NiceGame() {
   delete vispit;
   delete logpit;
   delete statboard;
-  delete score;
+  delete score_;
   delete ranker;
   for (int i=0; i<nplrs; i++)
     delete plplayers[i];
@@ -143,10 +143,13 @@ NiceGame::~NiceGame() {
 
 void NiceGame::terminate(bool natural) {
   rank_ = AllRecords::instance().add(name_, bset,
-                                     score->score(), lines, score->bricks());
+                                     score_->score(),
+                                     score_->lines(),
+                                     score_->bricks());
   if (rank_>=0)
     AllRecords::instance().save();
-  setlastscore(score->score(), lines, score->bricks(), name_, bset);
+  setlastscore(score_->score(), score_->lines(), score_->bricks(),
+               name_, bset);
   playing = false;
   if (timerid>=0)
     killTimer(timerid);
@@ -168,12 +171,13 @@ void NiceGame::setpause(bool onoff) {
 
 
 void NiceGame::start() {
+  score_->reset();
   nextbox[0]->clear();
   if (nextbox[1])
     nextbox[1]->clear();
   vispit->clear();
   statboard->setdata(SCORE, 0);
-  statboard->setdata(LINES, lines = 0);
+  statboard->setdata(LINES, 0);
   statboard->setdata(LEVEL, player[0]->startLevel(bset)); // should look at team lvl
   statboard->setdata(RANK, "-");
   statboard->setdata(PTSBLK, "-");
@@ -200,11 +204,11 @@ void NiceGame::start() {
 
 
 void NiceGame::addscore(double sc, PlPlayer *) {
-  (*score) += sc;
+  score_->addScore(sc);
   dbx(1, "NiceGame::addscore %g", sc);
-  statboard->setdata(SCORE, score->score());
-  statboard->setdata(RANK, ranker->getRank(score->score()));
-  statboard->setdata(PTSBLK, score->ppb());
+  statboard->setdata(SCORE, score_->score());
+  statboard->setdata(RANK, ranker->getRank(score_->score()));
+  statboard->setdata(PTSBLK, score_->ppb());
 }
 
 void NiceGame::req_to_land(PlPlayer *plp) {
@@ -236,12 +240,12 @@ void NiceGame::timerEvent(QTimerEvent *) {
       logpit->collapseline(y, pudding);
       vispit->pudding(y, pudding);
       Sounds::instance()->explode();
-      lines++;
+      score_->addLine();
       for (int j = 0; j < nplrs; j++) {
-        plplayers[j]->updlevel(lines);
+        plplayers[j]->updlevel(score_->lines());
         plplayers[j]->notifypudding(y, 1);
       }
-      statboard->setdata(LINES, lines);
+      statboard->setdata(LINES, score_->lines());
       statboard->setdata(LEVEL, plplayers[0]->getlevel());
       pudlns++;
     } else {
@@ -264,10 +268,10 @@ void NiceGame::timerEvent(QTimerEvent *) {
 void NiceGame::req_to_changelev(int change, PlPlayer *plp) {
   // check whether allowed
   int nlev = plp->getlevel() + change;
-  if (nlev < lines)
+  if (nlev < score_->lines())
     return; // don't allow if < lines
 
-  if (lines > CHLEV_MAXLINES)
+  if (score_->lines() > CHLEV_MAXLINES)
     return;
 
   if (nlev > CHLEV_MAXLEV)
@@ -301,3 +305,18 @@ void NiceGame::key(int code, bool in_not_out) {
     plplayers[i]->key(code, in_not_out);
 }
   
+int NiceGame::brickset() const {
+  return bset;
+}
+
+int NiceGame::rank() const {
+  return rank_;
+}
+
+Score const &NiceGame::score() const {
+  return *score_;
+}
+
+QString NiceGame::recordName() const {
+  return name_;
+}

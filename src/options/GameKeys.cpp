@@ -11,7 +11,8 @@ QMap<GameKeys::Key, QString> const &GameKeys::names() {
     { Key::CW, "Rotate CW" },
     { Key::CCW, "Rotate CCW" },
     { Key::Drop, "Drop" },
-    { Key::Zap, "Zap" } };
+    { Key::Zap, "Zap" },
+    { Key::FloatDown, "FloatDown" } };
   return map;
 }
 

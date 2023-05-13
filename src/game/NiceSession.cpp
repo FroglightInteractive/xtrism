@@ -14,6 +14,8 @@
 #include "Paths.h"
 #include "BrickData.h"
 #include "SPlayer.h"
+#include "Score.h"
+#include "HighScoreScreen.h"
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
   QWidget(mw) {
@@ -113,8 +115,20 @@ void NiceSession::exec() {
   if (g2)
     g2->start();
   el->exec();
-  delete el;
   hide();
+
+  if (g1->score().score()) {
+    HighScoreScreen hhs(g1, bg, parentWidget());
+    hhs.resize(size());
+    hhs.show();
+    hhs.setFocus();
+    connect(&hhs, &HighScoreScreen::keyPressed,
+            el, [this, el]() { el->quit(); });
+    el->exec();
+  }
+  
+  delete el;
+
   if (mm) {
     mm->show();
     mm->setFocus();

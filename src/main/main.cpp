@@ -45,9 +45,6 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
   app.setApplicationName("trism");
   qDebug() << "start of main";
-  SPlayerPA splayerpa;
-  SPlayer::setInstance(&splayerpa);
-  Sounds::instance();
 
   QDir(Paths::datadir()).mkpath(".");
   QDir(Paths::cachedir()).mkpath(".");
@@ -62,6 +59,9 @@ int main(int argc, char **argv) {
   mmp = &mm; // for setlastscore; to be improved
   mm.show();
   mm.setFocus();
+  SPlayerPA splayerpa;
+  SPlayer::setInstance(&splayerpa);
+  Sounds::instance();
   int r = app.exec();
   return r;
 }

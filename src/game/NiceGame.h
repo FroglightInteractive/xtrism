@@ -23,8 +23,10 @@ public:
   bool isplaying() {
     return playing;
   }
-  int rank() const; // only valid after game quit
-  QString recordName() const;
+  int rank() const; // valid after game quit, 0=1st, 1=2nd, etc, -1=unranked
+  int brickset() const;
+  class Score const &score() const;
+  QString recordName() const; // player or team name ("P1 & P2")
 public:
   void timerEvent(QTimerEvent *) override;
 signals:
@@ -51,7 +53,6 @@ private:
   };
   class Player const *player[2];
   class NextBox *nextbox[2];
-  int lines;
   Sides::Side pos;
   bool team;
   bool lastpoll;
@@ -66,7 +67,7 @@ private:
   bool playing;
   bool pause;
 
-  class Score *score;   // my resp
+  class Score *score_;   // my resp
   class Ranker *ranker;
   class StatBoard *statboard;   // my resp
   class LogPit *logpit;   // my resp

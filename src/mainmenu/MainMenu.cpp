@@ -35,10 +35,10 @@ MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
             });
   
       
-  textbut = new TextButton(this);
-  textbut->setGeometry(QRect(QPoint(width()*1/8, height()*1/10),
-                             QSize(width()*3/4, height()/24)));
-  textbut->setText("X T R I S M");
+  //textbut = new TextButton(this);
+  //textbut->setGeometry(QRect(QPoint(width()*1/8, height()*1/10),
+  //                           QSize(width()*3/4, height()/24)));
+  //textbut->setText("X T R I S M");
 
   playbuttons[0]->select();
 }
@@ -52,13 +52,12 @@ void MainMenu::paintEvent(QPaintEvent *) {
   qDebug() << "mm" << size();
   QPainter p(this);
   if (!backg)
-    backg = new MMBG(mw->size(),
-                     Paths::cachedir() + "/mmbg-" + mw->id() + ".jpg");
+    backg = new MMBG(mw->size());
   p.drawPixmap(0, 0, backg->toPixmap());
 }
 
 void MainMenu::setLastScore(QString s) {
-  textbut->setText(s);
+  //  textbut->setText(s);
 }
 
 int MainMenu::currentPlayButton() const {
@@ -104,3 +103,4 @@ void MainMenu::keyPressEvent(QKeyEvent *e) {
     break;
   }
 }
+

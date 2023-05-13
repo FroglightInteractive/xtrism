@@ -7,7 +7,7 @@
 
 class MMBG {
 public:
-  MMBG(QSize siz, QString filename=QString());
+  MMBG(QSize siz);
   QPixmap const &toPixmap() const;
 private:
   QPixmap pm;
