@@ -8,6 +8,11 @@
 #include <QVariantList>
 #include <QDir>
 #include "Paths.h"
+#include <QSet>
+#include "Score.h"
+
+Record::Record(Score const &s): Record(s.score(), s.lines(), s.bricks()) {
+}
 
 Record::Record(int score, int lines, int bricks, QString date1):
   date(date1), score(score), lines(lines), bricks(bricks) {
@@ -82,6 +87,18 @@ int Records::add(Record const &r) {
   }
 }
 
+void Records::dropBefore(QString datepfx) {
+  auto pred = [datepfx](Record const &r) { return r.date < datepfx; };
+  erase_if(*this, pred);
+//  iterator it1;
+//  for (iterator it=begin(); it!=end(); it=it1) {
+//    it1 = it;
+//    it1++;
+//    if ((*it).date < datepfx)
+//      erase(it);
+//  }
+}
+
 AllRecords::AllRecords() {
 }
 
@@ -109,14 +126,19 @@ QJsonObject AllRecords::toJson() const {
   return json;
 }
 
+void AllRecords::dropBefore(QString datepfx) {
+  for (QString name: keys()) 
+    for (int bs: (*this)[name].keys())
+      (*this)[name][bs].dropBefore(datepfx);
+}
+
 void Records::report() {
   for (auto r: *this)
     qDebug() << "    " << r.score << r.lines << r.bricks << r.date;
 }
 
-int AllRecords::add(QString name, int bs,
-                     int score, int lines, int bricks, QString date) {
-  return (*this)[name][bs].add(Record(score, lines, bricks, date));
+int AllRecords::add(QString name, int bs, Record const &rec) {
+  return (*this)[name][bs].add(rec);
 }
 
 void AllRecords::report() {
@@ -129,30 +151,43 @@ void AllRecords::report() {
   }
 }
 
-AllRecords &AllRecords::instance() {
-  static AllRecords rrr;
-  static bool loaded = false;
-  if (!loaded) 
-    rrr = load();
-  loaded = true;
-  return rrr;
+AllRecords &AllRecords::instance(AllRecords::Era e) {
+  static QMap<Era, AllRecords> rrr;
+  static QSet<Era> loaded;
+  if (!loaded.contains(e))
+    rrr[e] = load(e);
+  loaded << e;
+  return rrr[e];
 }
 
-AllRecords AllRecords::load() {
+QString AllRecords::filename(AllRecords::Era e) {
+  static QMap<Era, QString> fns{
+    {Era::AllTime, "records"},
+    {Era::ThisYear, "thisyear"},
+    {Era::Today, "today"}};
+  return fns[e];
+}
+
+AllRecords AllRecords::load(AllRecords::Era e) {
   QDir localdata(Paths::datadir());
-  QFile fd(localdata.filePath("records.json"));
+  QFile fd(localdata.filePath(filename(e) + ".json"));
   if (!fd.open(QFile::ReadOnly)) {
     qDebug() << "cannot read records";
     return AllRecords();
   }
   QJsonObject json(QJsonDocument::fromJson(fd.readAll()).object());
-  return fromJson(json);
+  AllRecords rr = fromJson(json);
+  if (e==Era::ThisYear) 
+    rr.dropBefore(QDateTime::currentDateTime().toString("yyyy"));
+  else if (e==Era::Today)
+    rr.dropBefore(QDateTime::currentDateTime().toString("yyyyMMdd"));
+  return rr;
 }
 
-void AllRecords::save() const {
+void AllRecords::save(AllRecords::Era e) const {
   QJsonObject json = toJson();
   QDir localdata(Paths::datadir());
-  QFile fd(localdata.filePath("records.json"));
+  QFile fd(localdata.filePath(filename(e) + ".json"));
   if (fd.open(QFile::WriteOnly)) {
     fd.write(QJsonDocument(json).toJson());
   } else {
@@ -172,6 +207,16 @@ void AllRecords::importScores(QString scorefn) {
     qDebug() << "score" << line;
     if (line.size()) 
       add(line[5], line[1].toInt() - 1,
-          line[2].toInt(), line[3].toInt(), line[4].toInt(), line[0]);
+          Record(line[2].toInt(), line[3].toInt(), line[4].toInt(), line[0]));
   }
+}
+
+int AllRecords::addAndSave(QString name, int bs, Record const &rec) {
+  QMap<Era, int> ranks;
+  for (Era e: QList<Era>{Era::AllTime, Era::ThisYear, Era::Today}) {
+    ranks[e] = instance(e).add(name, bs, rec);
+    if (ranks[e] >= 0)
+      instance(e).save(e);
+  }
+  return ranks[Era::AllTime];
 }

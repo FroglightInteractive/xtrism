@@ -48,3 +48,7 @@ QJsonObject Team::toJson() const {
   json["levels"] = jl;
   return json;
 };
+
+void Team::setStartLevel(int bs, int lvl) {
+  levels_[bs] = lvl;
+}

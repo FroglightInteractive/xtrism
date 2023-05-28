@@ -7,6 +7,8 @@
 #include <QObject>
 #include "GameTime.h"
 #include "Sides.h"
+#include "Score.h"
+#include "Records.h"
 
 class NiceGame: public QObject {
   Q_OBJECT;
@@ -24,8 +26,9 @@ public:
     return playing;
   }
   int rank() const; // valid after game quit, 0=1st, 1=2nd, etc, -1=unranked
+  QList<int> allKeyCodes() const;
   int brickset() const;
-  class Score const &score() const;
+  Record const &finalScore() const; // only valid after game quit
   QString recordName() const; // player or team name ("P1 & P2")
 public:
   void timerEvent(QTimerEvent *) override;
@@ -67,7 +70,8 @@ private:
   bool playing;
   bool pause;
 
-  class Score *score_;   // my resp
+  Score score_;
+  Record record_; 
   class Ranker *ranker;
   class StatBoard *statboard;   // my resp
   class LogPit *logpit;   // my resp

@@ -50,6 +50,7 @@ public:
   void disconnect(PlPlayer *oth);
   void poll();
   void key(int code, bool in_not_out);
+  QList<int> allKeyCodes() const;
 private:
   class NiceGame *game; // not ours
   class PlPlayer *other;   // may be 0

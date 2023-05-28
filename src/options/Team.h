@@ -16,6 +16,7 @@ public:
   int id2() const;
   QPair<int,int> ids() const;
   int startLevel(int bs) const;
+  void setStartLevel(int bs, int lvl);
 public:
   static Team fromJson(QJsonObject const &);
   QJsonObject toJson() const;

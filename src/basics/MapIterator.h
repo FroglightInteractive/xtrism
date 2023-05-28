@@ -4,6 +4,8 @@
 
 #define MAPITERATOR_H
 
+#include <QMap>
+
 template <class Map> class MapRange {
 public:
   typedef typename Map::iterator MapIterator;  

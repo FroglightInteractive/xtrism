@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+   <file alias="benguiat-book.ttf">../../data/font/benguiat-book.ttf</file>
+   <file alias="benguiat-bold.ttf">../../data/font/benguiat-bold.ttf</file>
+ </qresource>
+</RCC>

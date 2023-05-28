@@ -25,11 +25,11 @@ MainWindow::MainWindow(int maxf) {
     hei = factor*y;
   }
 
-  //  QFont fnt("Benguiat Bk BT");
+  QFont fnt("Benguiat Bk BT"); // Bk BT
   //  QFont fnt("Albertus Medium");
-  QFont fnt("Charter");
+  //  QFont fnt("Charter");
   fnt.setPixelSize(0.27*hei/12);
-  fnt.setWeight(QFont::Bold);
+  fnt.setWeight(QFont::Medium); // Bold
   setFont(fnt);
 
   resize(wid, hei);

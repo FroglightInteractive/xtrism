@@ -25,6 +25,7 @@ QImage logo(QRect dest, QSize mwsize, int depth) {
                  QSizeF(dest.width()*1./mwsize.width(),
                         dest.height()*1./mwsize.height()));
   QFont f("Benguiat Bk BT");
+  f.setWeight(QFont::Bold);
   int border = size.width() / 1000 + 1;
   int margin = 2*border + 16;
   int fs = 0;

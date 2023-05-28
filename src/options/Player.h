@@ -15,6 +15,7 @@ public:
   int startLevel(int bs) const;
   int nextpos() const;
   bool dwxpos() const;
+  void setStartLevel(int bs, int lvl);
 public:
   static Player fromJson(QJsonObject const &);
   QJsonObject toJson() const;

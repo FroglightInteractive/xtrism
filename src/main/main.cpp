@@ -10,6 +10,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include "Records.h"
+#include <QFontDatabase>
 
 MainMenu *mmp = 0;
 void setlastscore(int sc, int li, int brk, QString name, int bs) {
@@ -36,7 +37,6 @@ void setlastscore(int sc, int li, int brk, QString name, int bs) {
       .arg(li)
       .arg(brk?sc*1.0/brk : 0.0, 0, 'f', 1)
       .arg(bs + 1);  
-    mmp->setLastScore(buf);
   }
 }
 
@@ -45,7 +45,11 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
   app.setApplicationName("trism");
   qDebug() << "start of main";
+  
+  QFontDatabase::addApplicationFont(":/benguiat-book.ttf");
+  QFontDatabase::addApplicationFont(":/benguiat-bold.ttf");
 
+  
   QDir(Paths::datadir()).mkpath(".");
   QDir(Paths::cachedir()).mkpath(".");
 

@@ -88,6 +88,7 @@ public:
   // enter() returns 0 if not entered because code is unknown
   BufferCode read();
   void putback(BufferCode b);
+  QList<int> allKeyCodes() const;
 private:
   KeyCodes kcs;
   /* LimitedInt rp;

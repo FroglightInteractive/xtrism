@@ -1,22 +1,26 @@
 // MainMenu.H
 
 #include <QWidget>
+#include "Options.h"
 
 class MainMenu: public QWidget {
 public:
   MainMenu(class MainWindow *parent);
   ~MainMenu();
   void paintEvent(QPaintEvent *) override;
-  void setLastScore(QString);
   void keyPressEvent(QKeyEvent *) override;
 private:
   int currentPlayButton() const;
+  void selectPlayer(Options::PPos which, int id);
+  void selectBrickset(Options::PPos which, int id);
+  void makePlayButtons();
+  void makePlayerSelectors();
+  void makeBricksetSelectors();
+
 private:
   MainWindow *mw;
   QList<class PlayButton *> playbuttons;
-  class TextButton *textbut;
+  QMap<Options::PPos, class PlayerSelector *> playerselectors;
+  QMap<Options::PPos, class BricksetSelector *> bricksetselectors;
   class MMBG *backg;
-  //  class BoxMarblers *bms;
-  //  class InputField *inpf;
-  //  class PlayerSelector *selectors[2];
 };

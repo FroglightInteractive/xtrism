@@ -14,6 +14,13 @@ Options &Options::instance() {
   return opts;
 }
 
+Options::PPos Options::otherPos(Options::PPos p) {
+  if (p==PPos::Left)
+    return PPos::Right;
+  else
+    return PPos::Left;
+}
+
 Options::Options() {
   QDir localdata(Paths::datadir());
   QFile fd(localdata.filePath("options.json"));

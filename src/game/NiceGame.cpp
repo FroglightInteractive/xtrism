@@ -11,6 +11,7 @@ const int CHLEV_MAXLEV = 292; // superhuman speed: delay < 1 ms
 
 extern void setlastscore(int sc, int li, int brks, QString name, int bs);
 
+#include "Options.h"
 #include "Team.h"
 #include "PlPlayer.h"
 #include "LogPit.h"
@@ -24,8 +25,6 @@ extern void setlastscore(int sc, int li, int brks, QString name, int bs);
 #include "NiceSession.h"
 #include "../bricks/Probability.h"
 #include "../options/Player.h"
-#include "GameKeys.h"
-#include "MetaKeys.h"
 #include "BrickData.h"
 #include "BrickSprites.h"
 #include "../basics/dbx.h"
@@ -84,8 +83,6 @@ NiceGame::NiceGame(NiceSession *s, Sides::Side pos0,
   statboard->setlabel(PTSBLK, "Pts/Blk:", false);
 
   ranker = new Ranker(name_, bset);
-  score_ = new Score();
-
   
   QSize size = QSize(s->width() / (pos==Sides::Side::Solo?1:2), s->height());
   QPoint topleft(pos==Sides::Side::Right ? size.width() : 0, 0);
@@ -135,20 +132,16 @@ NiceGame::~NiceGame() {
   delete vispit;
   delete logpit;
   delete statboard;
-  delete score_;
   delete ranker;
   for (int i=0; i<nplrs; i++)
     delete plplayers[i];
 }
 
 void NiceGame::terminate(bool natural) {
-  rank_ = AllRecords::instance().add(name_, bset,
-                                     score_->score(),
-                                     score_->lines(),
-                                     score_->bricks());
-  if (rank_>=0)
-    AllRecords::instance().save();
-  setlastscore(score_->score(), score_->lines(), score_->bricks(),
+  record_ = Record(score_);
+  rank_ = AllRecords::addAndSave(name_, bset, record_);
+  
+  setlastscore(score_.score(), score_.lines(), score_.bricks(),
                name_, bset);
   playing = false;
   if (timerid>=0)
@@ -171,7 +164,7 @@ void NiceGame::setpause(bool onoff) {
 
 
 void NiceGame::start() {
-  score_->reset();
+  score_.reset();
   nextbox[0]->clear();
   if (nextbox[1])
     nextbox[1]->clear();
@@ -204,11 +197,11 @@ void NiceGame::start() {
 
 
 void NiceGame::addscore(double sc, PlPlayer *) {
-  score_->addScore(sc);
+  score_.addScore(sc);
   dbx(1, "NiceGame::addscore %g", sc);
-  statboard->setdata(SCORE, score_->score());
-  statboard->setdata(RANK, ranker->getRank(score_->score()));
-  statboard->setdata(PTSBLK, score_->ppb());
+  statboard->setdata(SCORE, score_.score());
+  statboard->setdata(RANK, ranker->getRank(score_.score()));
+  statboard->setdata(PTSBLK, score_.ppb());
 }
 
 void NiceGame::req_to_land(PlPlayer *plp) {
@@ -240,12 +233,12 @@ void NiceGame::timerEvent(QTimerEvent *) {
       logpit->collapseline(y, pudding);
       vispit->pudding(y, pudding);
       Sounds::instance()->explode();
-      score_->addLine();
+      score_.addLine();
       for (int j = 0; j < nplrs; j++) {
-        plplayers[j]->updlevel(score_->lines());
+        plplayers[j]->updlevel(score_.lines());
         plplayers[j]->notifypudding(y, 1);
       }
-      statboard->setdata(LINES, score_->lines());
+      statboard->setdata(LINES, score_.lines());
       statboard->setdata(LEVEL, plplayers[0]->getlevel());
       pudlns++;
     } else {
@@ -268,10 +261,10 @@ void NiceGame::timerEvent(QTimerEvent *) {
 void NiceGame::req_to_changelev(int change, PlPlayer *plp) {
   // check whether allowed
   int nlev = plp->getlevel() + change;
-  if (nlev < score_->lines())
+  if (nlev < score_.lines())
     return; // don't allow if < lines
 
-  if (score_->lines() > CHLEV_MAXLINES)
+  if (score_.lines() > CHLEV_MAXLINES)
     return;
 
   if (nlev > CHLEV_MAXLEV)
@@ -280,6 +273,19 @@ void NiceGame::req_to_changelev(int change, PlPlayer *plp) {
   for (int i = 0; i < nplrs; i++)
     plplayers[i]->setlevel(nlev);
   statboard->setdata(LEVEL, nlev);
+  if (team) {
+    Options &options(Options::instance());
+    Team t(options.team(player[0]->id(), player[1]->id()));
+    t.setStartLevel(bset, nlev);
+    options.updateTeam(t);
+    options.save();
+  } else {
+    Player plr = *player[0];
+    plr.setStartLevel(bset, nlev);
+    Options &options(Options::instance());
+    options.updatePlayer(plr);
+    options.save();
+  }
 }
 
 bool NiceGame::req_to_pause(PlPlayer *plp) {
@@ -313,10 +319,19 @@ int NiceGame::rank() const {
   return rank_;
 }
 
-Score const &NiceGame::score() const {
-  return *score_;
+Record const &NiceGame::finalScore() const {
+  return record_;
 }
 
 QString NiceGame::recordName() const {
   return name_;
 }
+
+QList<int> NiceGame::allKeyCodes() const {
+  QList<int> res = plplayers[0]->allKeyCodes();
+  if (plplayers[1])
+    res += plplayers[0]->allKeyCodes();
+  return res;
+}
+
+

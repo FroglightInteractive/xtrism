@@ -11,21 +11,33 @@
 #include <QPainter>
 #include "Paths.h"
 #include "SPlayer.h"
+#include "PlayerSelector.h"
+#include "BricksetSelector.h"
 
 MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   backg = 0;
   resize(mw->size());
+
+  makePlayButtons();
+  makePlayerSelectors();
+  makeBricksetSelectors();
+}
+
+void MainMenu::makePlayButtons() {
   playbuttons << new SoloButton("Solo Play", Options::PPos::Left, mw, this);
   playbuttons << new TeamButton("Team Play", mw, this);
   playbuttons << new ApartButton("Separate Play", mw, this);
   playbuttons << new SoloButton("Solo Play", Options::PPos::Right, mw, this);
+
   int pbw = width()/6;
   int pbh = height()/6;
   int space = width() - 4*pbw;
   for (int k=0; k<4; k++)
-    playbuttons[k]->setGeometry(QRect(QPoint(space*(k+1)/5 + pbw*k,
-                                             height()-1.85*pbh),
-                                      QSize(pbw, pbh)));
+    playbuttons[k]->setGeometry(QRect(space*(k+1)/5 + pbw*k,
+                                      height()-1.8*pbh
+                                      +.1*pbh*(k==1 || k==2),
+                                      pbw,
+                                      pbh));
   for (int k=0; k<4; k++)
     connect(playbuttons[k], &PlayButton::selected,
             this, [this](QWidget *pb) {
@@ -34,13 +46,53 @@ MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
                   playbuttons[k]->deselect();
             });
   
-      
-  //textbut = new TextButton(this);
-  //textbut->setGeometry(QRect(QPoint(width()*1/8, height()*1/10),
-  //                           QSize(width()*3/4, height()/24)));
-  //textbut->setText("X T R I S M");
-
   playbuttons[0]->select();
+}
+
+void MainMenu::makePlayerSelectors() {
+  int pbw = width()/6;
+  int space = width() - 4*pbw;
+  int x0 = space/8;
+  int psw = .2*width();
+  int psh = height()/24;
+  int y0 = .52*height();
+  int x1 = width() - x0 - psw;
+  playerselectors[Options::PPos::Left] = new PlayerSelector(this);
+  playerselectors[Options::PPos::Right] = new PlayerSelector(this);
+  connect(playerselectors[Options::PPos::Left], &PlayerSelector::playerChanged,
+          this, [this](int id) { selectPlayer(Options::PPos::Left, id); });
+  connect(playerselectors[Options::PPos::Right], &PlayerSelector::playerChanged,
+          this, [this](int id) { selectPlayer(Options::PPos::Right, id); });
+  playerselectors[Options::PPos::Left]->setGeometry(QRect(x0, y0, psw, psh));
+  playerselectors[Options::PPos::Right]->setGeometry(QRect(x1, y0, psw, psh));
+  playerselectors[Options::PPos::Left]
+    ->selectPlayer(Options::instance().currentPlayerID(Options::PPos::Left));
+  playerselectors[Options::PPos::Right]
+    ->selectPlayer(Options::instance().currentPlayerID(Options::PPos::Right));
+}
+
+void MainMenu::makeBricksetSelectors() {
+  int pbw = width()/6;
+  int space = width() - 4*pbw;
+  int x0 = space/6;
+  int bsw = .16*width();
+  int bsh = height()/24;
+  int y0 = .58*height();
+  int x1 = width() - x0 - bsw;
+  bricksetselectors[Options::PPos::Left] = new BricksetSelector(this);
+  bricksetselectors[Options::PPos::Right] = new BricksetSelector(this);
+  connect(bricksetselectors[Options::PPos::Left],
+          &BricksetSelector::bricksetChanged,
+          this, [this](int id) { selectBrickset(Options::PPos::Left, id); });
+  connect(bricksetselectors[Options::PPos::Right],
+          &BricksetSelector::bricksetChanged,
+          this, [this](int id) { selectBrickset(Options::PPos::Right, id); });
+  bricksetselectors[Options::PPos::Left]->setGeometry(QRect(x0, y0, bsw, bsh));
+  bricksetselectors[Options::PPos::Right]->setGeometry(QRect(x1, y0, bsw, bsh));
+  bricksetselectors[Options::PPos::Left]
+    ->selectBrickset(Options::instance().currentBrickset(Options::PPos::Left));
+  bricksetselectors[Options::PPos::Right]
+    ->selectBrickset(Options::instance().currentBrickset(Options::PPos::Right));
 }
 
 MainMenu::~MainMenu() {
@@ -54,10 +106,6 @@ void MainMenu::paintEvent(QPaintEvent *) {
   if (!backg)
     backg = new MMBG(mw->size());
   p.drawPixmap(0, 0, backg->toPixmap());
-}
-
-void MainMenu::setLastScore(QString s) {
-  //  textbut->setText(s);
 }
 
 int MainMenu::currentPlayButton() const {
@@ -104,3 +152,23 @@ void MainMenu::keyPressEvent(QKeyEvent *e) {
   }
 }
 
+void MainMenu::selectPlayer(Options::PPos which, int id) {
+  Options &options(Options::instance());
+  if (options.currentPlayerID(which)==id)
+    return;
+  Options::PPos other = Options::otherPos(which);
+  if (options.currentPlayerID(other)==id) {
+    options.setCurrentPlayer(other, options.currentPlayerID(which)); // swap
+    playerselectors[other]->selectPlayer(options.currentPlayerID(other));
+  }
+  options.setCurrentPlayer(which, id);
+  options.save();
+}
+
+void MainMenu::selectBrickset(Options::PPos which, int id) {
+  Options &options(Options::instance());
+  if (options.currentBrickset(which)==id)
+    return;
+  options.setCurrentBrickset(which, id);
+  options.save();
+}

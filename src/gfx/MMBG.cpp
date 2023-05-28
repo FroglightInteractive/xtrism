@@ -31,10 +31,9 @@ MMBG::MMBG(QSize size) {
   }
 
   qDebug() << "Drawing logo";
-  QRect r(QPoint(size.width()/6, size.height()/11),
+  QRect r(QPoint(size.width()/6, size.height()/13),
           QSize(size.width()*2/3, size.height()/3));
   QImage logo(::logo(r, size));
-  logo.save("/tmp/logo.png");
   { QPainter p(&img);
     p.drawImage(r.center() - QPoint(logo.width(),logo.height())/2, logo);
   }

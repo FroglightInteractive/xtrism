@@ -177,9 +177,10 @@ RGBImage RGBImage::colorized(GrayImage const &src, QRectF rainbow) {
   RGBImage out(w,h);
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
-      float phi = atan2(left + width * x / w, -top - height * y / h);
-      phi -= PI / 6;
-      if (phi < -PI)
+      float phi = -atan2(left + width * x / w, -top - height * y / h);
+      phi -= 5.; // PI/6
+      //      phi -= PI/6;
+      while (phi < -PI)
         phi += 2 * PI;
       float green = std::max(std::cos(phi * DECAY), 0.f);
       phi -= 2 * PI / 3;

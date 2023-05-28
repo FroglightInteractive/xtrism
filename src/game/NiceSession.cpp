@@ -117,7 +117,7 @@ void NiceSession::exec() {
   el->exec();
   hide();
 
-  if (g1->score().score()) {
+  if (g1->finalScore().score) {
     HighScoreScreen hhs(g1, bg, parentWidget());
     hhs.resize(size());
     hhs.show();

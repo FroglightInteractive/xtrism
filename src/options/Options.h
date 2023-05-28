@@ -18,6 +18,7 @@ public:
   Options();
   ~Options();
   static Options &instance();
+  static PPos otherPos(PPos);
 public:
   MetaKeys const &metakeys(Sides::Side) const;
   QList<int> allPlayerIDs() const;

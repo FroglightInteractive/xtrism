@@ -4,7 +4,7 @@
 // to non-empty (only).
 
 #include <string>
-
+#include "MapIterator.h"
 #include "KbdBuffer.h"
 
 KeyCodes::KeyCodes(GameKeys const &gk, MetaKeys const &mk):
@@ -248,4 +248,11 @@ void KbdBuffer::othreekey(KeyNumber nw) {
   default:
     break;
   }
+}
+
+QList<int> KbdBuffer::allKeyCodes() const {
+  QList<int> res;
+  for (auto it: maprange(kcs))
+    res << it.key();
+  return res;
 }

@@ -70,3 +70,7 @@ QJsonObject Player::toJson() const {
   return json;
 };
 
+
+void Player::setStartLevel(int bs, int lvl) {
+  levels_[bs] = lvl;
+}

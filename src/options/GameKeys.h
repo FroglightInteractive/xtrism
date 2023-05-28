@@ -25,6 +25,7 @@ public:
   static GameKeys fromJson(QJsonObject const &);
   QJsonObject toJson() const;
   int operator[](Key k) const { return keys[k]; }
+  QList<int> allCodes() const;
 private:
   QMap<Key, int> keys;
 };

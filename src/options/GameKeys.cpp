@@ -60,3 +60,9 @@ QJsonObject GameKeys::toJson() const {
   return json;
 }
   
+QList<int> GameKeys::allCodes() const {
+  QList<int> res;
+  for (auto kit: maprange(keys))
+    res << kit.value();
+  return res;
+}
