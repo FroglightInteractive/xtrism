@@ -12,15 +12,15 @@ QMap<GameKeys::Key, QString> const &GameKeys::names() {
     { Key::CCW, "Rotate CCW" },
     { Key::Drop, "Drop" },
     { Key::Zap, "Zap" },
-    { Key::FloatDown, "FloatDown" } };
+    { Key::FloatDown, "Float Down" } };
   return map;
 }
 
 GameKeys::GameKeys(Sides::Side s) {
   static QMap<Sides::Side, QMap<Key, QString>> dflt{
     { Sides::Side::Solo, {
-      { Key::Left, "," },
-      { Key::Right, "." },
+      { Key::Left, "Comma" },
+      { Key::Right, "Period" },
       { Key::CW, "L. Alt" },
       { Key::CCW, "A" },
       { Key::Drop, "CapsLock" },
@@ -29,7 +29,7 @@ GameKeys::GameKeys(Sides::Side s) {
     { Sides::Side::Left, {
       { Key::Left, "S" },
       { Key::Right, "D" },
-      { Key::CW, "L._Alt" },
+      { Key::CW, "L. Alt" },
       { Key::CCW, "A" },
       { Key::Drop, "CapsLock" },
       { Key::Zap, "F" } } },
@@ -65,4 +65,8 @@ QList<int> GameKeys::allCodes() const {
   for (auto kit: maprange(keys))
     res << kit.value();
   return res;
+}
+
+void GameKeys::setKey(GameKeys::Key k, int scan) {
+  keys[k] = scan;
 }

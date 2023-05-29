@@ -16,7 +16,7 @@ private:
   void makePlayButtons();
   void makePlayerSelectors();
   void makeBricksetSelectors();
-
+  void editKeys(Options::PPos which);
 private:
   MainWindow *mw;
   QList<class PlayButton *> playbuttons;

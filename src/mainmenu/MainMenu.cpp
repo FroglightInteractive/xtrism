@@ -13,6 +13,7 @@
 #include "SPlayer.h"
 #include "PlayerSelector.h"
 #include "BricksetSelector.h"
+#include "KeyEditor.h"
 
 MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   backg = 0;
@@ -69,6 +70,10 @@ void MainMenu::makePlayerSelectors() {
     ->selectPlayer(Options::instance().currentPlayerID(Options::PPos::Left));
   playerselectors[Options::PPos::Right]
     ->selectPlayer(Options::instance().currentPlayerID(Options::PPos::Right));
+  connect(playerselectors[Options::PPos::Left], &PlayerSelector::gearPressed,
+          this, [this]() { editKeys(Options::PPos::Left); });
+  connect(playerselectors[Options::PPos::Right], &PlayerSelector::gearPressed,
+          this, [this]() { editKeys(Options::PPos::Right); });
 }
 
 void MainMenu::makeBricksetSelectors() {
@@ -171,4 +176,11 @@ void MainMenu::selectBrickset(Options::PPos which, int id) {
     return;
   options.setCurrentBrickset(which, id);
   options.save();
+}
+
+void MainMenu::editKeys(Options::PPos which) {
+  KeyEditor ke(Options::instance().currentPlayer(which), mw);
+  hide();
+  ke.exec();
+  show();
 }

@@ -74,3 +74,7 @@ QJsonObject Player::toJson() const {
 void Player::setStartLevel(int bs, int lvl) {
   levels_[bs] = lvl;
 }
+
+void Player::setKey(Sides::Side s, GameKeys::Key k, int scan) {
+  keys_[s].setKey(k, scan);
+}

@@ -16,6 +16,7 @@ public:
   int nextpos() const;
   bool dwxpos() const;
   void setStartLevel(int bs, int lvl);
+  void setKey(Sides::Side s, GameKeys::Key k, int scan);
 public:
   static Player fromJson(QJsonObject const &);
   QJsonObject toJson() const;

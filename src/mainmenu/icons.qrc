@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+   <file alias="settings.svg">../../data/icons/Setting-Icon-SVG-03mcds.svg</file>
+ </qresource>
+</RCC>

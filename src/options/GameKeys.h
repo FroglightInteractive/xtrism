@@ -26,6 +26,7 @@ public:
   QJsonObject toJson() const;
   int operator[](Key k) const { return keys[k]; }
   QList<int> allCodes() const;
+  void setKey(Key k, int scan);
 private:
   QMap<Key, int> keys;
 };
