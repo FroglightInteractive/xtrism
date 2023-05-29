@@ -78,3 +78,11 @@ void Player::setStartLevel(int bs, int lvl) {
 void Player::setKey(Sides::Side s, GameKeys::Key k, int scan) {
   keys_[s].setKey(k, scan);
 }
+
+void Player::setName(QString s) {
+  name_ = s;
+}
+
+void Player::setID(int k) {
+  id_ = k;
+}

@@ -32,7 +32,7 @@ set(CMAKE_AUTOUIC ON)
 find_package(PulseAudio)
 
 find_package(Qt6
-  COMPONENTS Widgets Multimedia 
+  COMPONENTS Widgets Multimedia Svg
   REQUIRED)
 
 ######################################################################
@@ -47,6 +47,7 @@ include(src/CMakeLists.txt)
 #target_link_libraries(xtrism Qt5::X11Extras)
 target_link_libraries(xtrism Qt6::Widgets)
 target_link_libraries(xtrism Qt6::Multimedia)
+target_link_libraries(xtrism Qt6::Svg)
 target_link_libraries(xtrism X11)
 target_link_libraries(xtrism pulse)
 

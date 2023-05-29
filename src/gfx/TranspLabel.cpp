@@ -59,7 +59,7 @@ void TranspLabel::enterEvent(QEnterEvent *e) {
 }
 
 void TranspLabel::keyPressEvent(QKeyEvent *e) {
-  emit keyPressed(e->nativeScanCode());
+  emit keyPressed(e->nativeScanCode(), e->text(), e->key());
 }
 
 void TranspLabel::focusInEvent(QFocusEvent *) {

@@ -1,0 +1,3 @@
+  QFont f(font());
+  f.setWeight(QFont::Bold);
+  p.setFont(f);

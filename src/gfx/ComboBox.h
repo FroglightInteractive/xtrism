@@ -14,6 +14,7 @@ public:
   bool selectItem(QString);
   void setItems(QStringList);
   void mousePressEvent(QMouseEvent *) override;
+  QString currentItem() const;
 signals:
   void itemChanged(QString); // not emitted from selectItem
 private:

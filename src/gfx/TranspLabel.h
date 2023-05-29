@@ -22,7 +22,7 @@ public:
   void focusInEvent(QFocusEvent *) override;
   void focusOutEvent(QFocusEvent *) override;
 signals:
-  void keyPressed(int code);
+  void keyPressed(int code, QString txt, int qkey);
   void mousePressed();
 private:
   QString text_;

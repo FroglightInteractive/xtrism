@@ -14,6 +14,7 @@
 #include "PlayerSelector.h"
 #include "BricksetSelector.h"
 #include "KeyEditor.h"
+#include "NewPlayer.h"
 
 MainMenu::MainMenu(MainWindow *mw): QWidget(mw), mw(mw) {
   backg = 0;
@@ -74,6 +75,10 @@ void MainMenu::makePlayerSelectors() {
           this, [this]() { editKeys(Options::PPos::Left); });
   connect(playerselectors[Options::PPos::Right], &PlayerSelector::gearPressed,
           this, [this]() { editKeys(Options::PPos::Right); });
+  connect(playerselectors[Options::PPos::Left], &PlayerSelector::newPlayer,
+          this, [this]() { newPlayer(Options::PPos::Left); });
+  connect(playerselectors[Options::PPos::Right], &PlayerSelector::newPlayer,
+          this, [this]() { newPlayer(Options::PPos::Right); });
 }
 
 void MainMenu::makeBricksetSelectors() {
@@ -183,4 +188,30 @@ void MainMenu::editKeys(Options::PPos which) {
   hide();
   ke.exec();
   show();
+}
+
+void MainMenu::newPlayer(Options::PPos which) {
+  NewPlayer np(this);
+  np.move(width()/2 - np.width()/2,
+           height()/2 - np.height()*.7);
+  if (!np.exec())
+    return;
+  
+  qDebug() << "New player!" << np.name();
+  int id = 1;
+  for (int pid: Options::instance().allPlayerIDs())
+    if (pid>=id)
+      id = pid+1;
+  Player player;
+  player.setID(id);
+  player.setName(np.name());
+  Options::instance().updatePlayer(player);
+  Options::instance().save();
+  Options::PPos other = Options::otherPos(which);
+  int oid = playerselectors[other]->currentPlayer();
+  playerselectors[Options::PPos::Left]->rebuild();
+  playerselectors[Options::PPos::Right]->rebuild();
+  playerselectors[which]->selectPlayer(id);
+  playerselectors[other]->selectPlayer(oid);
+  
 }

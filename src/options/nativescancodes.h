@@ -67,7 +67,7 @@ QMap<int, QString> scan2name{
   {44, "J"},
   {45, "K"},
   {46, "L"},
-  {47, ";"},
+  {47, "Semicolon"},
   {48, "Quote"},
   {36, "Return"},
   {83, "KP 4"},

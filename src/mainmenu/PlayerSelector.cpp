@@ -7,14 +7,27 @@
 #include <QSvgRenderer>
 
 PlayerSelector::PlayerSelector(QWidget *parent): ComboBox(parent) {
+  rebuild();
+}
+
+void PlayerSelector::rebuild() {
   QStringList names;
   Options const &options(Options::instance());
   for (int id: options.allPlayerIDs())
     names << options.player(id).name();
+  QString newplayer = "〈New Player〉";
+  names << newplayer;
   setItems(names);
+  last_ = currentItem();
   connect(this, &ComboBox::itemChanged,
-          this, [this](QString s) {
-            emit playerChanged(Options::instance().findPlayer(s));
+          this, [this, newplayer](QString s) {
+            if (s==newplayer) {
+              selectItem(last_);
+              emit newPlayer();
+            } else {
+              last_ = s;
+              emit playerChanged(Options::instance().findPlayer(s));
+            }
           });
   settings_icon = new QSvgRenderer(QString(":/settings.svg"), this);
 }
@@ -44,4 +57,8 @@ void PlayerSelector::mousePressEvent(QMouseEvent *e) {
     emit gearPressed();
   else
     ComboBox::mousePressEvent(e);
+}
+
+int PlayerSelector::currentPlayer() const {
+  return Options::instance().findPlayer(currentItem());
 }

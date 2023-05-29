@@ -53,3 +53,10 @@ void ComboBox::mousePressEvent(QMouseEvent *e) {
   if (selectItem(res))
     emit itemChanged(res);
 }
+
+QString ComboBox::currentItem() const {
+  if (idx_>=0 && idx_<items_.size())
+    return items_[idx_];
+  else
+    return QString();
+}

@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include "MapIterator.h"
 #include "Paths.h"
+#include "UserInfo.h"
 
 Options &Options::instance() {
   static Options opts;
@@ -49,6 +50,7 @@ Options::Options() {
     for (auto it: maprange(Sides::names()))
       mk[it.key()] = MetaKeys(it.key());
     Player p;
+    p.setName(UserInfo::fullName());
     players[p.id()] = p;
     curplr[PPos::Left] = p.id();
     curplr[PPos::Right] = p.id();

@@ -7,7 +7,7 @@ QStringList const &BricksetSelector::names() {
   static QStringList names{"Classic (7)",
     "Disjointed (17)",
     "Double disjointed (27)",
-    "Totally unghinged (34)"};
+    "Totally unhinged (34)"};
   return names;
 }
 
