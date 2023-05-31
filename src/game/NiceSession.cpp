@@ -16,9 +16,13 @@
 #include "SPlayer.h"
 #include "Score.h"
 #include "HighScoreScreen.h"
+#include <QCursor>
 
 NiceSession::NiceSession(QString id, MainWindow *mw, QWidget *playbutton):
   QWidget(mw) {
+  QImage crs(32, 32, QImage::Format_ARGB32);
+  crs.fill(0);
+  setCursor(QCursor(QPixmap::fromImage(crs)));
   resize(mw->size());
   move(0, 0);
   QString fn0 = QString("%1/gamebg0-%2-%3x%4.jpg")
