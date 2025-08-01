@@ -1,6 +1,4 @@
 src/Makefile
 xtrism.pri
-xtrism
-cache
 build
 build-debug
