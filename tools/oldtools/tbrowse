@@ -1,3 +1,0 @@
-#!/bin/zsh
-cd `dirname $0`
-mhbrowse ecch '*.H' 40 12 env basics bricks bytemap gfx globals mainmenu options pics poll popups sessions sound game -geometry +0-30
