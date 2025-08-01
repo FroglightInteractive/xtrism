@@ -2,6 +2,7 @@
 
 #include "XWorld.h"
 #include <X11/Xlib.h>
+#include <stdlib.h>
 
 #if QT_VERSION < 0x060000
 #include <QX11Info>
@@ -10,13 +11,22 @@
 class XWorldPrivate {
 public:
   XWorldPrivate(QApplication *app, QWidget *widget) {
+    display = 0;
 #if QT_VERSION >= 0x060000
     QNativeInterface::QX11Application *x11
       = app->nativeInterface<QNativeInterface::QX11Application>();
-    display = (Display*)x11->display();
+    if (x11)
+      display = (Display*)x11->display();
 #else
     display = QX11Info::display();
 #endif
+    if (!display) {
+      qDebug() << "Cannot run without an X11 display";
+      qDebug() << "When running under Wayland, try";
+      qDebug();
+      qDebug() << "    export QT_QPA_PLATFORM=xcb";
+      exit(1);
+    }
     screen = XDefaultScreen(display);
     depth = DefaultDepth(display, screen);
     visual = XDefaultVisual(display, screen);
